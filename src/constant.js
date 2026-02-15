@@ -1,1 +1,1 @@
-export const DB_NAME = "amar_295"
+export const DB_NAME = "ChangelogHub"
