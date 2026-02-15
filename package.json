@@ -1,5 +1,5 @@
 {
-  "name": "changeoghub",
+  "name": "changeloghub",
   "version": "1.0.0",
   "description": "",
   "license": "ISC",
@@ -10,10 +10,16 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "start"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.3.1",
     "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
     "prettier": "^3.8.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
   }
 }
