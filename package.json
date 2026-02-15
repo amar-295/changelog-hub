@@ -1,0 +1,19 @@
+{
+  "name": "changeoghub",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "Amarnath",
+  "type": "module",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "prettier": "^3.8.1"
+  }
+}

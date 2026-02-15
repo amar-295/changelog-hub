@@ -1,0 +1,258 @@
+# ========================================
+# ChangelogHub - Git Ignore File
+# ========================================
+# This prevents sensitive and unnecessary files from being committed
+
+# ========================================
+# Environment Variables (CRITICAL!)
+# ========================================
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.env.staging
+*.env
+
+# ========================================
+# Node.js Dependencies
+# ========================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# ========================================
+# Build Outputs
+# ========================================
+# Backend
+dist/
+build/
+
+# Frontend (React)
+frontend/build/
+frontend/dist/
+frontend/.next/
+frontend/out/
+
+# ========================================
+# Logs
+# ========================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
+
+# ========================================
+# Operating System Files
+# ========================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ========================================
+# IDE / Editor Files
+# ========================================
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# JetBrains IDEs (WebStorm, IntelliJ, etc.)
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+Session.vim
+Sessionx.vim
+.netrwhist
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# ========================================
+# Testing
+# ========================================
+coverage/
+*.lcov
+.nyc_output
+.grunt
+lib-cov
+.jest-cache/
+.cache/
+
+# ========================================
+# TypeScript (if you add it later)
+# ========================================
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# ========================================
+# Database Files (Local Development)
+# ========================================
+# MongoDB local data
+data/
+*.db
+*.sqlite
+*.sqlite3
+
+# Redis
+dump.rdb
+
+# ========================================
+# Temporary Files
+# ========================================
+tmp/
+temp/
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+*.orig
+
+# ========================================
+# Package Manager Lock Files (Optional)
+# ========================================
+# Uncomment if your team agrees to ignore lock files
+# (Generally recommended to commit them for consistency)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# ========================================
+# Docker (if you add it later)
+# ========================================
+# docker-compose.override.yml
+
+# ========================================
+# Uploads & User Generated Content (Local)
+# ========================================
+# If storing files locally during development
+uploads/
+public/uploads/
+*.upload
+
+# ========================================
+# Secrets & Keys
+# ========================================
+*.key
+*.pem
+*.cert
+*.crt
+*.p12
+*.pfx
+secrets/
+credentials/
+
+# ========================================
+# Misc
+# ========================================
+.sass-cache/
+*.pid
+*.seed
+*.pid.lock
+.npm
+.eslintcache
+.stylelintcache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+.cache
+.parcel-cache
+.next
+.nuxt
+.vuepress/dist
+.serverless/
+.fusebox/
+.dynamodb/
+.tern-port
+.vscode-test
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# ========================================
+# Production Deployment Artifacts
+# ========================================
+# These might be generated during deployment
+.vercel
+.netlify
+.firebase/
+
+# ========================================
+# Documentation Build
+# ========================================
+# If you generate docs
+docs/.vuepress/dist
+docs/_book
+
+# ========================================
+# Optional: Debug Artifacts
+# ========================================
+*.heapsnapshot
+*.cpuprofile
+
+# ========================================
+# Keep These Files (Examples)
+# ========================================
+# If you want to explicitly track some files
+# that match patterns above, use !
+# Example:
+# !.vscode/settings.json
