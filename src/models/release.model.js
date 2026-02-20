@@ -9,6 +9,7 @@ const releaseSchema = new Schema(
         },
         slug: {                                     // URL-friendly version of title
             type: String,
+            // required: true,
         },
         content: {
             type: String,
@@ -16,7 +17,6 @@ const releaseSchema = new Schema(
         },
         version: {
             type: String,
-            required: true,
         },
         status: {
             type: String,
@@ -35,6 +35,10 @@ const releaseSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: "User",
             required: true,
+        },
+        updatedBy: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
         },
         category: {
             type: String,
@@ -58,7 +62,7 @@ releaseSchema.index(
 )
 
 releaseSchema.pre("save", function () {
-    if (this.isModified("title") && !this.slug) {
+    if (!this.slug) {
         this.slug = generateSlug(this.title)
     }
 })
