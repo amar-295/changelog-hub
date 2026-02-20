@@ -3,10 +3,11 @@ import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
+import { Workspace } from "../models/workspace.model.js";
 
 const generateAccessAndRefreshTokens = async (userId) => {
     try {
-        const user = await User.findById(userId)
+        const user = await User.findById(userId).select("+refreshToken")
         const accessToken = user.generateAccessToken()
         const refreshToken = user.generateRefreshToken()
 
@@ -25,7 +26,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
     if (
         [fullName, email, username, password].some((field) =>
-            field?.trim() === "")
+            !field || field?.trim() === "")
     ) {
         throw new ApiError(400, "All fields are required")
     }
@@ -45,6 +46,31 @@ const registerUser = asyncHandler(async (req, res) => {
         username: username.toLowerCase(),
     })
 
+    let subdomain = user.username.toLowerCase()
+
+    const existingWorkspace = await Workspace.findOne({
+        subdomain
+    })
+
+    if (existingWorkspace) {
+        subdomain = `${user.username}-${Date.now()}`
+    }
+
+    let workspace;
+    try {
+        workspace = await Workspace.create({
+            name: `${user.fullName}'s Workspace`,
+            owner: user._id,
+            subdomain: subdomain
+        })
+    } catch (error) {
+        await User.findByIdAndDelete(user._id)
+        throw new ApiError(500, "Something went wrong while creating workspace")
+    }
+
+    user.workspaceId = workspace._id
+    await user.save({ validateBeforeSave: false})
+
     const createdUser = await User.findById(user._id)
         .select("-password -refreshToken")
 
@@ -53,7 +79,7 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
     return res.status(201).json(
-        new ApiResponse(200, createdUser, "User registered successfully")
+        new ApiResponse(201, createdUser, "User registered successfully")
     )
 
 })
@@ -62,16 +88,16 @@ const registerUser = asyncHandler(async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
     const { email, username, password } = req.body
 
-    if (!email && !password) {
+    if (!(email || username) || !password) {
         throw new ApiError(400, "Email and password are required")
     }
 
     const user = await User.findOne({
         $or: [{ email }, { username }]
-    })
+    }).select("+password")
 
     if (!user) {
-        throw new ApiError(404, "User does not exist")
+        throw new ApiError(404, "User not found")
     }
 
     const isPasswordValid = await user.isPasswordCorrect(password)
@@ -80,10 +106,16 @@ const loginUser = asyncHandler(async (req, res) => {
         throw new ApiError(401, "Invalid credentials")
     }
 
+    try {
+        user.lastLoginAt = new Date()
+        await user.save({ validateBeforeSave: false})
+    } catch (error) {
+        console.error("Failed to update last login time", error.message)
+    }
     const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user._id)
 
     const loggedInUser = await User.findById(user._id)
-        .select("-password -refreshToken")
+    .select("-password -refreshToken")
 
     const options = {
         httpOnly: true,
@@ -109,8 +141,8 @@ const loginUser = asyncHandler(async (req, res) => {
 const logoutUser = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(req.user._id,
         {
-            $set: {
-                refreshToken: undefined
+            $unset: {
+                refreshToken: 1
             },
         },
         {
@@ -141,7 +173,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     try {
         const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET)
     
-        const user = await User.findById(decodedToken?._id)
+        const user = await User.findById(decodedToken?._id).select("+refreshToken")
     
         if (!user) {
             throw new ApiError(401, "Invalid refresh token")

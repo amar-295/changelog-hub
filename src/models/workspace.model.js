@@ -7,20 +7,27 @@ const workspaceSchema = new Schema({
     },
     description: {
         type: String,
-        required: true,
     },
     owner: {
         type: Schema.Types.ObjectId,
         ref: "User",
+        required: true,
     },
-    members: {
-        type: [Schema.Types.ObjectId],
-        ref: "User",
+    subdomain: {                        // for public URL
+        type: String,
+        required: true,
+        toLowerCase: true,
+        trim: true,
+        index: {unique: true}
     },
-    projects: {
-        type: [Schema.Types.ObjectId],
-        ref: "Project",
+    plan: {
+        type: String,
+        enum: ["free", "starter", "pro", "enterprise"],
+        default: "free",
     },
+    logo: {
+        type: String,
+    }
     
 },{timestamps: true})
 

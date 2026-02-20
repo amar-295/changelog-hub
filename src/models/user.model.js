@@ -25,6 +25,7 @@ const userSchema = new Schema({
     password: {
         type: String,  // bcrypt js
         required: [true, "Password is required"],
+        select: false,
     },
     avatar: {
         type: String,
@@ -44,6 +45,7 @@ const userSchema = new Schema({
     },
     refreshToken: {
         type: String,
+        select: false,
     },
     lastLoginAt: {
         type: Date,
