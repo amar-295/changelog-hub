@@ -6,14 +6,16 @@ const releaseSchema = new Schema(
         title: {
             type: String,
             required: true,
+            trim: true,
         },
         slug: {                                     // URL-friendly version of title
             type: String,
-            // required: true,
+            required: true,
         },
         content: {
             type: String,
             required: true,
+            trim: true,
         },
         version: {
             type: String,

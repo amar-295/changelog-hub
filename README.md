@@ -32,7 +32,7 @@ ChangelogHub is a developer-friendly platform designed to help teams publish and
 
 ### 📝 Release Management
 - [x] **Create Release:** POST endpoint with auto-slug generation via pre-save hook
-- [ ] **Get All Releases:** List releases for a workspace
+- [x] **Get All Releases:** Paginated listing with filtering, search, and input validation
 - [ ] **Get Single Release:** Fetch release by slug
 - [ ] **Update Release:** Edit release details
 - [ ] **Delete Release:** Remove a release
@@ -181,6 +181,56 @@ ChangelogHub is a developer-friendly platform designed to help teams publish and
 }
 ```
 *Note: `slug` is auto-generated from the title via a pre-save hook using `slugify`.*
+
+### **6. Get All Releases** 🔒
+**Endpoint:** `GET /api/v1/releases/`
+
+**Headers:**
+- `Authorization`: `Bearer <accessToken>`
+
+**Query Parameters (all optional):**
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `page` | Number | `1` | Page number (min: 1) |
+| `limit` | Number | `10` | Results per page (min: 1, max: 50) |
+| `status` | String | — | Filter by status (`draft`, `published`, `archived`) |
+| `category` | String | — | Filter by category (`feature`, `improvement`, `bugfix`, `security`, `other`) |
+| `search` | String | — | Search releases by title (case-insensitive) |
+
+**Example:** `GET /api/v1/releases?page=1&limit=5&status=draft&search=dark`
+
+**Success Response:** (200 OK)
+```json
+{
+  "statusCode": 200,
+  "data": {
+    "releases": [
+      {
+        "_id": "699...",
+        "title": "Dark Mode Support",
+        "slug": "dark-mode-support",
+        "content": "Added dark mode toggle",
+        "version": "v1.0.0",
+        "category": "feature",
+        "status": "draft",
+        "createdAt": "2026-02-21T..."
+      }
+    ],
+    "pagination": {
+      "currentPage": 1,
+      "totalPages": 1,
+      "totalReleases": 1,
+      "limit": 5
+    }
+  },
+  "message": "Releases fetched successfully",
+  "success": true
+}
+```
+*Notes:*
+- *Results are sorted by newest first (`createdAt: -1`).*
+- *Search input is sanitized against regex injection.*
+- *Invalid `status` or `category` values return `400 Bad Request`.*
 
 ---
 
