@@ -33,9 +33,10 @@ ChangelogHub is a developer-friendly platform designed to help teams publish and
 ### 📝 Release Management
 - [x] **Create Release:** POST endpoint with auto-slug generation via pre-save hook
 - [x] **Get All Releases:** Paginated listing with filtering, search, and input validation
-- [ ] **Get Single Release:** Fetch release by slug
-- [ ] **Update Release:** Edit release details
-- [ ] **Delete Release:** Remove a release
+- [x] **Get Single Release:** Fetch release by ID
+- [x] **Update Release:** Edit release details
+- [x] **Delete Release:** Remove a release
+- [x] **Publish Release:** Publish draft releases with timestamps
 
 ---
 
@@ -232,6 +233,86 @@ ChangelogHub is a developer-friendly platform designed to help teams publish and
 - ***Parameter Clamping:** `page` is defaulted to 1 (min: 1), and `limit` is capped at 50 (min: 1) to prevent database overloading.*
 - ***Security:** Search input is sanitized using regex escaping to prevent regex injection attacks.*
 - ***Validation:** Invalid `status` or `category` values explicitly return `400 Bad Request`.*
+
+### **7. Get Single Release** 🔒
+**Endpoint:** `GET /api/v1/releases/:id`
+
+**Headers:**
+- `Authorization`: `Bearer <accessToken>`
+
+**Success Response:** (200 OK)
+```json
+{
+  "statusCode": 200,
+  "data": {
+    "_id": "699...",
+    "title": "Dark Mode Support",
+    "slug": "dark-mode-support",
+    "status": "draft"
+  },
+  "message": "Release fetched successfully",
+  "success": true
+}
+```
+
+### **8. Update Release** 🔒
+**Endpoint:** `PATCH /api/v1/releases/:id`
+
+**Headers:**
+- `Authorization`: `Bearer <accessToken>`
+
+**Body (JSON - Optional Fields):**
+- `title` (String)
+- `content` (String)
+- `version` (String)
+- `category` (String)
+
+**Success Response:** (200 OK)
+```json
+{
+  "statusCode": 200,
+  "data": { "title": "Updated Title", "slug": "updated-title" },
+  "message": "Release updated successfully",
+  "success": true
+}
+```
+*Note: If the title changes, the slug is automatically regenerated.*
+
+### **9. Delete Release** 🔒
+**Endpoint:** `DELETE /api/v1/releases/:id`
+
+**Headers:**
+- `Authorization`: `Bearer <accessToken>`
+
+**Success Response:** (200 OK)
+```json
+{
+  "statusCode": 200,
+  "data": {},
+  "message": "Release deleted successfully",
+  "success": true
+}
+```
+*Note: Currently allows deletion of any release. Deletion protection for published releases is planned.*
+
+### **10. Publish Release** 🔒
+**Endpoint:** `PATCH /api/v1/releases/:id/publish`
+
+**Headers:**
+- `Authorization`: `Bearer <accessToken>`
+
+**Success Response:** (200 OK)
+```json
+{
+  "statusCode": 200,
+  "data": {
+    "status": "published",
+    "publishedAt": "2026-02-22T05:26:29Z"
+  },
+  "message": "Release published successfully",
+  "success": true
+}
+```
 
 ---
 
