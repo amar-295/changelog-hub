@@ -10,7 +10,6 @@ const releaseSchema = new Schema(
         },
         slug: {                                     // URL-friendly version of title
             type: String,
-            required: true,
         },
         content: {
             type: String,
@@ -53,7 +52,7 @@ const releaseSchema = new Schema(
 
 // compund unique index- ensures that within a workspace, each slug is unique
 
-releaseSchema.index(                        
+releaseSchema.index(
     {
         workspaceId: 1,
         slug: 1,
