@@ -229,8 +229,9 @@ ChangelogHub is a developer-friendly platform designed to help teams publish and
 ```
 *Notes:*
 - *Results are sorted by newest first (`createdAt: -1`).*
-- *Search input is sanitized against regex injection.*
-- *Invalid `status` or `category` values return `400 Bad Request`.*
+- ***Parameter Clamping:** `page` is defaulted to 1 (min: 1), and `limit` is capped at 50 (min: 1) to prevent database overloading.*
+- ***Security:** Search input is sanitized using regex escaping to prevent regex injection attacks.*
+- ***Validation:** Invalid `status` or `category` values explicitly return `400 Bad Request`.*
 
 ---
 
