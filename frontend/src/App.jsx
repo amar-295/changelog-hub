@@ -1,9 +1,15 @@
+import { useState } from 'react'
 import './App.css'
+import Signup from './components/Signup'
+import { Routes, Route } from 'react-router-dom'
 
 function App() {
+  const [count, setCount] = useState(0)
 
   return (
-    <h1 className='text-3xl font-bold underline'>Tailwind Test</h1>
+    <Routes>
+      <Route path="/signup" element={<Signup />} />
+    </Routes>
   )
 }
 
