@@ -19,5 +19,15 @@ export const authService = {
             const message = error.response?.data?.message || "Something went wrong"
             throw new Error(message)
         }
+    },
+
+    login: async (userData) => {
+        try {
+            const response = await apiClient.post("/login", userData);
+            return response.data
+        } catch (error) {
+            const message = error.response?.data?.message || "Something went wrong"
+            throw new Error(message)
+        }
     }
 }

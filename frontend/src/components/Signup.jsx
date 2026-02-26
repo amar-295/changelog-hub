@@ -18,6 +18,7 @@ function Signup() {
     try {
       const response = await authService.register(formData);
       console.log("Success:", response.message);
+      navigate("/login");
     } catch (error) {
       console.error("Signup failed:", error.message)
     }
@@ -36,8 +37,8 @@ function Signup() {
         <div className="w-full max-w-[440px] flex flex-col items-center">
           <div className="bg-white dark:bg-slate-900 shadow-xl rounded-xl w-full p-8 border border-slate-200 dark:border-slate-800">
             {/* Header/Logo */}
-            <div className="flex flex-col items-center gap-4 mb-8">
-              <div className="text-primary">
+            <div className="flex flex-col items-center">
+              <div className="w-20 h-20 flex items-center justify-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm mb-2">
                 <Logo/>
               </div>
               <div className="text-center">
@@ -138,12 +139,12 @@ function Signup() {
             <div className="mt-6 text-center">
               <p className="text-sm text-slate-500 dark:text-slate-400">
                 Already have an account?
-                <a
-                  className="text-primary font-semibold hover:underline decoration-2 underline-offset-4"
-                  href="#"
+                <Link
+                  className="text-primary font-semibold hover:underline"
+                  to="/login"
                 >
                   Log in
-                </a>
+                </Link>
               </p>
             </div>
           </div>
