@@ -1,35 +1,34 @@
 import React from "react";
 import Logo from "./Logo";
 import { useState } from "react";
-import { Link , useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { authService } from "../services/authService";
 
 function Login() {
   const navigate = useNavigate();
-    
-    const [formData, setFormData] = useState({
-      email: "",
-      password: "",
-    });
-  
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      try {
-        const response = await authService.login(formData);
-        console.log("Success:", response.message);
-        navigate("/dashboard");
-      } catch (error) {
-        console.error("Login failed:", error.message)
-      }
-    };
-  
-    const handleChange = (e) => {
-      setFormData({
-        ...formData,
-        [e.target.name]: e.target.value,
-      })
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await authService.login(formData);
+      console.log("Success:", response.message);
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Login failed:", error.message);
     }
-    
+  };
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   return (
     <>
