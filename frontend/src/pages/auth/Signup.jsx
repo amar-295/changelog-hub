@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Logo from "../../components/Logo";
 import { Link, useNavigate } from "react-router-dom";
 import { authService } from "../../services/authService";
+import { Github, User, Mail, AtSign, Lock } from "lucide-react";
 
 function Signup() {
   const navigate = useNavigate();
@@ -33,114 +34,127 @@ function Signup() {
 
   return (
     <>
-      <main className="bg-background-light dark:bg-background-dark font-display min-h-screen flex items-center justify-center p-4">
-        <div className="w-full max-w-[440px] flex flex-col items-center">
-          <div className="bg-white dark:bg-slate-900 shadow-xl rounded-xl w-full p-8 border border-slate-200 dark:border-slate-800">
+      <main className="bg-bg-page text-text-primary min-h-screen flex items-center justify-center p-4 transition-colors duration-300">
+        <div className="w-full max-w-[420px] flex flex-col gap-6 items-center">
+          <div className="bg-bg-card shadow-xl rounded-2xl w-full p-8 border border-border">
             {/* Header/Logo */}
             <div className="flex flex-col items-center">
-              <div className="w-20 h-20 flex items-center justify-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm mb-2">
+              <div className="w-[68px] h-[68px] flex items-center justify-center bg-bg-elevated border border-border rounded-2xl shadow-sm mb-4">
                 <Logo />
               </div>
-              <div className="text-center">
-                <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
+              <div className="text-center mb-2">
+                <h2
+                  className="text-2xl font-bold tracking-tight text-text-primary"
+                  style={{ fontFamily: "var(--font-display)" }}
+                >
                   Create your account
-                </h1>
-                <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">
+                </h2>
+                <p className="text-text-secondary text-[14px]">
                   Join ChangelogHub to manage your product updates.
                 </p>
               </div>
             </div>
             {/* GitHub Auth */}
             <div className="flex flex-col gap-3">
-              <button className="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-slate-900 text-white hover:bg-slate-800 transition-colors gap-2 text-base font-semibold">
-                <span className="material-symbols-outlined text-[20px]">
-                  account_circle
-                </span>
+              <button className="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-11 border border-border bg-bg-input text-text-primary hover:bg-[#333] hover:border-border-light transition-all gap-2 text-[14px] font-semibold">
+                <Github className="w-[18px] h-[18px] mb-px" />
                 <span className="truncate">Sign up with GitHub</span>
               </button>
             </div>
             {/* Divider */}
-            <div className="relative my-8">
+            <div className="relative my-6">
               <div
                 aria-hidden="true"
                 className="absolute inset-0 flex items-center"
               >
-                <div className="w-full border-t border-slate-200 dark:border-slate-800"></div>
+                <div className="w-full border-t border-border"></div>
               </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white dark:bg-slate-900 px-2 text-slate-400 font-bold tracking-widest">
+              <div className="relative flex justify-center text-[11px] uppercase tracking-widest">
+                <span className="bg-bg-card px-3 text-text-muted font-bold">
                   OR
                 </span>
               </div>
             </div>
             {/* Signup Form */}
-            <form className="space-y-4" onSubmit={handleSubmit}>
+            <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">
+                <label className="text-[12px] font-semibold text-text-primary tracking-wider uppercase ml-1">
                   Full Name
                 </label>
-                <input
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  className="form-input flex w-full rounded-lg text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-800 bg-background-light dark:bg-slate-800 focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4 text-base font-normal"
-                  placeholder="Full name"
-                  type="text"
-                />
+                <div className="relative flex items-center">
+                  <User className="absolute left-3.5 text-text-muted w-[18px] h-[18px]" />
+                  <input
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    className="w-full pl-[38px] pr-4 py-2.5 bg-bg-input border border-border rounded-lg text-[14px] text-text-primary focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-text-muted hover:border-border-light"
+                    placeholder="John Doe"
+                    type="text"
+                  />
+                </div>
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">
+                <label className="text-[12px] font-semibold text-text-primary tracking-wider uppercase ml-1">
                   Work Email
                 </label>
-                <input
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="form-input flex w-full rounded-lg text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-800 bg-background-light dark:bg-slate-800 focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4 text-base font-normal"
-                  placeholder="name@company.com"
-                  type="email"
-                />
+                <div className="relative flex items-center">
+                  <Mail className="absolute left-3.5 text-text-muted w-[18px] h-[18px]" />
+                  <input
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full pl-[38px] pr-4 py-2.5 bg-bg-input border border-border rounded-lg text-[14px] text-text-primary focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-text-muted hover:border-border-light"
+                    placeholder="name@company.com"
+                    type="email"
+                  />
+                </div>
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">
+                <label className="text-[12px] font-semibold text-text-primary tracking-wider uppercase ml-1">
                   Username
                 </label>
-                <input
-                  name="username"
-                  value={formData.username}
-                  onChange={handleChange}
-                  className="form-input flex w-full rounded-lg text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-800 bg-background-light dark:bg-slate-800 focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4 text-base font-normal"
-                  placeholder="username"
-                  type="text"
-                />
+                <div className="relative flex items-center">
+                  <AtSign className="absolute left-3.5 text-text-muted w-[18px] h-[18px]" />
+                  <input
+                    name="username"
+                    value={formData.username}
+                    onChange={handleChange}
+                    className="w-full pl-[38px] pr-4 py-2.5 bg-bg-input border border-border rounded-lg text-[14px] text-text-primary focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-text-muted hover:border-border-light"
+                    placeholder="username"
+                    type="text"
+                  />
+                </div>
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">
+                <label className="text-[12px] font-semibold text-text-primary tracking-wider uppercase ml-1">
                   Password
                 </label>
-                <input
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="form-input flex w-full rounded-lg text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-800 bg-background-light dark:bg-slate-800 focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4 text-base font-normal"
-                  placeholder="At least 8 characters"
-                  type="password"
-                />
+                <div className="relative flex items-center">
+                  <Lock className="absolute left-3.5 text-text-muted w-[18px] h-[18px]" />
+                  <input
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="w-full pl-[38px] pr-4 py-2.5 bg-bg-input border border-border rounded-lg text-[14px] text-text-primary focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-text-muted hover:border-border-light"
+                    placeholder="At least 8 characters"
+                    type="password"
+                  />
+                </div>
               </div>
               <div className="pt-2">
                 <button
-                  className="w-full h-12 rounded-lg bg-primary text-white font-bold text-base hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20"
+                  className="w-full h-11 rounded-lg bg-primary text-white font-semibold text-[14px] hover:bg-primary-dark transition-colors flex items-center justify-center"
                   type="submit"
                 >
                   Create account
                 </button>
               </div>
             </form>
-            <div className="mt-6 text-center">
-              <p className="text-sm text-slate-500 dark:text-slate-400">
-                Already have an account?
+            <div className="mt-8 pt-6 border-t border-border text-center">
+              <p className="text-[14px] text-text-secondary">
+                Already have an account?{" "}
                 <Link
-                  className="text-primary font-semibold hover:underline"
+                  className="text-primary font-semibold hover:text-primary-dark transition-colors"
                   to="/login"
                 >
                   Log in
@@ -149,23 +163,14 @@ function Signup() {
             </div>
           </div>
           {/* Footer Links */}
-          <div className="mt-8 flex gap-6 text-xs text-slate-400 font-medium">
-            <a
-              className="hover:text-slate-600 dark:hover:text-slate-200"
-              href="#"
-            >
-              Terms of Service
-            </a>
-            <a
-              className="hover:text-slate-600 dark:hover:text-slate-200"
-              href="#"
-            >
+          <div className="flex justify-center gap-6 text-[12px] text-text-muted font-medium mt-2">
+            <a className="hover:text-text-primary transition-colors" href="#">
               Privacy Policy
             </a>
-            <a
-              className="hover:text-slate-600 dark:hover:text-slate-200"
-              href="#"
-            >
+            <a className="hover:text-text-primary transition-colors" href="#">
+              Terms of Service
+            </a>
+            <a className="hover:text-text-primary transition-colors" href="#">
               Contact Support
             </a>
           </div>

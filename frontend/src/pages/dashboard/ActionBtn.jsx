@@ -1,4 +1,5 @@
 import React from "react";
+import { Plus } from "lucide-react";
 
 function ActionBtn() {
   return (
@@ -9,7 +10,7 @@ function ActionBtn() {
         boxShadow: "0 15px 40px rgba(99, 102, 241, 0.35)",
       }}
     >
-      <span className="material-symbols-outlined">add</span>
+      <Plus size={24} strokeWidth={2.5} />
       <span>CREATE UPDATE</span>
     </button>
   );

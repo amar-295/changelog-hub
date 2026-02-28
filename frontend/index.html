@@ -1,15 +1,43 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="icon.svg" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ChangelogHub</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<html lang="en" class="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <!-- Preconnect for faster font loading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!--
+    Font System (Research-backed, SaaS-standard):
+    · Inter        — UI / body / labels   (variable axis: 100–900, same as Notion & Linear)
+    · Manrope      — Display / headings   (400–800, "best Inter alternative for dev-tools & fintech")
+    · JetBrains Mono — Code / monospace  (400–600, loved by developers)
+  -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChangelogHub</title>
+
+  <!-- Prevent FOUC (Flash of Unstyled Content) for Dark Mode -->
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else if (localStorage.theme === 'light') {
+      document.documentElement.classList.remove('dark');
+    } else {
+      // Default to dark mode if no preference is set, as this is a dark-first SaaS app
+      document.documentElement.classList.add('dark');
+    }
+  </script>
+</head>
+
+<body class="bg-gray-50 dark:bg-[#1a1a1a]">
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
 </html>

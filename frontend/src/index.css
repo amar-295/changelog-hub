@@ -1,48 +1,72 @@
 @import "tailwindcss";
 
 @theme {
-  /* Sleek Modern SaaS Theme (ChatGPT Inspired Neutrals) */
-  --color-primary: #10a37f; /* ChatGPT's subtle green accent, can be changed */
+  /* ── Color Palette ── */
+  /* Sophisticated SaaS Teal - Muted for dark mode comfort */
+  --color-primary: #10a37f;
   --color-primary-dark: #0e8c6d;
   --color-accent: #34d399;
 
-  /* Page backgrounds - ChatGPT Dark Mode precise colors */
-  --color-bg-page: #212121; /* Main chat area */
-  --color-bg-sidebar: #171717; /* Sidebar area */
-  --color-bg-card: #2f2f2f; /* Elevated elements */
+  --color-bg-page: #212121;
+  --color-bg-sidebar: #1c1c1c;
+  --color-bg-card: #2f2f2f;
   --color-bg-card-hover: #3b3b3b;
   --color-bg-elevated: #2f2f2f;
   --color-bg-input: #2f2f2f;
 
-  /* Subtle Borders */
   --color-border: #424242;
   --color-border-light: #525252;
 
-  /* High contrast readable text */
   --color-text-primary: #ececec;
   --color-text-secondary: #b4b4b4;
   --color-text-muted: #828282;
 
-  --font-display: "Inter", sans-serif;
+  /* ── Font System ──
+     Display  → Plus Jakarta Sans (headings, hero text)
+     Sans     → Inter             (UI, body, labels)
+     Mono     → JetBrains Mono   (code, technical text)
+  */
+  --font-display: "Manrope", system-ui, sans-serif;
+  --font-sans:    "Inter", system-ui, sans-serif;
+  --font-mono:    "JetBrains Mono", "Fira Code", ui-monospace, monospace;
 
-  --radius: 0.25rem;
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
+  /* SaaS Standard Perfectly Balanced Border Radii */
+  --radius-sm: 0.25rem;   /* 4px */
+  --radius: 0.375rem;     /* 6px - The Golden Standard for buttons/inputs */
+  --radius-lg: 0.5rem;    /* 8px - For cards and containers */
+  --radius-xl: 0.75rem;   /* 12px - For large modals/cards */
   --radius-full: 9999px;
 }
+
+/* ── Base Typography ──────────────────────────────────────────────────────── */
 
 body {
   background-color: var(--color-bg-page);
   color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;          /* 15px — slightly larger than 14, feels more breathable */
+  line-height: 1.6;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11"; /* Inter contextual alternates */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-.material-symbols-outlined {
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 200,
-  'GRAD' 0,
-  'opsz' 24;
+/* Display font for all headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;       /* Tighter tracking: hallmark of premium SaaS headings */
+  line-height: 1.2;
 }
+
+/* Code & monospace */
+code, pre, kbd, samp,
+.font-mono {
+  font-family: var(--font-mono);
+  font-feature-settings: "liga" 1, "calt" 1;  /* Enable ligatures in JetBrains Mono */
+}
+
+
 
 /* Smooth scrollbar */
 ::-webkit-scrollbar {
@@ -57,4 +81,169 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #4a4e57;
+}
+
+/* --- Dropdown Animations --- */
+@keyframes dropdown-reveal {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-dropdown {
+  animation: dropdown-reveal 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: top right;
+}
+
+/* --- Tooltip Animation (SaaS standard: fade + slide up 4px) --- */
+@keyframes tooltip-show {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.tooltip-visible {
+  animation: tooltip-show 0.12s ease-out forwards;
+}
+
+/* Tooltip Animation for Sidebar (slide right) */
+@keyframes tooltip-show-right {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateX(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+.tooltip-visible-right {
+  animation: tooltip-show-right 0.12s ease-out forwards;
+}
+.animate-dropdown {
+  animation: dropdown-reveal 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: top right;
+}
+
+/* ── Tiptap Rich Text Editor ─────────────────────────────────────────────── */
+
+/* Editor wrapper focus ring */
+.tiptap-editor:focus-visible {
+  outline: none;
+}
+
+/* The ProseMirror editable area */
+.ProseMirror {
+  padding: 1rem 1.25rem;
+  min-height: 220px;
+  max-height: 400px;
+  overflow-y: auto;
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  line-height: 1.75;
+  caret-color: var(--color-primary);
+}
+
+.ProseMirror:focus {
+  outline: none;
+}
+
+/* Placeholder */
+.ProseMirror p.is-editor-empty:first-child::before,
+.ProseMirror.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: var(--color-text-muted);
+  pointer-events: none;
+  float: left;
+  height: 0;
+}
+
+/* Headings */
+.ProseMirror h1 { font-size: 1.6rem; font-weight: 800; margin: 1rem 0 0.5rem; color: var(--color-text-primary); }
+.ProseMirror h2 { font-size: 1.3rem; font-weight: 700; margin: 0.9rem 0 0.4rem; color: var(--color-text-primary); }
+.ProseMirror h3 { font-size: 1.1rem; font-weight: 700; margin: 0.7rem 0 0.4rem; color: var(--color-text-primary); }
+
+/* Paragraph */
+.ProseMirror p { margin: 0.4rem 0; }
+
+/* Lists */
+.ProseMirror ul { list-style: disc; padding-left: 1.5rem; margin: 0.5rem 0; }
+.ProseMirror ol { list-style: decimal; padding-left: 1.5rem; margin: 0.5rem 0; }
+.ProseMirror li { margin: 0.25rem 0; }
+
+/* Blockquote */
+.ProseMirror blockquote {
+  border-left: 3px solid var(--color-primary);
+  margin: 0.75rem 0;
+  padding: 0.25rem 0 0.25rem 1rem;
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+/* Code inline */
+.ProseMirror code {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 0.15em 0.4em;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.82em;
+  color: #e2a96f;
+}
+
+/* Code block */
+.ProseMirror pre {
+  background: rgba(0,0,0,0.35);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin: 0.75rem 0;
+  overflow-x: auto;
+}
+.ProseMirror pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.82rem;
+}
+
+/* Links */
+.ProseMirror a.tiptap-link {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.ProseMirror a.tiptap-link:hover { opacity: 0.8; }
+
+/* Highlight */
+.ProseMirror mark {
+  background-color: rgba(251, 191, 36, 0.25);
+  color: #fbbf24;
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+/* Horizontal rule */
+.ProseMirror hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 1rem 0;
+}
+
+/* Selection */
+.ProseMirror ::selection {
+  background: rgba(16, 163, 127, 0.25);
 }

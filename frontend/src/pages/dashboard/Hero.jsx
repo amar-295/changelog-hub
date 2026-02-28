@@ -1,4 +1,5 @@
 import React from "react";
+import { Eye, ExternalLink } from "lucide-react";
 
 function Hero() {
   return (
@@ -23,21 +24,16 @@ function Hero() {
             color: "var(--color-text-secondary)",
           }}
         >
-          <span className="material-symbols-outlined text-[20px]">
-            visibility
-          </span>
+          <Eye size={18} strokeWidth={1.5} />
           View Public Page
         </button>
         <button
-          className="px-5 py-2.5 rounded-xl text-white font-bold text-sm transition-all shadow-lg flex items-center gap-2 hover:opacity-90"
+          className="px-5 py-2.5 rounded-xl text-white font-bold text-sm transition-all flex items-center gap-2 hover:opacity-90"
           style={{
             backgroundColor: "var(--color-primary-dark)",
-            boxShadow: "0 10px 25px rgba(99, 102, 241, 0.25)",
           }}
         >
-          <span className="material-symbols-outlined text-[20px]">
-            ios_share
-          </span>
+          <ExternalLink size={18} strokeWidth={1.5} />
           Export
         </button>
       </div>
