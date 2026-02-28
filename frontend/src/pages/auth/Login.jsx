@@ -1,10 +1,11 @@
 import React from "react";
-import Logo from "./Logo";
+import Logo from "../../components/Logo";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { authService } from "../services/authService";
+import { useAuth } from "../../context/AuthContext";
 
 function Login() {
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -15,9 +16,9 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await authService.login(formData);
+      const response = await login(formData);
       console.log("Success:", response.message);
-      navigate("/dashboard");
+      navigate("/");
     } catch (error) {
       console.error("Login failed:", error.message);
     }

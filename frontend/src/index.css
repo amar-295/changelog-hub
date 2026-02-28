@@ -1,27 +1,27 @@
 @import "tailwindcss";
 
 @theme {
-  /* Full Dark Gray Developer Theme */
-  --color-primary: #818cf8;
-  --color-primary-dark: #6366f1;
-  --color-accent: #22d3ee;
+  /* Sleek Modern SaaS Theme (ChatGPT Inspired Neutrals) */
+  --color-primary: #10a37f; /* ChatGPT's subtle green accent, can be changed */
+  --color-primary-dark: #0e8c6d;
+  --color-accent: #34d399;
 
-  /* Page backgrounds - comfortable dark gray, NOT pitch black */
-  --color-bg-page: #1a1d23;
-  --color-bg-sidebar: #14161a;
-  --color-bg-card: #22252b;
-  --color-bg-card-hover: #2a2d34;
-  --color-bg-elevated: #2c2f36;
-  --color-bg-input: #2a2d34;
+  /* Page backgrounds - ChatGPT Dark Mode precise colors */
+  --color-bg-page: #212121; /* Main chat area */
+  --color-bg-sidebar: #171717; /* Sidebar area */
+  --color-bg-card: #2f2f2f; /* Elevated elements */
+  --color-bg-card-hover: #3b3b3b;
+  --color-bg-elevated: #2f2f2f;
+  --color-bg-input: #2f2f2f;
 
-  /* Borders */
-  --color-border: #32363e;
-  --color-border-light: #3a3e47;
+  /* Subtle Borders */
+  --color-border: #424242;
+  --color-border-light: #525252;
 
-  /* Text */
-  --color-text-primary: #e2e4e9;
-  --color-text-secondary: #9ca0ab;
-  --color-text-muted: #6b7280;
+  /* High contrast readable text */
+  --color-text-primary: #ececec;
+  --color-text-secondary: #b4b4b4;
+  --color-text-muted: #828282;
 
   --font-display: "Inter", sans-serif;
 
@@ -34,6 +34,14 @@
 body {
   background-color: var(--color-bg-page);
   color: var(--color-text-primary);
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 200,
+  'GRAD' 0,
+  'opsz' 24;
 }
 
 /* Smooth scrollbar */

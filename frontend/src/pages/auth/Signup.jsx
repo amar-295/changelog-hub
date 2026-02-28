@@ -1,11 +1,11 @@
-import React, {useState} from "react";
-import Logo from "../components/Logo";
+import React, { useState } from "react";
+import Logo from "../../components/Logo";
 import { Link, useNavigate } from "react-router-dom";
-import { authService } from "../services/authService";
+import { authService } from "../../services/authService";
 
 function Signup() {
   const navigate = useNavigate();
-  
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -20,7 +20,7 @@ function Signup() {
       console.log("Success:", response.message);
       navigate("/login");
     } catch (error) {
-      console.error("Signup failed:", error.message)
+      console.error("Signup failed:", error.message);
     }
   };
 
@@ -28,9 +28,9 @@ function Signup() {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
-    })
-  }
-  
+    });
+  };
+
   return (
     <>
       <main className="bg-background-light dark:bg-background-dark font-display min-h-screen flex items-center justify-center p-4">
@@ -39,7 +39,7 @@ function Signup() {
             {/* Header/Logo */}
             <div className="flex flex-col items-center">
               <div className="w-20 h-20 flex items-center justify-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm mb-2">
-                <Logo/>
+                <Logo />
               </div>
               <div className="text-center">
                 <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">

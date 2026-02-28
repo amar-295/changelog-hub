@@ -2,7 +2,7 @@ import React from "react";
 import Header from "./Header";
 import Hero from "./Hero";
 import MetricCard from "./MetricCard";
-import RecentUpdate from "./RecentUpdate";
+import RecentUpdate from "../releases/RecentUpdate";
 import ActionBtn from "./ActionBtn";
 
 function Dashboard() {
