@@ -258,13 +258,56 @@ const publishRelease = asyncHandler(async (req, res) => {
     }
 })
 
+const unpublishRelease = asyncHandler(async(req, res) => {
+    const { id } = req.params
+    const workspaceId = req.user.workspaceId
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new ApiError(400, "Invalid release Id format")
+    }
+
+    const release = await Release.findOne({
+        _id: id,
+        workspaceId
+    })
+
+    if (!release) {
+        throw new ApiError(404, "Release not found")
+    }
+
+    if (release.status === "draft") {
+        throw new ApiError(400, "Release is already draft")
+    }
+
+    try {
+        const unpublishedRelease = await Release.findByIdAndUpdate(
+            id,
+            {
+                status: "draft",
+                updatedBy: req.user._id
+            },
+            {
+                new: true,
+                runValidators: true
+            }
+        )
+
+        return res.status(200).json(
+            new ApiResponse(200, unpublishedRelease, "Release unpublished successfully")
+        )
+    } catch (error) {
+        throw new ApiError(500, error?.message || "Failed to unpublish release")
+    }
+})
+
 export {
     createRelease,
     getAllReleases,
     getReleaseById,
     updateRelease,
     deleteRelease,
-    publishRelease
+    publishRelease,
+    unpublishRelease
 }
 
 // **Delete Policy (Approach A - Current):**

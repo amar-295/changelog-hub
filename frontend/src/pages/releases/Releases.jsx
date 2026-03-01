@@ -4,6 +4,7 @@ import {
   ChevronDown,
   Calendar,
   MoreHorizontal,
+  MoreVertical,
   ChevronLeft,
   ChevronRight,
   Search,
@@ -32,7 +33,7 @@ function StatusBadge({ status }) {
   const s = styles[status] || styles.draft;
   return (
     <span
-      className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider"
+      className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest"
       style={{ backgroundColor: s.bg, color: s.color }}
     >
       <span
@@ -69,7 +70,7 @@ function CategoryCell({ category }) {
     <div className="flex items-center gap-2">
       <Icon size={14} strokeWidth={1.5} className={c.color} />
       <span
-        className="text-xs font-semibold capitalize"
+        className="text-xs font-bold capitalize"
         style={{ color: "var(--color-text-secondary)" }}
       >
         {c.label}
@@ -123,7 +124,7 @@ function Releases() {
         onClose={() => setShowCreateModal(false)}
         onSuccess={handleCreateSuccess}
       />
-      <div className="p-8 max-w-[1200px] mx-auto space-y-6">
+      <div className="p-8 max-w-7xl mx-auto space-y-8">
         {/* Page Header */}
         <div className="flex flex-col gap-1.5 mb-8">
           <h2 className="text-2xl font-bold tracking-tight" style={textPrimary}>
@@ -145,12 +146,12 @@ function Releases() {
               <input
                 type="text"
                 placeholder="Filter releases..."
-                className="h-9 w-full rounded-md border bg-transparent pl-9 pr-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50 transition-shadow"
+                className="h-9 w-full rounded-lg border bg-transparent pl-9 pr-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50 transition-shadow"
                 style={{ ...borderStyle, ...textPrimary }}
               />
             </div>
             <button
-              className="h-9 border border-dashed px-3 flex items-center gap-2 rounded-md text-sm font-medium hover:bg-white/5 transition-colors cursor-pointer"
+              className="h-9 border border-dashed px-3 flex items-center gap-2 rounded-lg text-sm font-medium hover:bg-white/5 transition-colors cursor-pointer"
               style={{
                 ...borderStyle,
                 ...textSecondary,
@@ -166,7 +167,7 @@ function Releases() {
               <span className="bg-white/10 px-1 rounded text-xs">All</span>
             </button>
             <button
-              className="h-9 border border-dashed px-3 flex items-center gap-2 rounded-md text-sm font-medium hover:bg-white/5 transition-colors cursor-pointer"
+              className="h-9 border border-dashed px-3 flex items-center gap-2 rounded-lg text-sm font-medium hover:bg-white/5 transition-colors cursor-pointer"
               style={{
                 ...borderStyle,
                 ...textSecondary,
@@ -179,7 +180,7 @@ function Releases() {
           </div>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="h-9 px-4 flex items-center gap-2 rounded-md text-sm font-medium text-white shadow-sm hover:opacity-90 active:scale-95 transition-all cursor-pointer"
+            className="h-9 px-4 flex items-center gap-2 rounded-lg text-sm font-medium text-white shadow-sm hover:opacity-90 active:scale-95 transition-all cursor-pointer"
             style={{ backgroundColor: "var(--color-primary)" }}
           >
             <Plus size={16} strokeWidth={2} />
@@ -189,17 +190,14 @@ function Releases() {
 
         {/* Shadcn-Style Table Container */}
         <div
-          className="rounded-lg border shadow-sm overflow-hidden"
+          className="rounded-2xl border shadow-sm overflow-hidden"
           style={borderStyle}
         >
           <table className="w-full text-sm text-left">
-            <thead style={{ backgroundColor: "var(--color-bg-card)" }}>
-              <tr
-                className="border-b transition-colors hover:bg-white/2"
-                style={borderStyle}
-              >
+            <thead style={{ backgroundColor: "var(--color-bg-elevated)" }}>
+              <tr className="border-b transition-colors" style={borderStyle}>
                 <th
-                  className="h-11 px-4 align-middle w-12 text-center border-r"
+                  className="h-11 px-6 py-4 align-middle w-12 text-center"
                   style={borderStyle}
                 >
                   <input
@@ -209,31 +207,31 @@ function Releases() {
                   />
                 </th>
                 <th
-                  className="h-11 px-4 align-middle font-medium"
+                  className="h-11 px-6 py-4 align-middle font-bold text-xs uppercase tracking-widest"
                   style={textMuted}
                 >
                   Title
                 </th>
                 <th
-                  className="h-11 px-4 align-middle font-medium"
+                  className="h-11 px-6 py-4 align-middle font-bold text-xs uppercase tracking-widest"
                   style={textMuted}
                 >
                   Status
                 </th>
                 <th
-                  className="h-11 px-4 align-middle font-medium"
+                  className="h-11 px-6 py-4 align-middle font-bold text-xs uppercase tracking-widest"
                   style={textMuted}
                 >
                   Category
                 </th>
                 <th
-                  className="h-11 px-4 align-middle font-medium"
+                  className="h-11 px-6 py-4 align-middle font-bold text-xs uppercase tracking-widest"
                   style={textMuted}
                 >
                   Date
                 </th>
                 <th
-                  className="h-11 px-4 align-middle w-16 text-center font-medium"
+                  className="h-11 px-6 py-4 align-middle w-16 text-center font-bold text-xs uppercase tracking-widest"
                   style={textMuted}
                 >
                   Actions
@@ -277,11 +275,11 @@ function Releases() {
               {releases.map((release) => (
                 <tr
                   key={release._id}
-                  className="border-b last:border-0 transition-colors hover:bg-white/3 group"
+                  className="border-b last:border-0 transition-colors hover:brightness-110 group"
                   style={{ ...borderStyle, cursor: "pointer" }}
                 >
                   <td
-                    className="p-4 align-middle text-center border-r"
+                    className="px-6 py-4 align-middle text-center"
                     style={borderStyle}
                   >
                     <input
@@ -290,27 +288,27 @@ function Releases() {
                       aria-label={`Select release ${release.title}`}
                     />
                   </td>
-                  <td className="p-4 align-middle max-w-[300px]">
+                  <td className="px-6 py-4 align-middle max-w-[300px]">
                     <div className="flex flex-col gap-0.5">
-                      <span
-                        className="font-medium truncate"
-                        style={textPrimary}
-                      >
+                      <span className="font-bold truncate" style={textPrimary}>
                         {release.title}
                       </span>
-                      <span className="text-xs truncate" style={textSecondary}>
+                      <span
+                        className="text-xs truncate font-medium"
+                        style={textSecondary}
+                      >
                         {stripHtml(release.content)}
                       </span>
                     </div>
                   </td>
-                  <td className="p-4 align-middle">
+                  <td className="px-6 py-4 align-middle">
                     <StatusBadge status={release.status} />
                   </td>
-                  <td className="p-4 align-middle">
+                  <td className="px-6 py-4 align-middle">
                     <CategoryCell category={release.category} />
                   </td>
                   <td
-                    className="p-4 align-middle text-sm"
+                    className="px-6 py-4 align-middle text-sm font-medium"
                     style={textSecondary}
                   >
                     {new Date(release.createdAt).toLocaleDateString("en-US", {
@@ -319,13 +317,13 @@ function Releases() {
                       year: "numeric",
                     })}
                   </td>
-                  <td className="p-4 align-middle text-center">
+                  <td className="px-6 py-4 align-middle text-center">
                     <button
                       className="p-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-all hover:bg-white/10 cursor-pointer"
                       style={textMuted}
                       aria-label="Row actions"
                     >
-                      <MoreHorizontal size={16} strokeWidth={2} />
+                      <MoreVertical size={18} strokeWidth={1.5} />
                     </button>
                   </td>
                 </tr>
@@ -343,7 +341,7 @@ function Releases() {
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="h-8 px-3 text-sm font-medium border rounded-md transition-all hover:bg-white/5 disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer"
+              className="h-8 px-3 text-sm font-medium border rounded-lg transition-all hover:bg-white/5 disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer"
               style={{
                 ...borderStyle,
                 ...textPrimary,
@@ -355,7 +353,7 @@ function Releases() {
             <button
               onClick={() => setPage((p) => p + 1)}
               disabled={!pagination || page >= pagination.totalPages}
-              className="h-8 px-3 text-sm font-medium border rounded-md transition-all hover:bg-white/5 disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer"
+              className="h-8 px-3 text-sm font-medium border rounded-lg transition-all hover:bg-white/5 disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer"
               style={{
                 ...borderStyle,
                 ...textPrimary,
