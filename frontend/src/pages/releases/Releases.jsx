@@ -15,8 +15,6 @@ import {
 import { releaseService } from "../../services/releaseService";
 import CreateReleaseModal from "./CreateReleaseModal";
 
-const textPrimary = { color: "var(--color-text-primary)" };
-
 function StatusBadge({ status }) {
   const styles = {
     published: {
@@ -81,26 +79,17 @@ function CategoryCell({ category }) {
 }
 
 function Releases() {
-  const cardStyle = {
-    backgroundColor: "var(--color-bg-card)",
-    borderColor: "var(--color-border)",
-  };
   const textPrimary = { color: "var(--color-text-primary)" };
   const textSecondary = { color: "var(--color-text-secondary)" };
   const textMuted = { color: "var(--color-text-muted)" };
   const borderStyle = { borderColor: "var(--color-border)" };
-  const filterBtnStyle = {
-    backgroundColor: "var(--color-bg-input)",
-    borderColor: "var(--color-border)",
-    color: "var(--color-text-secondary)",
-  };
 
   const [releases, setReleases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState(null);
-  const [statusFilter, setStatusFilter] = useState("");
+  const [statusFilter] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -134,129 +123,131 @@ function Releases() {
         onClose={() => setShowCreateModal(false)}
         onSuccess={handleCreateSuccess}
       />
-      <div className="p-8 max-w-7xl mx-auto space-y-6">
+      <div className="p-8 max-w-[1200px] mx-auto space-y-6">
         {/* Page Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-          <div className="space-y-2">
-            <h2
-              className="text-3xl font-black tracking-tight"
-              style={textPrimary}
-            >
-              Releases
-            </h2>
-            <p style={textSecondary}>
-              Manage and publish your product updates.
-            </p>
-          </div>
+        <div className="flex flex-col gap-1.5 mb-8">
+          <h2 className="text-2xl font-bold tracking-tight" style={textPrimary}>
+            Releases
+          </h2>
+          <p className="text-sm" style={textSecondary}>
+            Manage and publish your product updates.
+          </p>
         </div>
 
-        {/* Filters */}
-        <div
-          className="flex items-center gap-3 rounded-xl px-4 py-3 border"
-          style={cardStyle}
-        >
-          <div className="flex items-center gap-2">
+        {/* Shadcn-Style Toolbar */}
+        <div className="flex items-center justify-between gap-4 mb-4">
+          <div className="flex flex-1 items-center gap-2">
+            <div className="relative w-72">
+              <Search
+                className="absolute left-2.5 top-2.5 h-4 w-4"
+                style={textMuted}
+              />
+              <input
+                type="text"
+                placeholder="Filter releases..."
+                className="h-9 w-full rounded-md border bg-transparent pl-9 pr-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary/50 transition-shadow"
+                style={{ ...borderStyle, ...textPrimary }}
+              />
+            </div>
             <button
-              className="flex items-center gap-2 px-3 py-1.5 border rounded-lg text-sm font-medium transition-colors hover:bg-bg-card-hover cursor-pointer"
-              style={filterBtnStyle}
-            >
-              Status: <span style={textPrimary}>All</span>
-              <ChevronDown size={ICON_SIZE} strokeWidth={STROKE_WIDTH} />
-            </button>
-            <button
-              className="flex items-center gap-2 px-3 py-1.5 border rounded-lg text-sm font-medium transition-colors hover:bg-bg-card-hover cursor-pointer"
-              style={filterBtnStyle}
-            >
-              Category: <span style={textPrimary}>All</span>
-              <ChevronDown size={ICON_SIZE} strokeWidth={STROKE_WIDTH} />
-            </button>
-            <button
-              className="flex items-center gap-2 px-3 py-1.5 border rounded-lg text-sm font-medium transition-colors hover:bg-bg-card-hover cursor-pointer"
-              style={filterBtnStyle}
-            >
-              Date Range: <span style={textPrimary}>Last 30 Days</span>
-              <Calendar size={ICON_SIZE} strokeWidth={STROKE_WIDTH} />
-            </button>
-          </div>
-          <div className="ml-auto flex items-center gap-4">
-            <span
-              className="text-[11px] font-semibold uppercase tracking-wider"
-              style={textMuted}
-            >
-              Sorted by Date
-            </span>
-            <div
-              className="h-4 w-px"
-              style={{ backgroundColor: "var(--color-border)" }}
-            />
-            <button
-              onClick={() => setShowCreateModal(true)}
-              className="px-4 py-1.5 rounded-lg text-white font-semibold text-[13px] transition-all flex items-center gap-2 hover:opacity-90 active:scale-[0.95] shadow-sm cursor-pointer"
+              className="h-9 border border-dashed px-3 flex items-center gap-2 rounded-md text-sm font-medium hover:bg-white/5 transition-colors cursor-pointer"
               style={{
-                backgroundColor: "var(--color-primary)",
+                ...borderStyle,
+                ...textSecondary,
+                backgroundColor: "var(--color-bg-card)",
               }}
             >
-              <Plus size={16} strokeWidth={2} />
-              New Release
+              <Plus size={14} style={textMuted} />
+              Status
+              <div
+                className="h-4 w-px bg-border mx-1"
+                style={{ backgroundColor: "var(--color-border)" }}
+              ></div>
+              <span className="bg-white/10 px-1 rounded text-xs">All</span>
+            </button>
+            <button
+              className="h-9 border border-dashed px-3 flex items-center gap-2 rounded-md text-sm font-medium hover:bg-white/5 transition-colors cursor-pointer"
+              style={{
+                ...borderStyle,
+                ...textSecondary,
+                backgroundColor: "var(--color-bg-card)",
+              }}
+            >
+              <Plus size={14} style={textMuted} />
+              Category
             </button>
           </div>
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="h-9 px-4 flex items-center gap-2 rounded-md text-sm font-medium text-white shadow-sm hover:opacity-90 active:scale-95 transition-all cursor-pointer"
+            style={{ backgroundColor: "var(--color-primary)" }}
+          >
+            <Plus size={16} strokeWidth={2} />
+            New Release
+          </button>
         </div>
 
-        {/* Releases Table */}
+        {/* Shadcn-Style Table Container */}
         <div
-          className="rounded-xl border shadow-sm overflow-hidden"
-          style={cardStyle}
+          className="rounded-lg border shadow-sm overflow-hidden"
+          style={borderStyle}
         >
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b" style={borderStyle}>
-                <th className="py-4 px-6 w-12 text-center text-xs">
+          <table className="w-full text-sm text-left">
+            <thead style={{ backgroundColor: "var(--color-bg-card)" }}>
+              <tr
+                className="border-b transition-colors hover:bg-white/2"
+                style={borderStyle}
+              >
+                <th
+                  className="h-11 px-4 align-middle w-12 text-center border-r"
+                  style={borderStyle}
+                >
                   <input
-                    className="rounded border-gray-600 bg-gray-800 text-primary focus:ring-primary cursor-pointer"
                     type="checkbox"
+                    className="size-4 rounded border-gray-600 bg-transparent text-primary focus:ring-primary focus:ring-offset-0 cursor-pointer accent-blue-500"
+                    aria-label="Select all releases"
                   />
                 </th>
                 <th
-                  className="py-4 px-6 text-xs font-bold uppercase tracking-widest"
+                  className="h-11 px-4 align-middle font-medium"
                   style={textMuted}
                 >
-                  Title &amp; Description
+                  Title
                 </th>
                 <th
-                  className="py-4 px-6 text-xs font-bold uppercase tracking-widest"
+                  className="h-11 px-4 align-middle font-medium"
                   style={textMuted}
                 >
                   Status
                 </th>
                 <th
-                  className="py-4 px-6 text-xs font-bold uppercase tracking-widest"
+                  className="h-11 px-4 align-middle font-medium"
                   style={textMuted}
                 >
                   Category
                 </th>
                 <th
-                  className="py-4 px-6 text-xs font-bold uppercase tracking-widest"
+                  className="h-11 px-4 align-middle font-medium"
                   style={textMuted}
                 >
                   Date
                 </th>
                 <th
-                  className="py-4 px-6 text-xs font-bold uppercase tracking-widest"
+                  className="h-11 px-4 align-middle w-16 text-center font-medium"
                   style={textMuted}
                 >
-                  Version
+                  Actions
                 </th>
-                <th className="py-4 px-6 w-12"></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody style={{ backgroundColor: "var(--color-bg-card)" }}>
               {loading && (
                 <tr>
-                  <td colSpan="6" className="py-20 text-center">
-                    <div className="flex flex-col items-center gap-3">
-                      <div className="size-8 rounded-full border-2 border-primary border-t-transparent animate-spin"></div>
-                      <span className="text-sm font-medium" style={textMuted}>
-                        Loading releases...
+                  <td colSpan="6" className="h-24 text-center">
+                    <div className="flex justify-center items-center gap-2">
+                      <div className="size-4 rounded-full border-2 border-primary border-t-transparent animate-spin"></div>
+                      <span className="text-sm" style={textMuted}>
+                        Loading...
                       </span>
                     </div>
                   </td>
@@ -264,64 +255,62 @@ function Releases() {
               )}
               {error && (
                 <tr>
-                  <td colSpan="6" className="py-12 text-center text-red-400">
+                  <td
+                    colSpan="6"
+                    className="h-24 text-center text-red-500 font-medium"
+                  >
                     {error}
                   </td>
                 </tr>
               )}
               {!loading && !error && releases.length === 0 && (
                 <tr>
-                  <td colSpan="6" className="py-20 text-center">
-                    <div className="flex flex-col items-center gap-3 opacity-50">
-                      <Search size={40} strokeWidth={1} style={textMuted} />
-                      <div className="text-center">
-                        <p className="font-bold" style={textPrimary}>
-                          No releases found
-                        </p>
-                        <p className="text-sm" style={textSecondary}>
-                          Try adjusting your filters or create a new update.
-                        </p>
-                      </div>
-                    </div>
+                  <td
+                    colSpan="6"
+                    className="h-24 text-center"
+                    style={textMuted}
+                  >
+                    No releases found.
                   </td>
                 </tr>
               )}
               {releases.map((release) => (
                 <tr
                   key={release._id}
-                  className="border-b last:border-0 transition-colors hover:bg-bg-card-hover"
+                  className="border-b last:border-0 transition-colors hover:bg-white/3 group"
                   style={{ ...borderStyle, cursor: "pointer" }}
                 >
-                  <td className="py-5 px-6 text-center">
+                  <td
+                    className="p-4 align-middle text-center border-r"
+                    style={borderStyle}
+                  >
                     <input
-                      className="rounded border-gray-600 bg-gray-800 cursor-pointer"
                       type="checkbox"
+                      className="size-4 rounded border-gray-600 bg-transparent text-primary focus:ring-primary focus:ring-offset-0 cursor-pointer accent-blue-500"
+                      aria-label={`Select release ${release.title}`}
                     />
                   </td>
-                  <td className="py-5 px-6">
-                    <div className="flex flex-col">
+                  <td className="p-4 align-middle max-w-[300px]">
+                    <div className="flex flex-col gap-0.5">
                       <span
-                        className="font-bold line-clamp-1"
+                        className="font-medium truncate"
                         style={textPrimary}
                       >
                         {release.title}
                       </span>
-                      <span
-                        className="text-sm line-clamp-1"
-                        style={textSecondary}
-                      >
+                      <span className="text-xs truncate" style={textSecondary}>
                         {stripHtml(release.content)}
                       </span>
                     </div>
                   </td>
-                  <td className="py-5 px-6">
+                  <td className="p-4 align-middle">
                     <StatusBadge status={release.status} />
                   </td>
-                  <td className="py-5 px-6">
+                  <td className="p-4 align-middle">
                     <CategoryCell category={release.category} />
                   </td>
                   <td
-                    className="py-5 px-6 text-sm font-medium whitespace-nowrap"
+                    className="p-4 align-middle text-sm"
                     style={textSecondary}
                   >
                     {new Date(release.createdAt).toLocaleDateString("en-US", {
@@ -330,20 +319,13 @@ function Releases() {
                       year: "numeric",
                     })}
                   </td>
-                  <td className="py-5 px-6">
-                    <span
-                      className="px-2 py-0.5 rounded bg-bg-elevated border border-border text-xs font-bold"
-                      style={textPrimary}
-                    >
-                      {release.version || "—"}
-                    </span>
-                  </td>
-                  <td className="py-5 px-6 text-right">
+                  <td className="p-4 align-middle text-center">
                     <button
-                      className="p-1 rounded hover:bg-bg-elevated transition-colors cursor-pointer"
+                      className="p-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-all hover:bg-white/10 cursor-pointer"
                       style={textMuted}
+                      aria-label="Row actions"
                     >
-                      <MoreHorizontal size={18} strokeWidth={STROKE_WIDTH} />
+                      <MoreHorizontal size={16} strokeWidth={2} />
                     </button>
                   </td>
                 </tr>
@@ -352,31 +334,35 @@ function Releases() {
           </table>
         </div>
 
-        {/* Pagination */}
-        <div className="flex items-center justify-between pb-10">
-          <p className="text-sm font-medium" style={textSecondary}>
-            Showing <span style={textPrimary}>{releases.length}</span> of{" "}
-            <span style={textPrimary}>{pagination?.totalReleases ?? 0}</span>{" "}
-            results
-          </p>
+        {/* Shadcn-Style Pagination */}
+        <div className="flex items-center justify-between pt-4 pb-10">
+          <div className="text-sm" style={textMuted}>
+            {releases.length} of {pagination?.totalReleases ?? 0} row(s) shown.
+          </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="px-4 py-2 text-sm font-bold border rounded-lg transition-all flex items-center gap-2 hover:bg-bg-card-hover disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer"
-              style={{ ...cardStyle, ...textSecondary }}
+              className="h-8 px-3 text-sm font-medium border rounded-md transition-all hover:bg-white/5 disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer"
+              style={{
+                ...borderStyle,
+                ...textPrimary,
+                backgroundColor: "var(--color-bg-card)",
+              }}
             >
-              <ChevronLeft size={16} strokeWidth={2} />
               Previous
             </button>
             <button
               onClick={() => setPage((p) => p + 1)}
               disabled={!pagination || page >= pagination.totalPages}
-              className="px-4 py-2 text-sm font-bold border rounded-lg transition-all flex items-center gap-2 hover:bg-bg-card-hover disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer"
-              style={{ ...cardStyle, ...textSecondary }}
+              className="h-8 px-3 text-sm font-medium border rounded-md transition-all hover:bg-white/5 disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer"
+              style={{
+                ...borderStyle,
+                ...textPrimary,
+                backgroundColor: "var(--color-bg-card)",
+              }}
             >
               Next
-              <ChevronRight size={16} strokeWidth={2} />
             </button>
           </div>
         </div>

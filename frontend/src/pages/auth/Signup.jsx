@@ -56,7 +56,6 @@ function Signup() {
       navigate("/");
     } catch (error) {
       toast.error(error.message || "Failed to create account");
-      console.error("Signup failed:", error);
     } finally {
       setIsLoading(false);
     }

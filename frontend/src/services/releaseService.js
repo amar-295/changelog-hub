@@ -50,7 +50,7 @@ export const releaseService = {
     try {
       const response = await api.patch(`/releases/${id}/publish`);
       return response.data;
-    } catch (error) {
+    } catch {
       throw new Error("Failed to publish release");
     }
   },

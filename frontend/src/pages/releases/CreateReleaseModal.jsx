@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   X,
   ChevronDown,
@@ -61,7 +61,7 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
   }, [isOpen]);
 
   // Handle Cancel / Auto-Save as Draft
-  const handleCancel = async () => {
+  const handleCancel = useCallback(async () => {
     const hasContent =
       form.title.trim() !== "" ||
       (form.content &&
@@ -86,7 +86,7 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
     } else {
       onClose();
     }
-  };
+  }, [form, onSuccess, onClose]);
 
   useEffect(() => {
     const handler = (e) => {
@@ -100,7 +100,7 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [form, onClose, isCategoryOpen]);
+  }, [form, onClose, isCategoryOpen, handleCancel]);
 
   // Handle clicks outside category dropdown
   useEffect(() => {
@@ -161,14 +161,6 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
     fontWeight: "700",
     letterSpacing: "0.06em",
     textTransform: "uppercase",
-  };
-
-  const categoryColors = {
-    feature: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-    improvement: "bg-violet-500/10 text-violet-400 border-violet-500/20",
-    bugfix: "bg-red-500/10 text-red-400 border-red-500/20",
-    security: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-    other: "bg-gray-500/10 text-gray-400 border-gray-500/20",
   };
 
   return (

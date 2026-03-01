@@ -187,7 +187,7 @@ function MetricCard({ totalReleases }) {
             +8.3%
           </span>
         </div>
-        <div className="flex items-end gap-1 h-12 mt-2">
+        <div aria-hidden="true" className="flex items-end gap-1 h-12 mt-2">
           <div
             className="w-full rounded-t-sm"
             style={{

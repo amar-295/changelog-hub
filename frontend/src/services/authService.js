@@ -47,7 +47,7 @@ export const authService = {
     try {
       const response = await api.post("/users/refresh-token");
       return response.data;
-    } catch (error) {
+    } catch {
       throw new Error("Session expired");
     }
   },

@@ -71,7 +71,7 @@ function Header() {
       await logout();
       toast.success("Signed out");
       navigate("/login");
-    } catch (error) {
+    } catch {
       toast.error("Failed to sign out");
     }
   };

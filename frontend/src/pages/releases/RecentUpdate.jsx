@@ -29,7 +29,7 @@ function RecentUpdate({ onTotalReleasesLoaded }) {
       }
     };
     fetchRecent();
-  }, []);
+  }, [onTotalReleasesLoaded]);
 
   const thStyle = { color: "var(--color-text-muted)" };
   const titleStyle = { color: "var(--color-text-primary)" };
@@ -142,30 +142,35 @@ function RecentUpdate({ onTotalReleasesLoaded }) {
             <thead>
               <tr style={{ backgroundColor: "var(--color-bg-elevated)" }}>
                 <th
+                  scope="col"
                   className="px-6 py-4 text-xs font-bold uppercase tracking-widest"
                   style={thStyle}
                 >
                   Title
                 </th>
                 <th
+                  scope="col"
                   className="px-6 py-4 text-xs font-bold uppercase tracking-widest"
                   style={thStyle}
                 >
                   Date
                 </th>
                 <th
+                  scope="col"
                   className="px-6 py-4 text-xs font-bold uppercase tracking-widest"
                   style={thStyle}
                 >
                   Engagement
                 </th>
                 <th
+                  scope="col"
                   className="px-6 py-4 text-xs font-bold uppercase tracking-widest"
                   style={thStyle}
                 >
                   Status
                 </th>
                 <th
+                  scope="col"
                   className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-right"
                   style={thStyle}
                 >
@@ -208,6 +213,7 @@ function RecentUpdate({ onTotalReleasesLoaded }) {
                     </td>
                     <td className="px-6 py-4">
                       <div
+                        aria-hidden="true"
                         className="w-32 h-2 rounded-full overflow-hidden"
                         style={{ backgroundColor: "var(--color-border)" }}
                       >
@@ -229,7 +235,10 @@ function RecentUpdate({ onTotalReleasesLoaded }) {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button className="p-1 rounded transition-colors hover:opacity-80 cursor-pointer">
+                      <button
+                        aria-label="Release options"
+                        className="p-1 rounded transition-colors hover:opacity-80 cursor-pointer"
+                      >
                         <MoreVertical
                           size={18}
                           strokeWidth={1.5}

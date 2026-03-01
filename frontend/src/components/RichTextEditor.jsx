@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef } from "react";
+import React, { useCallback } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -148,16 +148,6 @@ function RichTextEditor({
       Placeholder.configure({
         placeholder,
         emptyEditorClass: "is-editor-empty",
-      }),
-      Underline,
-      Link.configure({
-        openOnClick: false,
-        autolink: true,
-        HTMLAttributes: {
-          class: "tiptap-link",
-          rel: "noopener noreferrer",
-          target: "_blank",
-        },
       }),
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       Highlight.configure({ multicolor: false }),

@@ -40,7 +40,6 @@ function Login() {
     } catch (error) {
       // The authService throws the error object directly from the response
       toast.error(error.message || "Invalid credentials");
-      console.error("Login failed:", error);
     } finally {
       setIsLoading(false);
     }

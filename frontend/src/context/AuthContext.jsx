@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { authService } from "../services/authService";
 
@@ -14,7 +15,7 @@ export const AuthProvider = ({ children }) => {
       try {
         const response = await authService.getCurrentUser();
         setUser(response.data || response);
-      } catch (error) {
+      } catch {
         setUser(null);
       } finally {
         setLoading(false);

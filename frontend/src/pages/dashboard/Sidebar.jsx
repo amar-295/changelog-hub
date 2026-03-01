@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   ScrollText,
@@ -11,6 +9,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
 } from "lucide-react";
+import { useTooltip } from "../../hooks/useTooltip";
 
 const ICON_SIZE = 18;
 const ICON_STROKE = 1.5;
@@ -23,12 +22,12 @@ const NAV_ITEMS = [
 ];
 
 function Sidebar({ isOpen, setIsOpen }) {
-  const { logout } = useAuth();
-  const navigate = useNavigate();
   const [headerHovered, setHeaderHovered] = useState(false);
   const [hoveredNavItem, setHoveredNavItem] = useState(null);
   const [navItemRects, setNavItemRects] = useState({});
   const itemRefs = useRef({});
+
+  const toggleTooltip = useTooltip();
 
   // Helper to update coordinates of the hovered nav item
   const updateHoverRect = (to) => {
@@ -67,17 +66,24 @@ function Sidebar({ isOpen, setIsOpen }) {
       <div className="pt-5 pb-6 px-2 w-full flex flex-col h-full overflow-visible">
         {/* ── Header: Logo + Toggle ── */}
         <div
-          className="flex items-center mb-8 h-8 relative w-full cursor-pointer shrink-0 overflow-hidden"
-          onMouseEnter={() => setHeaderHovered(true)}
-          onMouseLeave={() => setHeaderHovered(false)}
+          className="flex items-center mb-8 h-8 relative w-full cursor-pointer shrink-0 overflow-visible"
+          onMouseEnter={() => {
+            setHeaderHovered(true);
+            if (!isOpen) toggleTooltip.showTooltip();
+          }}
+          onMouseLeave={() => {
+            setHeaderHovered(false);
+            if (!isOpen) toggleTooltip.hideTooltip();
+          }}
           onClick={(e) => {
             if (!isOpen) {
               e.stopPropagation();
               setIsOpen(true);
+              toggleTooltip.hideAndSuppress();
             }
           }}
         >
-          {/* Logo & wordmark */}
+          {/* Logo Only */}
           <div className="absolute left-1 flex items-center gap-2.5">
             <img
               src="/icon.svg"
@@ -86,12 +92,6 @@ function Sidebar({ isOpen, setIsOpen }) {
                 !isOpen && headerHovered ? "opacity-0" : "opacity-100"
               }`}
             />
-            <h1
-              className={`text-[14px] font-semibold tracking-wide whitespace-nowrap transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0 invisible"}`}
-              style={{ color: "var(--color-text-primary)" }}
-            >
-              ChangelogHub
-            </h1>
           </div>
 
           {/* Open icon (closed state hover) */}
@@ -112,31 +112,89 @@ function Sidebar({ isOpen, setIsOpen }) {
             <PanelLeftOpen size={ICON_SIZE} strokeWidth={ICON_STROKE} />
           </div>
 
+          {/* Tooltip for Open Sidebar */}
+          {!isOpen && headerHovered && toggleTooltip.isVisible && (
+            <div
+              className="absolute left-[52px] top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold whitespace-nowrap text-white pointer-events-none z-99999 flex items-center tooltip-visible-right"
+              style={{
+                backgroundColor: "#1a1a1a",
+                border: "1px solid rgba(255,255,255,0.08)",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
+              }}
+            >
+              Expand Sidebar
+              <div
+                className="absolute top-1/2 right-full -translate-y-1/2 w-0 h-0"
+                style={{
+                  borderTop: "5px solid transparent",
+                  borderBottom: "5px solid transparent",
+                  borderRight: "5px solid #1a1a1a",
+                }}
+              />
+            </div>
+          )}
+
           {/* Close icon (open state) */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsOpen(false);
-            }}
-            aria-label="Close sidebar"
-            className={`absolute right-1 p-1.5 rounded-lg transition-all duration-300 group/btn ${
-              isOpen
-                ? "opacity-100 hover:bg-bg-card"
-                : "opacity-0 invisible pointer-events-none"
+          <div
+            className={`absolute right-1 transition-all duration-300 ${
+              isOpen ? "opacity-100" : "opacity-0 invisible pointer-events-none"
             }`}
-            style={{ color: "var(--color-text-secondary)" }}
+            onMouseEnter={() => {
+              if (isOpen) toggleTooltip.showTooltip();
+            }}
+            onMouseLeave={() => {
+              if (isOpen) toggleTooltip.hideTooltip();
+            }}
           >
-            <PanelLeftClose
-              size={ICON_SIZE}
-              strokeWidth={ICON_STROKE}
-              className="group-hover/btn:text-white transition-colors"
-            />
-          </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsOpen(false);
+                toggleTooltip.hideAndSuppress();
+              }}
+              aria-label="Close sidebar"
+              className="p-1.5 rounded-lg hover:bg-bg-card group/btn text-text-secondary cursor-pointer"
+            >
+              <PanelLeftClose
+                size={ICON_SIZE}
+                strokeWidth={ICON_STROKE}
+                className="group-hover/btn:text-white transition-colors"
+              />
+            </button>
+
+            {/* Tooltip for Close Sidebar */}
+            {isOpen && toggleTooltip.isVisible && (
+              <div
+                className="absolute right-[110%] mr-1 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold whitespace-nowrap text-white pointer-events-none z-99999 flex items-center tooltip-visible"
+                style={{
+                  backgroundColor: "#1a1a1a",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
+                  animation:
+                    "tooltipFadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+                }}
+              >
+                Collapse Sidebar
+                <div
+                  className="absolute top-1/2 left-full -translate-y-1/2 w-0 h-0"
+                  style={{
+                    borderTop: "5px solid transparent",
+                    borderBottom: "5px solid transparent",
+                    borderLeft: "5px solid #1a1a1a",
+                  }}
+                />
+              </div>
+            )}
+          </div>
         </div>
 
         {/* ── Navigation ── */}
         <nav className="w-full flex flex-col gap-0.5">
-          {NAV_ITEMS.map(({ to, icon: Icon, text, end }) => {
+          {NAV_ITEMS.map((item) => {
+            const Icon = item.icon;
+            const to = item.to;
+            const text = item.text;
+            const end = item.end;
             const rect = navItemRects[to];
             return (
               <div
