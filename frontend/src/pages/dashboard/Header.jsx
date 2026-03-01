@@ -190,7 +190,7 @@ function Header() {
 
         {/* Avatar */}
         <div
-          className="relative group p-[1.5px] flex items-center justify-center rounded-full transition-colors cursor-pointer hover:bg-white/15"
+          className={`profile-ring ${profileOpen ? "active" : ""}`}
           ref={profileRef}
           onMouseEnter={avatarTooltip.showTooltip}
           onMouseLeave={avatarTooltip.hideTooltip}
@@ -200,15 +200,7 @@ function Header() {
           }}
           aria-label="Account menu"
         >
-          <div
-            className="flex items-center justify-center size-[34px] rounded-full text-[13px] font-bold text-white shadow-sm"
-            style={{
-              backgroundColor: "var(--color-bg-sidebar)",
-              border: "1px solid var(--color-border)",
-            }}
-          >
-            {initials}
-          </div>
+          <div className="profile-avatar">{initials}</div>
 
           {/* Avatar Tooltip */}
           {avatarTooltip.isVisible && !profileOpen && (
@@ -239,6 +231,7 @@ function Header() {
           {profileOpen && (
             <div
               className="absolute right-0 top-full mt-2 w-60 rounded-xl shadow-xl overflow-hidden z-50 animate-dropdown"
+              onClick={(e) => e.stopPropagation()}
               style={{
                 backgroundColor: "var(--color-bg-card)",
                 border: "1px solid var(--color-border)",

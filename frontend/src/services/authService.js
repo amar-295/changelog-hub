@@ -3,7 +3,7 @@ import api from "./api";
 export const authService = {
   register: async (userData) => {
     try {
-      const response = await api.post("/users/register", userData);
+      const response = await api.post("/auth/register", userData);
       return response.data;
     } catch (error) {
       const message = error.response?.data?.message || "Something went wrong";
@@ -13,7 +13,7 @@ export const authService = {
 
   login: async (userData) => {
     try {
-      const response = await api.post("/users/login", userData);
+      const response = await api.post("/auth/login", userData);
       return response.data;
     } catch (error) {
       const message =
@@ -24,7 +24,7 @@ export const authService = {
 
   logout: async () => {
     try {
-      const response = await api.post("/users/logout");
+      const response = await api.post("/auth/logout");
       return response.data;
     } catch (error) {
       const message =
@@ -35,7 +35,7 @@ export const authService = {
 
   getCurrentUser: async () => {
     try {
-      const response = await api.get("/users/current-user");
+      const response = await api.get("/auth/me");
       return response.data;
     } catch (error) {
       const message = error.response?.data?.message || "Not authenticated";
@@ -45,7 +45,7 @@ export const authService = {
 
   refreshToken: async () => {
     try {
-      const response = await api.post("/users/refresh-token");
+      const response = await api.post("/auth/refresh-token");
       return response.data;
     } catch {
       throw new Error("Session expired");

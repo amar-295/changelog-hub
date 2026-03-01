@@ -1,4 +1,10 @@
-import React, { useCallback } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+} from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -27,6 +33,10 @@ import {
   Undo,
   Redo,
   Minus,
+  Check,
+  X,
+  Link2Off,
+  Trash2,
 } from "lucide-react";
 import { useTooltip } from "../hooks/useTooltip";
 
@@ -135,24 +145,51 @@ function Divider() {
 }
 
 // ── Main Editor ───────────────────────────────────────────────────────────────
+
+// Define Extensions outside React to prevent Strict Mode from creating duplicate instances
 function RichTextEditor({
   content,
   onChange,
   placeholder = "Write your release notes here...",
 }) {
-  const editor = useEditor({
-    extensions: [
+  const [linkMenu, setLinkMenu] = useState({ isOpen: false, url: "" });
+  const linkInputRef = useRef(null);
+
+  const extensions = useMemo(() => {
+    return [
       StarterKit.configure({
         codeBlock: { languageClassPrefix: "language-" },
+        // Explicitly disable these in case they are bundled in the user's version
+        history: true,
+        heading: true,
+        bold: true,
+        italic: true,
+        strike: true,
+      }),
+      TextAlign.configure({ types: ["heading", "paragraph"] }),
+      Highlight.configure({ multicolor: false }),
+      FontFamily,
+      Underline.configure(),
+      Link.configure({
+        openOnClick: false,
+        HTMLAttributes: {
+          class: "tiptap-link",
+        },
       }),
       Placeholder.configure({
         placeholder,
         emptyEditorClass: "is-editor-empty",
       }),
-      TextAlign.configure({ types: ["heading", "paragraph"] }),
-      Highlight.configure({ multicolor: false }),
-      FontFamily,
-    ],
+    ];
+  }, [placeholder]);
+
+  const openLinkMenu = useCallback((editorInst) => {
+    const previousUrl = editorInst.getAttributes("link").href || "";
+    setLinkMenu({ isOpen: true, url: previousUrl });
+  }, []);
+
+  const editor = useEditor({
+    extensions,
     content: content || "",
     onUpdate: ({ editor }) => {
       onChange?.(editor.getHTML());
@@ -162,24 +199,100 @@ function RichTextEditor({
         class: "tiptap-editor",
         spellcheck: "true",
       },
+      handleKeyDown: (view, event) => {
+        if (event.metaKey || event.ctrlKey) {
+          // Mod+K: Set Link
+          if (event.key.toLowerCase() === "k" && !event.shiftKey) {
+            event.preventDefault();
+            const currentEditor = editorRef.current;
+            if (currentEditor) openLinkMenu(currentEditor);
+            return true;
+          }
+          // Mod+Shift+K: Unlink
+          if (event.key.toLowerCase() === "k" && event.shiftKey) {
+            event.preventDefault();
+            const currentEditor = editorRef.current;
+            if (currentEditor) {
+              currentEditor
+                .chain()
+                .focus()
+                .extendMarkRange("link")
+                .unsetLink()
+                .run();
+            }
+            return true;
+          }
+        }
+
+        // Link Breakout on Space: If at the end of a link, space should break out
+        if (event.code === "Space" && editor.isActive("link")) {
+          const { $from } = editor.state.selection;
+          const pos = $from.pos;
+          const end = $from.end();
+
+          // If the cursor is at the very end of the link text
+          if (pos === end) {
+            editor.chain().focus().unsetLink().insertContent(" ").run();
+            return true;
+          }
+        }
+        return false;
+      },
     },
   });
 
-  const setLink = useCallback(() => {
-    const previousUrl = editor?.getAttributes("link").href;
-    const url = window.prompt("URL", previousUrl);
-    if (url === null) return;
-    if (url === "") {
-      editor?.chain().focus().extendMarkRange("link").unsetLink().run();
-      return;
-    }
-    editor
-      ?.chain()
-      .focus()
-      .extendMarkRange("link")
-      .setLink({ href: url })
-      .run();
+  // Keep a ref of editor for handleKeyDown closure
+  const editorRef = useRef(null);
+  useEffect(() => {
+    editorRef.current = editor;
   }, [editor]);
+
+  // Focus input when link menu opens
+  useEffect(() => {
+    if (linkMenu.isOpen && linkInputRef.current) {
+      linkInputRef.current.focus();
+    }
+  }, [linkMenu.isOpen]);
+
+  const submitLink = useCallback(
+    (e) => {
+      e?.preventDefault();
+      if (!editor) return;
+
+      let url = linkMenu.url.trim();
+      if (url === "") {
+        editor.chain().focus().extendMarkRange("link").unsetLink().run();
+      } else {
+        // Auto-prefix if no protocol
+        if (!/^https?:\/\//i.test(url) && !url.startsWith("/")) {
+          url = "https://" + url;
+        }
+
+        if (editor.state.selection.empty) {
+          // If no selection, insert the link explicitly with text
+          editor
+            .chain()
+            .focus()
+            .insertContent(`<a href="${url}">${url}</a>`)
+            .run();
+        } else {
+          editor
+            .chain()
+            .focus()
+            .extendMarkRange("link")
+            .setLink({ href: url })
+            .run();
+        }
+      }
+      setLinkMenu({ isOpen: false, url: "" });
+    },
+    [editor, linkMenu.url],
+  );
+
+  const setLink = useCallback(() => {
+    if (!editor) return;
+    openLinkMenu(editor);
+  }, [editor, openLinkMenu]);
 
   if (!editor) return null;
 
@@ -212,7 +325,7 @@ function RichTextEditor({
     >
       {/* ── Toolbar ── */}
       <div
-        className="flex flex-wrap items-center gap-0.5 px-3 py-2 border-b shrink-0"
+        className="flex flex-wrap items-center gap-0.5 px-3 py-2 border-b shrink-0 relative"
         style={{
           backgroundColor: "var(--color-bg-elevated)",
           borderColor: "var(--color-border)",
@@ -220,6 +333,68 @@ function RichTextEditor({
           borderTopRightRadius: "11px",
         }}
       >
+        {linkMenu.isOpen && (
+          <div
+            className="absolute inset-0 z-10 flex items-center px-3 gap-2"
+            style={{
+              backgroundColor: "var(--color-bg-elevated)",
+              borderTopLeftRadius: "11px",
+              borderTopRightRadius: "11px",
+            }}
+          >
+            <LinkIcon
+              size={IC}
+              strokeWidth={IS}
+              className="text-text-muted shrink-0"
+            />
+            <form
+              onSubmit={submitLink}
+              className="flex-1 flex items-center gap-2"
+            >
+              <input
+                ref={linkInputRef}
+                value={linkMenu.url}
+                onChange={(e) =>
+                  setLinkMenu({ ...linkMenu, url: e.target.value })
+                }
+                className="flex-1 bg-transparent text-text-primary text-[13px] px-2 py-1 outline-none font-medium placeholder:text-text-muted/50"
+                placeholder="Paste or type URL (https://...)"
+              />
+              <button
+                type="submit"
+                className="p-1.5 rounded bg-primary/20 text-primary hover:bg-primary/30 transition-colors"
+                title="Save Link"
+              >
+                <Check size={IC} strokeWidth={IS} />
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  editor
+                    .chain()
+                    .focus()
+                    .extendMarkRange("link")
+                    .unsetLink()
+                    .run();
+                  setLinkMenu({ isOpen: false, url: "" });
+                }}
+                className="p-1.5 rounded bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors"
+                title="Remove Link"
+              >
+                <Trash2 size={IC} strokeWidth={IS} />
+              </button>
+              <button
+                type="button"
+                onClick={() => setLinkMenu({ isOpen: false, url: "" })}
+                className="p-1.5 rounded bg-white/5 text-text-muted hover:text-white hover:bg-white/10 transition-colors"
+                title="Cancel"
+              >
+                <X size={IC} strokeWidth={IS} />
+              </button>
+            </form>
+          </div>
+        )}
+
         {/* Undo / Redo */}
         <ToolbarButton
           label="Undo"
@@ -301,7 +476,7 @@ function RichTextEditor({
         </ToolbarButton>
         <ToolbarButton
           label="Strikethrough"
-          shortcut={formatShortcut("S", { shift: true })}
+          shortcut={formatShortcut("X", { shift: true })}
           active={editor.isActive("strike")}
           onClick={() => editor.chain().focus().toggleStrike().run()}
         >
