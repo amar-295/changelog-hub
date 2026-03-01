@@ -17,10 +17,12 @@ app.use(cookieParser())
 // routes import 
 import userRouter from "./routes/user.routes.js"
 import releaseRouter from "./routes/release.routes.js"
+import publicRouter from "./routes/public.routes.js"
 
 // routes declaration
-app.use("/api/v1/users", userRouter)
+app.use("/api/v1/auth", userRouter)
 app.use("/api/v1/releases", releaseRouter)
+app.use("/api/v1/public", publicRouter)
 
 app.get('/', (req, res) => {
     res.send(`Server is running`)

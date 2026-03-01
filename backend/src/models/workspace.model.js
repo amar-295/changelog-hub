@@ -20,6 +20,11 @@ const workspaceSchema = new Schema({
         trim: true,
         index: {unique: true}
     },
+    customDomain: {
+        type: String,
+        toLowerCase: true,
+        trim: true,
+    },
     plan: {
         type: String,
         enum: ["free", "starter", "pro", "enterprise"],
