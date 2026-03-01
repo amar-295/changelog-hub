@@ -7,6 +7,10 @@ import {
   ChevronLeft,
   ChevronRight,
   Search,
+  Sparkles,
+  ArrowUpRight,
+  Bug,
+  Shield,
 } from "lucide-react";
 import { releaseService } from "../../services/releaseService";
 import CreateReleaseModal from "./CreateReleaseModal";
@@ -16,9 +20,9 @@ const textPrimary = { color: "var(--color-text-primary)" };
 function StatusBadge({ status }) {
   const styles = {
     published: {
-      bg: "rgba(52, 211, 153, 0.1)",
-      color: "#34d399",
-      dot: "#34d399",
+      bg: "rgba(59, 130, 246, 0.1)",
+      color: "#60a5fa",
+      dot: "#3b82f6",
     },
     draft: { bg: "rgba(148, 163, 184, 0.1)", color: "#94a3b8", dot: "#94a3b8" },
     archived: {
@@ -47,6 +51,33 @@ function stripHtml(html) {
   if (!html) return "";
   const doc = new DOMParser().parseFromString(html, "text/html");
   return doc.body.textContent || "";
+}
+
+function CategoryCell({ category }) {
+  const categories = {
+    feature: { icon: Sparkles, color: "text-blue-400", label: "Feature" },
+    improvement: {
+      icon: ArrowUpRight,
+      color: "text-violet-400",
+      label: "Improvement",
+    },
+    bugfix: { icon: Bug, color: "text-red-400", label: "Bugfix" },
+    security: { icon: Shield, color: "text-amber-400", label: "Security" },
+    other: { icon: MoreHorizontal, color: "text-gray-400", label: "Other" },
+  };
+  const c = categories[category] || categories.other;
+  const Icon = c.icon;
+  return (
+    <div className="flex items-center gap-2">
+      <Icon size={14} strokeWidth={1.5} className={c.color} />
+      <span
+        className="text-xs font-semibold capitalize"
+        style={{ color: "var(--color-text-secondary)" }}
+      >
+        {c.label}
+      </span>
+    </div>
+  );
 }
 
 function Releases() {
@@ -117,16 +148,6 @@ function Releases() {
               Manage and publish your product updates.
             </p>
           </div>
-          <button
-            onClick={() => setShowCreateModal(true)}
-            className="px-6 py-2.5 rounded-md text-white font-black text-[13px] tracking-widest uppercase transition-all flex items-center gap-2 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]"
-            style={{
-              backgroundColor: "var(--color-primary)",
-            }}
-          >
-            <Plus size={18} strokeWidth={2.5} />
-            CREATE UPDATE
-          </button>
         </div>
 
         {/* Filters */}
@@ -136,31 +157,48 @@ function Releases() {
         >
           <div className="flex items-center gap-2">
             <button
-              className="flex items-center gap-2 px-3 py-1.5 border rounded-lg text-sm font-medium transition-colors hover:bg-bg-card-hover"
+              className="flex items-center gap-2 px-3 py-1.5 border rounded-lg text-sm font-medium transition-colors hover:bg-bg-card-hover cursor-pointer"
               style={filterBtnStyle}
             >
               Status: <span style={textPrimary}>All</span>
               <ChevronDown size={ICON_SIZE} strokeWidth={STROKE_WIDTH} />
             </button>
             <button
-              className="flex items-center gap-2 px-3 py-1.5 border rounded-lg text-sm font-medium transition-colors hover:bg-bg-card-hover"
+              className="flex items-center gap-2 px-3 py-1.5 border rounded-lg text-sm font-medium transition-colors hover:bg-bg-card-hover cursor-pointer"
               style={filterBtnStyle}
             >
               Category: <span style={textPrimary}>All</span>
               <ChevronDown size={ICON_SIZE} strokeWidth={STROKE_WIDTH} />
             </button>
             <button
-              className="flex items-center gap-2 px-3 py-1.5 border rounded-lg text-sm font-medium transition-colors hover:bg-bg-card-hover"
+              className="flex items-center gap-2 px-3 py-1.5 border rounded-lg text-sm font-medium transition-colors hover:bg-bg-card-hover cursor-pointer"
               style={filterBtnStyle}
             >
               Date Range: <span style={textPrimary}>Last 30 Days</span>
               <Calendar size={ICON_SIZE} strokeWidth={STROKE_WIDTH} />
             </button>
           </div>
-          <div className="ml-auto flex items-center gap-2">
-            <span className="text-xs font-medium" style={textMuted}>
+          <div className="ml-auto flex items-center gap-4">
+            <span
+              className="text-[11px] font-semibold uppercase tracking-wider"
+              style={textMuted}
+            >
               Sorted by Date
             </span>
+            <div
+              className="h-4 w-px"
+              style={{ backgroundColor: "var(--color-border)" }}
+            />
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="px-4 py-1.5 rounded-lg text-white font-semibold text-[13px] transition-all flex items-center gap-2 hover:opacity-90 active:scale-[0.95] shadow-sm cursor-pointer"
+              style={{
+                backgroundColor: "var(--color-primary)",
+              }}
+            >
+              <Plus size={16} strokeWidth={2} />
+              New Release
+            </button>
           </div>
         </div>
 
@@ -174,7 +212,7 @@ function Releases() {
               <tr className="border-b" style={borderStyle}>
                 <th className="py-4 px-6 w-12 text-center text-xs">
                   <input
-                    className="rounded border-gray-600 bg-gray-800 text-primary focus:ring-primary"
+                    className="rounded border-gray-600 bg-gray-800 text-primary focus:ring-primary cursor-pointer"
                     type="checkbox"
                   />
                 </th>
@@ -189,6 +227,12 @@ function Releases() {
                   style={textMuted}
                 >
                   Status
+                </th>
+                <th
+                  className="py-4 px-6 text-xs font-bold uppercase tracking-widest"
+                  style={textMuted}
+                >
+                  Category
                 </th>
                 <th
                   className="py-4 px-6 text-xs font-bold uppercase tracking-widest"
@@ -250,7 +294,7 @@ function Releases() {
                 >
                   <td className="py-5 px-6 text-center">
                     <input
-                      className="rounded border-gray-600 bg-gray-800"
+                      className="rounded border-gray-600 bg-gray-800 cursor-pointer"
                       type="checkbox"
                     />
                   </td>
@@ -273,6 +317,9 @@ function Releases() {
                   <td className="py-5 px-6">
                     <StatusBadge status={release.status} />
                   </td>
+                  <td className="py-5 px-6">
+                    <CategoryCell category={release.category} />
+                  </td>
                   <td
                     className="py-5 px-6 text-sm font-medium whitespace-nowrap"
                     style={textSecondary}
@@ -293,7 +340,7 @@ function Releases() {
                   </td>
                   <td className="py-5 px-6 text-right">
                     <button
-                      className="p-1 rounded hover:bg-bg-elevated transition-colors"
+                      className="p-1 rounded hover:bg-bg-elevated transition-colors cursor-pointer"
                       style={textMuted}
                     >
                       <MoreHorizontal size={18} strokeWidth={STROKE_WIDTH} />
@@ -316,7 +363,7 @@ function Releases() {
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="px-4 py-2 text-sm font-bold border rounded-lg transition-all flex items-center gap-2 hover:bg-bg-card-hover disabled:opacity-20 disabled:cursor-not-allowed"
+              className="px-4 py-2 text-sm font-bold border rounded-lg transition-all flex items-center gap-2 hover:bg-bg-card-hover disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer"
               style={{ ...cardStyle, ...textSecondary }}
             >
               <ChevronLeft size={16} strokeWidth={2} />
@@ -325,7 +372,7 @@ function Releases() {
             <button
               onClick={() => setPage((p) => p + 1)}
               disabled={!pagination || page >= pagination.totalPages}
-              className="px-4 py-2 text-sm font-bold border rounded-lg transition-all flex items-center gap-2 hover:bg-bg-card-hover disabled:opacity-20 disabled:cursor-not-allowed"
+              className="px-4 py-2 text-sm font-bold border rounded-lg transition-all flex items-center gap-2 hover:bg-bg-card-hover disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer"
               style={{ ...cardStyle, ...textSecondary }}
             >
               Next

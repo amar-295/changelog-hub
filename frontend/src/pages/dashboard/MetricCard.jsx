@@ -1,6 +1,6 @@
 import React from "react";
 
-function MetricCard() {
+function MetricCard({ totalReleases }) {
   const cardStyle = {
     backgroundColor: "var(--color-bg-card)",
     borderColor: "var(--color-border)",
@@ -19,18 +19,18 @@ function MetricCard() {
               className="text-xs font-bold uppercase tracking-widest"
               style={{ color: "var(--color-text-muted)" }}
             >
-              Total Views
+              Total Releases
             </p>
             <h3
               className="text-3xl font-black mt-1"
               style={{ color: "var(--color-text-primary)" }}
             >
-              128.4k
+              {totalReleases}
             </h3>
           </div>
           <span
-            className="text-emerald-400 font-bold text-sm flex items-center px-2 py-1 rounded-lg"
-            style={{ backgroundColor: "rgba(52, 211, 153, 0.1)" }}
+            className="text-blue-400 font-bold text-sm flex items-center px-2 py-1 rounded-lg"
+            style={{ backgroundColor: "rgba(59, 130, 246, 0.1)" }}
           >
             +14.2%
           </span>
@@ -105,8 +105,8 @@ function MetricCard() {
             </h3>
           </div>
           <span
-            className="text-emerald-400 font-bold text-sm flex items-center px-2 py-1 rounded-lg"
-            style={{ backgroundColor: "rgba(52, 211, 153, 0.1)" }}
+            className="text-blue-400 font-bold text-sm flex items-center px-2 py-1 rounded-lg"
+            style={{ backgroundColor: "rgba(59, 130, 246, 0.1)" }}
           >
             +5.1%
           </span>
@@ -181,8 +181,8 @@ function MetricCard() {
             </h3>
           </div>
           <span
-            className="text-emerald-400 font-bold text-sm flex items-center px-2 py-1 rounded-lg"
-            style={{ backgroundColor: "rgba(52, 211, 153, 0.1)" }}
+            className="text-blue-400 font-bold text-sm flex items-center px-2 py-1 rounded-lg"
+            style={{ backgroundColor: "rgba(59, 130, 246, 0.1)" }}
           >
             +8.3%
           </span>

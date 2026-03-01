@@ -2,10 +2,11 @@
 
 @theme {
   /* ── Color Palette ── */
-  /* Sophisticated SaaS Teal - Muted for dark mode comfort */
-  --color-primary: #10a37f;
-  --color-primary-dark: #0e8c6d;
-  --color-accent: #34d399;
+  /* Refined VS Code inspired Blue/Violet palette - Professional & Balanced */
+  --color-primary: #3b82f6;      /* Balanced Azure Blue */
+  --color-primary-dark: #2563eb; /* Deep Blue */
+  --color-accent: #818cf8;       /* Muted Indigo */
+  --color-primary-muted: rgba(59, 130, 246, 0.12);
 
   --color-bg-page: #212121;
   --color-bg-sidebar: #1c1c1c;

@@ -411,7 +411,7 @@ function RichTextEditor({
 
       {/* ── Editor Area ── */}
       <div
-        className="flex-1 overflow-y-auto"
+        className="flex-1 overflow-y-auto cursor-pointer"
         style={{
           backgroundColor: "var(--color-bg-input)",
           borderBottomLeftRadius: "11px",

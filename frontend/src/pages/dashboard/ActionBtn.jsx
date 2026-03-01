@@ -4,14 +4,13 @@ import { Plus } from "lucide-react";
 function ActionBtn() {
   return (
     <button
-      className="fixed bottom-10 right-10 flex items-center gap-3 text-white px-6 py-4 rounded-full hover:scale-105 active:scale-95 transition-all z-20 font-black tracking-tight"
+      className="fixed bottom-8 right-8 flex items-center gap-2 text-white px-4 py-2.5 rounded-lg hover:opacity-90 active:scale-95 transition-all z-20 font-semibold text-sm shadow-lg cursor-pointer"
       style={{
-        backgroundColor: "var(--color-primary-dark)",
-        boxShadow: "0 15px 40px rgba(99, 102, 241, 0.35)",
+        backgroundColor: "var(--color-primary)",
       }}
     >
-      <Plus size={24} strokeWidth={2.5} />
-      <span>CREATE UPDATE</span>
+      <Plus size={18} strokeWidth={2} />
+      <span>New Release</span>
     </button>
   );
 }

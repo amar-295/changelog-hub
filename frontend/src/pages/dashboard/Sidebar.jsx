@@ -67,7 +67,7 @@ function Sidebar({ isOpen, setIsOpen }) {
       <div className="pt-5 pb-6 px-2 w-full flex flex-col h-full overflow-visible">
         {/* ── Header: Logo + Toggle ── */}
         <div
-          className="flex items-center mb-8 h-8 relative w-full cursor-pointer shrink-0"
+          className="flex items-center mb-8 h-8 relative w-full cursor-pointer shrink-0 overflow-hidden"
           onMouseEnter={() => setHeaderHovered(true)}
           onMouseLeave={() => setHeaderHovered(false)}
           onClick={(e) => {

@@ -52,17 +52,12 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        console.log("Access token expired. Attempting to refresh token...");
         // Call refresh endpoint to get new cookies
         await api.post("/users/refresh-token");
-        console.log(
-          "Token refreshed successfully! Retrying original request...",
-        );
 
         processQueue(null);
         return api(originalRequest);
       } catch (err) {
-        console.error("Refresh token failed or expired:", err);
         processQueue(err, null);
 
         // Dispatch event so AuthContext can log user out

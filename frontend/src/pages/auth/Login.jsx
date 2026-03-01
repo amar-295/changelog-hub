@@ -3,25 +3,46 @@ import Logo from "../../components/Logo";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { Mail, Lock, Eye } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, Loader2 } from "lucide-react";
+import toast from "react-hot-toast";
 
 function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const newErrors = {};
+
+    if (!formData.email.trim()) newErrors.email = "Email is required";
+    if (!formData.password) newErrors.password = "Password is required";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
+    setIsLoading(true);
+
     try {
-      const response = await login(formData);
-      console.log("Success:", response.message);
+      await login(formData);
+      toast.success("Signed in successfully");
       navigate("/");
     } catch (error) {
-      console.error("Login failed:", error.message);
+      // The authService throws the error object directly from the response
+      toast.error(error.message || "Invalid credentials");
+      console.error("Login failed:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -30,6 +51,13 @@ function Login() {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    // Clear error for this field when user starts typing
+    if (errors[e.target.name]) {
+      setErrors({
+        ...errors,
+        [e.target.name]: null,
+      });
+    }
   };
 
   return (
@@ -66,11 +94,16 @@ function Login() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full pl-[38px] pr-4 py-2.5 bg-[#252525] border border-border rounded-lg text-[14px] text-text-primary focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-text-muted hover:border-border-light"
+                    className={`w-full pl-[38px] pr-4 py-2.5 bg-[#252525] border ${errors.email ? "border-red-500 focus:ring-red-500" : "border-border focus:border-primary focus:ring-primary hover:border-border-light"} rounded-lg text-[14px] text-text-primary focus:ring-1 outline-none transition-all placeholder-text-muted`}
                     placeholder="name@company.com"
                     type="email"
                   />
                 </div>
+                {errors.email && (
+                  <span className="text-red-500 text-[12px] ml-1">
+                    {errors.email}
+                  </span>
+                )}
               </div>
               {/* Password Field */}
               <div className="flex flex-col gap-2">
@@ -91,24 +124,39 @@ function Login() {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full pl-[38px] pr-10 py-2.5 bg-[#252525] border border-border rounded-lg text-[14px] text-text-primary focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-text-muted hover:border-border-light"
+                    className={`w-full pl-[38px] pr-10 py-2.5 bg-[#252525] border ${errors.password ? "border-red-500 focus:ring-red-500" : "border-border focus:border-primary focus:ring-primary hover:border-border-light"} rounded-lg text-[14px] text-text-primary focus:ring-1 outline-none transition-all placeholder-text-muted`}
                     placeholder="••••••••"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                   />
                   <button
                     className="absolute right-3 text-text-muted hover:text-text-primary transition-colors flex items-center"
                     type="button"
+                    onClick={() => setShowPassword(!showPassword)}
                   >
-                    <Eye className="w-[18px] h-[18px]" />
+                    {showPassword ? (
+                      <EyeOff className="w-[18px] h-[18px]" />
+                    ) : (
+                      <Eye className="w-[18px] h-[18px]" />
+                    )}
                   </button>
                 </div>
+                {errors.password && (
+                  <span className="text-red-500 text-[12px] ml-1">
+                    {errors.password}
+                  </span>
+                )}
               </div>
               {/* Primary Button */}
               <button
-                className="w-full bg-primary hover:bg-primary-dark text-white font-semibold flex items-center justify-center h-11 rounded-lg transition-colors mt-3 text-[14px]"
+                className="w-full bg-primary hover:bg-primary-dark text-white font-semibold flex items-center justify-center h-11 rounded-lg transition-colors mt-3 text-[14px] cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
                 type="submit"
+                disabled={isLoading}
               >
-                Log in
+                {isLoading ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  "Log in"
+                )}
               </button>
             </form>
             <div className="mt-8 pt-6 border-t border-border text-center">

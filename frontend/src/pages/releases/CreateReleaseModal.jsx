@@ -1,10 +1,36 @@
 import React, { useState, useEffect, useRef } from "react";
-import { X, ChevronDown, Loader2, Rocket, FileText } from "lucide-react";
+import {
+  X,
+  ChevronDown,
+  Loader2,
+  Rocket,
+  FileText,
+  Sparkles,
+  ArrowUpRight,
+  Bug,
+  Shield,
+  MoreHorizontal,
+} from "lucide-react";
 import RichTextEditor from "../../components/RichTextEditor";
 import { releaseService } from "../../services/releaseService";
 
-const CATEGORIES = ["feature", "improvement", "bugfix", "security", "other"];
-const STATUSES = ["draft", "published"];
+const CATEGORIES = [
+  { id: "feature", label: "Feature", icon: Sparkles, color: "text-blue-400" },
+  {
+    id: "improvement",
+    label: "Improvement",
+    icon: ArrowUpRight,
+    color: "text-violet-400",
+  },
+  { id: "bugfix", label: "Bugfix", icon: Bug, color: "text-red-400" },
+  {
+    id: "security",
+    label: "Security",
+    icon: Shield,
+    color: "text-amber-400",
+  },
+  { id: "other", label: "Other", icon: MoreHorizontal, color: "text-gray-400" },
+];
 
 function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
   const [form, setForm] = useState({
@@ -16,7 +42,9 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const overlayRef = useRef(null);
+  const categoryRef = useRef(null);
 
   // Reset form on open
   useEffect(() => {
@@ -60,14 +88,32 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
     }
   };
 
-  // Close / Auto-Save on Escape
   useEffect(() => {
     const handler = (e) => {
-      if (e.key === "Escape") handleCancel();
+      if (e.key === "Escape") {
+        if (isCategoryOpen) {
+          setIsCategoryOpen(false);
+        } else {
+          handleCancel();
+        }
+      }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [form, onClose]); // watch form so handleCancel has latest closure state
+  }, [form, onClose, isCategoryOpen]);
+
+  // Handle clicks outside category dropdown
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (categoryRef.current && !categoryRef.current.contains(e.target)) {
+        setIsCategoryOpen(false);
+      }
+    };
+    if (isCategoryOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isCategoryOpen]);
 
   if (!isOpen) return null;
 
@@ -151,7 +197,7 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
         >
           <div className="flex items-center gap-3">
             <div
-              className="p-2 rounded-xl"
+              className="p-2 rounded-lg"
               style={{
                 backgroundColor:
                   "var(--color-primary-muted, rgba(99,102,241,0.12))",
@@ -176,10 +222,9 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
           </div>
           <button
             onClick={handleCancel}
-            className="p-2 rounded-lg transition-colors hover:bg-bg-elevated"
-            style={{ color: "var(--color-text-muted)" }}
+            className="p-2 transition-all hover:bg-white/5 rounded-lg text-text-muted hover:text-text-primary cursor-pointer active:scale-90"
           >
-            <X size={18} />
+            <X size={20} />
           </button>
         </div>
 
@@ -193,82 +238,105 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
               value={form.title}
               onChange={(e) => handleField("title", e.target.value)}
               placeholder="e.g. v2.5.0 — Dark Mode Support"
-              className="w-full px-4 py-2.5 rounded-xl border text-sm font-medium outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+              className="w-full px-4 py-2.5 rounded-lg border text-sm font-medium outline-none focus:ring-2 focus:ring-primary/30 transition-all"
               style={inputStyle}
             />
           </div>
 
-          {/* Version + Category + Status row */}
-          <div className="grid grid-cols-3 gap-4">
+          {/* Version + Category row */}
+          <div className="grid grid-cols-2 gap-6">
             {/* Version */}
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 px-0">
               <label style={labelStyle}>Version</label>
               <input
                 type="text"
                 value={form.version}
                 onChange={(e) => handleField("version", e.target.value)}
                 placeholder="e.g. 2.5.0"
-                className="w-full px-4 py-2.5 rounded-xl border text-sm font-medium outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+                className="w-full px-4 py-2.5 rounded-lg border text-sm font-medium outline-none focus:ring-2 focus:ring-primary/30 transition-all"
                 style={inputStyle}
               />
             </div>
 
             {/* Category */}
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 px-0">
               <label style={labelStyle}>Category</label>
-              <div className="relative">
-                <select
-                  value={form.category}
-                  onChange={(e) => handleField("category", e.target.value)}
-                  className="w-full appearance-none px-4 py-2.5 rounded-xl border text-sm font-medium outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+              <div className="relative" ref={categoryRef}>
+                <button
+                  type="button"
+                  onClick={() => setIsCategoryOpen(!isCategoryOpen)}
+                  className="w-full px-4 py-2.5 rounded-lg border text-sm font-medium flex items-center justify-between transition-all hover:border-primary-dark/40 cursor-pointer text-left"
                   style={inputStyle}
                 >
-                  {CATEGORIES.map((c) => (
-                    <option key={c} value={c}>
-                      {c.charAt(0).toUpperCase() + c.slice(1)}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown
-                  size={14}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
-                  style={{ color: "var(--color-text-muted)" }}
-                />
-              </div>
-              {/* Preview badge */}
-              <span
-                className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold border ${categoryColors[form.category]}`}
-              >
-                {form.category}
-              </span>
-            </div>
-
-            {/* Status */}
-            <div className="space-y-1.5">
-              <label style={labelStyle}>Save as</label>
-              <div className="flex gap-2">
-                {STATUSES.map((s) => (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={() => handleField("status", s)}
-                    className={`flex-1 py-2.5 rounded-xl text-sm font-bold border transition-all capitalize ${
-                      form.status === s
-                        ? "text-white border-transparent"
-                        : "hover:border-primary/40"
+                  <div className="flex items-center gap-2">
+                    {(() => {
+                      const active = CATEGORIES.find(
+                        (c) => c.id === form.category,
+                      );
+                      const Icon = active.icon;
+                      return (
+                        <>
+                          <Icon
+                            size={16}
+                            strokeWidth={1.5}
+                            className={active.color}
+                          />
+                          <span className="capitalize">{active.label}</span>
+                        </>
+                      );
+                    })()}
+                  </div>
+                  <ChevronDown
+                    size={16}
+                    className={`transition-transform duration-200 ${
+                      isCategoryOpen ? "rotate-180" : ""
                     }`}
-                    style={
-                      form.status === s
-                        ? {
-                            backgroundColor: "var(--color-primary)",
-                            borderColor: "var(--color-primary)",
-                          }
-                        : { ...inputStyle }
-                    }
+                    style={{ color: "var(--color-text-muted)" }}
+                  />
+                </button>
+
+                {/* Dropdown Menu */}
+                {isCategoryOpen && (
+                  <div
+                    className="absolute top-full left-0 right-0 mt-2 py-1.5 rounded-lg border shadow-xl z-50 animate-dropdown overflow-hidden"
+                    style={{
+                      backgroundColor: "var(--color-bg-card)",
+                      borderColor: "var(--color-border)",
+                    }}
                   >
-                    {s}
-                  </button>
-                ))}
+                    {CATEGORIES.map((c) => {
+                      const Icon = c.icon;
+                      const isActive = form.category === c.id;
+                      return (
+                        <button
+                          key={c.id}
+                          type="button"
+                          onClick={() => {
+                            handleField("category", c.id);
+                            setIsCategoryOpen(false);
+                          }}
+                          className={`w-full px-4 py-2.5 text-sm flex items-center justify-between transition-colors cursor-pointer capitalize ${
+                            isActive
+                              ? "bg-primary text-white"
+                              : "text-text-secondary hover:bg-primary/5 hover:text-text-primary"
+                          }`}
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <Icon
+                              size={16}
+                              strokeWidth={1.5}
+                              className={isActive ? "text-white" : c.color}
+                            />
+                            <span>{c.label}</span>
+                          </div>
+                          {isActive && (
+                            <div className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_white]" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -286,7 +354,7 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
           {/* Error */}
           {error && (
             <div
-              className="px-4 py-3 rounded-xl text-sm font-medium text-red-400 border border-red-500/20"
+              className="px-4 py-3 rounded-lg text-sm font-medium text-red-400 border border-red-500/20"
               style={{ backgroundColor: "rgba(239,68,68,0.08)" }}
             >
               {error}
@@ -306,7 +374,7 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
             type="button"
             onClick={handleCancel}
             disabled={loading}
-            className="px-5 py-2 rounded-xl text-sm font-bold border transition-all hover:bg-bg-card disabled:opacity-40"
+            className="px-5 py-2 rounded-lg text-sm font-bold border transition-all hover:bg-bg-card-hover hover:border-border-light disabled:opacity-40 cursor-pointer"
             style={{
               borderColor: "var(--color-border)",
               color: "var(--color-text-secondary)",
@@ -321,7 +389,7 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
               type="button"
               onClick={() => handleSubmit(false)}
               disabled={loading}
-              className="px-5 py-2 rounded-xl text-sm font-bold border transition-all hover:bg-bg-card disabled:opacity-40"
+              className="px-5 py-2 rounded-lg text-sm font-bold border transition-all hover:bg-bg-card-hover hover:border-border-light disabled:opacity-40 cursor-pointer"
               style={{
                 borderColor: "var(--color-border)",
                 color: "var(--color-text-primary)",
@@ -339,7 +407,7 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
               type="button"
               onClick={() => handleSubmit(true)}
               disabled={loading}
-              className="px-6 py-2 rounded-xl text-sm font-black uppercase tracking-widest text-white transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40 flex items-center gap-2"
+              className="px-6 py-2 rounded-lg text-sm font-bold text-white transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.95] disabled:opacity-40 flex items-center gap-2 cursor-pointer"
               style={{ backgroundColor: "var(--color-primary)" }}
             >
               {loading ? (

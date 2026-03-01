@@ -1,11 +1,25 @@
 import React, { useState } from "react";
 import Logo from "../../components/Logo";
 import { Link, useNavigate } from "react-router-dom";
-import { authService } from "../../services/authService";
-import { Github, User, Mail, AtSign, Lock } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
+import {
+  Github,
+  User,
+  Mail,
+  AtSign,
+  Lock,
+  Loader2,
+  Eye,
+  EyeOff,
+} from "lucide-react";
+import toast from "react-hot-toast";
 
 function Signup() {
   const navigate = useNavigate();
+  const { register } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -16,12 +30,35 @@ function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const newErrors = {};
+
+    if (!formData.fullName.trim()) newErrors.fullName = "Full name is required";
+    if (!formData.email.trim()) newErrors.email = "Work email is required";
+    if (!formData.username.trim()) newErrors.username = "Username is required";
+
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      // Optional: shake animation or similar could be added here
+      return;
+    }
+
+    setErrors({});
+    setIsLoading(true);
     try {
-      const response = await authService.register(formData);
-      console.log("Success:", response.message);
-      navigate("/login");
+      await register(formData);
+      toast.success("Account created successfully");
+      navigate("/");
     } catch (error) {
-      console.error("Signup failed:", error.message);
+      toast.error(error.message || "Failed to create account");
+      console.error("Signup failed:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -30,6 +67,13 @@ function Signup() {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    // Clear error for this field when user starts typing
+    if (errors[e.target.name]) {
+      setErrors({
+        ...errors,
+        [e.target.name]: null,
+      });
+    }
   };
 
   return (
@@ -87,11 +131,16 @@ function Signup() {
                     name="fullName"
                     value={formData.fullName}
                     onChange={handleChange}
-                    className="w-full pl-[38px] pr-4 py-2.5 bg-bg-input border border-border rounded-lg text-[14px] text-text-primary focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-text-muted hover:border-border-light"
+                    className={`w-full pl-[38px] pr-4 py-2.5 bg-bg-input border ${errors.fullName ? "border-red-500 focus:ring-red-500" : "border-border focus:border-primary focus:ring-primary hover:border-border-light"} rounded-lg text-[14px] text-text-primary focus:ring-1 outline-none transition-all placeholder-text-muted`}
                     placeholder="John Doe"
                     type="text"
                   />
                 </div>
+                {errors.fullName && (
+                  <span className="text-red-500 text-[12px] ml-1">
+                    {errors.fullName}
+                  </span>
+                )}
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-[12px] font-semibold text-text-primary tracking-wider uppercase ml-1">
@@ -103,11 +152,16 @@ function Signup() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full pl-[38px] pr-4 py-2.5 bg-bg-input border border-border rounded-lg text-[14px] text-text-primary focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-text-muted hover:border-border-light"
+                    className={`w-full pl-[38px] pr-4 py-2.5 bg-bg-input border ${errors.email ? "border-red-500 focus:ring-red-500" : "border-border focus:border-primary focus:ring-primary hover:border-border-light"} rounded-lg text-[14px] text-text-primary focus:ring-1 outline-none transition-all placeholder-text-muted`}
                     placeholder="name@company.com"
                     type="email"
                   />
                 </div>
+                {errors.email && (
+                  <span className="text-red-500 text-[12px] ml-1">
+                    {errors.email}
+                  </span>
+                )}
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-[12px] font-semibold text-text-primary tracking-wider uppercase ml-1">
@@ -119,11 +173,16 @@ function Signup() {
                     name="username"
                     value={formData.username}
                     onChange={handleChange}
-                    className="w-full pl-[38px] pr-4 py-2.5 bg-bg-input border border-border rounded-lg text-[14px] text-text-primary focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-text-muted hover:border-border-light"
+                    className={`w-full pl-[38px] pr-4 py-2.5 bg-bg-input border ${errors.username ? "border-red-500 focus:ring-red-500" : "border-border focus:border-primary focus:ring-primary hover:border-border-light"} rounded-lg text-[14px] text-text-primary focus:ring-1 outline-none transition-all placeholder-text-muted`}
                     placeholder="username"
                     type="text"
                   />
                 </div>
+                {errors.username && (
+                  <span className="text-red-500 text-[12px] ml-1">
+                    {errors.username}
+                  </span>
+                )}
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-[12px] font-semibold text-text-primary tracking-wider uppercase ml-1">
@@ -135,18 +194,39 @@ function Signup() {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full pl-[38px] pr-4 py-2.5 bg-bg-input border border-border rounded-lg text-[14px] text-text-primary focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-text-muted hover:border-border-light"
+                    className={`w-full pl-[38px] pr-10 py-2.5 bg-bg-input border ${errors.password ? "border-red-500 focus:ring-red-500" : "border-border focus:border-primary focus:ring-primary hover:border-border-light"} rounded-lg text-[14px] text-text-primary focus:ring-1 outline-none transition-all placeholder-text-muted`}
                     placeholder="At least 8 characters"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                   />
+                  <button
+                    className="absolute right-3 text-text-muted hover:text-text-primary transition-colors flex items-center"
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-[18px] h-[18px]" />
+                    ) : (
+                      <Eye className="w-[18px] h-[18px]" />
+                    )}
+                  </button>
                 </div>
+                {errors.password && (
+                  <span className="text-red-500 text-[12px] ml-1">
+                    {errors.password}
+                  </span>
+                )}
               </div>
               <div className="pt-2">
                 <button
-                  className="w-full h-11 rounded-lg bg-primary text-white font-semibold text-[14px] hover:bg-primary-dark transition-colors flex items-center justify-center"
+                  className="w-full h-11 rounded-lg bg-primary text-white font-semibold text-[14px] hover:bg-primary-dark transition-colors flex items-center justify-center cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
                   type="submit"
+                  disabled={isLoading}
                 >
-                  Create account
+                  {isLoading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    "Create account"
+                  )}
                 </button>
               </div>
             </form>

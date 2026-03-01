@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { MoreVertical, Inbox } from "lucide-react";
 import { releaseService } from "../../services/releaseService";
 
-function RecentUpdate() {
+function RecentUpdate({ onTotalReleasesLoaded }) {
   const [releases, setReleases] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -16,6 +16,12 @@ function RecentUpdate() {
           limit: 4,
         });
         setReleases(response.data?.releases || []);
+        if (
+          response.data?.pagination?.totalReleases !== undefined &&
+          onTotalReleasesLoaded
+        ) {
+          onTotalReleasesLoaded(response.data.pagination.totalReleases);
+        }
       } catch (error) {
         console.error("Failed to fetch recent updates:", error);
       } finally {
@@ -33,8 +39,8 @@ function RecentUpdate() {
       case "published":
         return {
           text: "Published",
-          color: "text-emerald-400",
-          bg: "rgba(52, 211, 153, 0.1)",
+          color: "text-blue-400",
+          bg: "rgba(59, 130, 246, 0.1)",
           dot: "var(--color-primary)",
         };
       case "draft":
@@ -89,7 +95,7 @@ function RecentUpdate() {
           Recent Updates
         </h3>
         <button
-          className="text-sm font-bold hover:underline"
+          className="text-sm font-bold hover:underline cursor-pointer"
           style={{ color: "var(--color-primary)" }}
         >
           View All
@@ -223,7 +229,7 @@ function RecentUpdate() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button className="p-1 rounded transition-colors hover:opacity-80">
+                      <button className="p-1 rounded transition-colors hover:opacity-80 cursor-pointer">
                         <MoreVertical
                           size={18}
                           strokeWidth={1.5}

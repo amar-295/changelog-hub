@@ -3,6 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Search, Bell, LogOut, Settings } from "lucide-react";
 import { useTooltip } from "../../hooks/useTooltip";
+import toast from "react-hot-toast";
 
 const PAGE_TITLES = {
   "/": "Dashboard",
@@ -64,10 +65,15 @@ function Header() {
     };
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setProfileOpen(false);
-    logout();
-    navigate("/login");
+    try {
+      await logout();
+      toast.success("Signed out");
+      navigate("/login");
+    } catch (error) {
+      toast.error("Failed to sign out");
+    }
   };
 
   return (
@@ -139,7 +145,7 @@ function Header() {
               bellTooltip.hideAndSuppress();
               // handle notification click
             }}
-            className="relative p-2 rounded-lg transition-colors hover:bg-bg-card"
+            className="relative p-2 rounded-lg transition-colors hover:bg-bg-card cursor-pointer"
             style={{ color: "var(--color-text-secondary)" }}
             aria-label="Notifications"
           >
@@ -184,7 +190,7 @@ function Header() {
 
         {/* Avatar */}
         <div
-          className="relative group p-[3px] flex items-center justify-center rounded-full transition-colors cursor-pointer hover:bg-white/15"
+          className="relative group p-[1.5px] flex items-center justify-center rounded-full transition-colors cursor-pointer hover:bg-white/15"
           ref={profileRef}
           onMouseEnter={avatarTooltip.showTooltip}
           onMouseLeave={avatarTooltip.hideTooltip}
