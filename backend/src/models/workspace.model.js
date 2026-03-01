@@ -16,13 +16,16 @@ const workspaceSchema = new Schema({
     subdomain: {                        // for public URL
         type: String,
         required: true,
-        toLowerCase: true,
+        lowercase: true,
         trim: true,
-        index: {unique: true}
+        unique: true,
+        minlength: [3, "Subdomain must be at least 3 characters"],
+        maxlength: [30, "Subdomain must be less than 30 characters"],
+        match: [/^[a-z0-9][a-z0-9-]*[a-z0-9]$/, "Subdomain can only contain lowercase letters, numbers, and hyphens (cannot start or end with hyphen)"]
     },
     customDomain: {
         type: String,
-        toLowerCase: true,
+        lowercase: true,
         trim: true,
     },
     plan: {

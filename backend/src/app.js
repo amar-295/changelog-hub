@@ -11,23 +11,36 @@ app.use(cors({
 
 app.use(express.json({ limit: "16kb" }))
 app.use(express.urlencoded({ extended: true, limit: "16kb" }))
-app.use(express.static("public"))
+// app.use(express.static("public"))
 app.use(cookieParser())
 
 // routes import 
 import userRouter from "./routes/user.routes.js"
 import releaseRouter from "./routes/release.routes.js"
 import publicRouter from "./routes/public.routes.js"
+import subscriberRouter from "./routes/subscriber.routes.js"
 
 // routes declaration
 app.use("/api/v1/auth", userRouter)
 app.use("/api/v1/releases", releaseRouter)
 app.use("/api/v1/public", publicRouter)
+app.use("/api/v1/subscribers", subscriberRouter)
 
 app.get('/', (req, res) => {
     res.send(`Server is running`)
 })
 
+// 404 handler
+app.use((req, res, next) => {
+    res.status(404).json({
+        success: false,
+        statusCode: 404,
+        message: `Route ${req.originalUrl} not found`,
+        errors: [],
+    })
+})
+
+// Error handler
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
