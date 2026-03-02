@@ -157,12 +157,19 @@ changelog-hub/
 ├── frontend/                         # React + Vite frontend
 │   ├── src/
 │   │   ├── components/              # Reusable React components
+│   │   │   ├── RichTextEditor/      # Modular TipTap components
+│   │   │   └── ErrorBoundary.jsx    # Application error handling
 │   │   ├── pages/                   # Page components
-│   │   ├── hooks/                   # Custom React hooks
-│   │   ├── services/                # API service layer
+│   │   │   ├── dashboard/           # Dashboard page & components
+│   │   │   │   └── components/      # Header, Sidebar, MetricCard elements
+│   │   │   └── releases/            # Release management pages
+│   │   │       ├── components/      # Table, Pagination, Badge elements
+│   │   │       └── hooks/           # Page-specific hooks (useReleaseForm)
+│   │   ├── hooks/                   # Global React hooks (useTooltip, useAuth)
+│   │   ├── services/                # API service layer (auth, releases)
 │   │   ├── stores/                  # State management
-│   │   ├── styles/                  # Global styles
-│   │   ├── utils/                   # Utility functions
+│   │   ├── styles/                  # Global styles (index.css)
+│   │   ├── utils/                   # Shared utility functions
 │   │   └── App.jsx                  # Main app component
 │   ├── index.html
 │   ├── vite.config.js

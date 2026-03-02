@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { MoreVertical, Inbox } from "lucide-react";
 import { releaseService } from "../../services/releaseService";
 
@@ -258,3 +259,7 @@ function RecentUpdate({ onTotalReleasesLoaded }) {
 }
 
 export default RecentUpdate;
+
+RecentUpdate.propTypes = {
+  onTotalReleasesLoaded: PropTypes.func,
+};

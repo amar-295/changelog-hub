@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { ExternalLink, Download } from "lucide-react";
 
 function Hero({ user }) {
@@ -44,3 +45,9 @@ function Hero({ user }) {
 }
 
 export default Hero;
+
+Hero.propTypes = {
+  user: PropTypes.shape({
+    fullName: PropTypes.string,
+  }),
+};

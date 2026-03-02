@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 function Logo({ width = "100px", className = "" }) {
   return (
@@ -11,5 +12,10 @@ function Logo({ width = "100px", className = "" }) {
     </div>
   );
 }
+
+Logo.propTypes = {
+  width: PropTypes.string,
+  className: PropTypes.string,
+};
 
 export default Logo;

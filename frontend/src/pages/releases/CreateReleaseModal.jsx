@@ -1,154 +1,25 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import {
-  X,
-  ChevronDown,
-  Loader2,
-  Rocket,
-  FileText,
-  Sparkles,
-  ArrowUpRight,
-  Bug,
-  Shield,
-  MoreHorizontal,
-} from "lucide-react";
-import RichTextEditor from "../../components/RichTextEditor";
-import { releaseService } from "../../services/releaseService";
-
-const CATEGORIES = [
-  { id: "feature", label: "Feature", icon: Sparkles, color: "text-blue-400" },
-  {
-    id: "improvement",
-    label: "Improvement",
-    icon: ArrowUpRight,
-    color: "text-violet-400",
-  },
-  { id: "bugfix", label: "Bugfix", icon: Bug, color: "text-red-400" },
-  {
-    id: "security",
-    label: "Security",
-    icon: Shield,
-    color: "text-amber-400",
-  },
-  { id: "other", label: "Other", icon: MoreHorizontal, color: "text-gray-400" },
-];
+import React, { useEffect, useRef } from "react";
+import PropTypes from "prop-types";
+import { X, Loader2, Rocket, FileText } from "lucide-react";
+import RichTextEditor from "../../components/RichTextEditor/index";
+import CategoryDropdown from "./components/CategoryDropdown";
+import { useReleaseForm } from "./hooks/useReleaseForm";
 
 function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
-  const [form, setForm] = useState({
-    title: "",
-    version: "",
-    category: "feature",
-    status: "draft",
-    content: "",
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const overlayRef = useRef(null);
-  const categoryRef = useRef(null);
+  const { form, loading, error, handleField, handleCancel, handleSubmit } =
+    useReleaseForm({ isOpen, onSuccess, onClose });
 
-  // Reset form on open
-  useEffect(() => {
-    if (isOpen) {
-      setForm({
-        title: "",
-        version: "",
-        category: "feature",
-        status: "draft",
-        content: "",
-      });
-      setError(null);
-    }
-  }, [isOpen]);
-
-  // Handle Cancel / Auto-Save as Draft
-  const handleCancel = useCallback(async () => {
-    const hasContent =
-      form.title.trim() !== "" ||
-      (form.content &&
-        form.content !== "<p></p>" &&
-        form.content.trim() !== "");
-    if (hasContent) {
-      try {
-        setLoading(true);
-        const autoTitle = form.title.trim() || "Untitled Release";
-        await releaseService.createRelease({
-          ...form,
-          title: autoTitle,
-          status: "draft",
-        });
-        onSuccess?.();
-      } catch (err) {
-        console.error("Auto-draft failed", err);
-      } finally {
-        setLoading(false);
-        onClose();
-      }
-    } else {
-      onClose();
-    }
-  }, [form, onSuccess, onClose]);
-
+  // Escape key handler
   useEffect(() => {
     const handler = (e) => {
-      if (e.key === "Escape") {
-        if (isCategoryOpen) {
-          setIsCategoryOpen(false);
-        } else {
-          handleCancel();
-        }
-      }
+      if (e.key === "Escape") handleCancel();
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [form, onClose, isCategoryOpen, handleCancel]);
-
-  // Handle clicks outside category dropdown
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (categoryRef.current && !categoryRef.current.contains(e.target)) {
-        setIsCategoryOpen(false);
-      }
-    };
-    if (isCategoryOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isCategoryOpen]);
+  }, [handleCancel]);
 
   if (!isOpen) return null;
-
-  const handleField = (field, value) =>
-    setForm((prev) => ({ ...prev, [field]: value }));
-
-  const handleSubmit = async (publishNow = false) => {
-    if (!form.title.trim()) {
-      setError("Title is required.");
-      return;
-    }
-    if (!form.content || form.content === "<p></p>") {
-      setError("Content cannot be empty.");
-      return;
-    }
-
-    try {
-      setLoading(true);
-      setError(null);
-      const payload = {
-        ...form,
-        status: publishNow ? "published" : form.status,
-      };
-      await releaseService.createRelease(payload);
-      onSuccess?.();
-      onClose();
-    } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          "Failed to create release. Please try again.",
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const inputStyle = {
     backgroundColor: "var(--color-bg-input)",
@@ -164,17 +35,11 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
   };
 
   return (
-    // Backdrop
-    // Backdrop: removed onClick to prevent accidental closure
     <div
       ref={overlayRef}
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{
-        backgroundColor: "rgba(0,0,0,0.65)",
-        backdropFilter: "blur(4px)",
-      }}
+      style={{ backgroundColor: "rgba(0,0,0,0.65)", backdropFilter: "blur(4px)" }}
     >
-      {/* Modal */}
       <div
         className="relative w-full max-w-4xl max-h-[92vh] flex flex-col rounded-2xl shadow-2xl overflow-hidden animate-dropdown"
         style={{
@@ -190,10 +55,7 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
           <div className="flex items-center gap-3">
             <div
               className="p-2 rounded-lg"
-              style={{
-                backgroundColor:
-                  "var(--color-primary-muted, rgba(99,102,241,0.12))",
-              }}
+              style={{ backgroundColor: "var(--color-primary-muted, rgba(99,102,241,0.12))" }}
             >
               <FileText size={18} style={{ color: "var(--color-primary)" }} />
             </div>
@@ -204,10 +66,7 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
               >
                 New Release
               </h2>
-              <p
-                className="text-xs"
-                style={{ color: "var(--color-text-muted)" }}
-              >
+              <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>
                 Compose and publish a product update
               </p>
             </div>
@@ -235,10 +94,9 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
             />
           </div>
 
-          {/* Version + Category row */}
+          {/* Version + Category */}
           <div className="grid grid-cols-2 gap-6">
-            {/* Version */}
-            <div className="space-y-1.5 px-0">
+            <div className="space-y-1.5">
               <label style={labelStyle}>Version</label>
               <input
                 type="text"
@@ -249,91 +107,17 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
                 style={inputStyle}
               />
             </div>
-
-            {/* Category */}
-            <div className="space-y-1.5 px-0">
+            <div className="space-y-1.5">
               <label style={labelStyle}>Category</label>
-              <div className="relative" ref={categoryRef}>
-                <button
-                  type="button"
-                  onClick={() => setIsCategoryOpen(!isCategoryOpen)}
-                  className="w-full px-4 py-2.5 rounded-lg border text-sm font-medium flex items-center justify-between transition-all hover:border-primary-dark/40 cursor-pointer text-left"
-                  style={inputStyle}
-                >
-                  <div className="flex items-center gap-2">
-                    {(() => {
-                      const active = CATEGORIES.find(
-                        (c) => c.id === form.category,
-                      );
-                      const Icon = active.icon;
-                      return (
-                        <>
-                          <Icon
-                            size={16}
-                            strokeWidth={1.5}
-                            className={active.color}
-                          />
-                          <span className="capitalize">{active.label}</span>
-                        </>
-                      );
-                    })()}
-                  </div>
-                  <ChevronDown
-                    size={16}
-                    className={`transition-transform duration-200 ${
-                      isCategoryOpen ? "rotate-180" : ""
-                    }`}
-                    style={{ color: "var(--color-text-muted)" }}
-                  />
-                </button>
-
-                {/* Dropdown Menu */}
-                {isCategoryOpen && (
-                  <div
-                    className="absolute top-full left-0 right-0 mt-2 py-1.5 rounded-lg border shadow-xl z-50 animate-dropdown overflow-hidden"
-                    style={{
-                      backgroundColor: "var(--color-bg-card)",
-                      borderColor: "var(--color-border)",
-                    }}
-                  >
-                    {CATEGORIES.map((c) => {
-                      const Icon = c.icon;
-                      const isActive = form.category === c.id;
-                      return (
-                        <button
-                          key={c.id}
-                          type="button"
-                          onClick={() => {
-                            handleField("category", c.id);
-                            setIsCategoryOpen(false);
-                          }}
-                          className={`w-full px-4 py-2.5 text-sm flex items-center justify-between transition-colors cursor-pointer capitalize ${
-                            isActive
-                              ? "bg-primary text-white"
-                              : "text-text-secondary hover:bg-primary/5 hover:text-text-primary"
-                          }`}
-                        >
-                          <div className="flex items-center gap-2.5">
-                            <Icon
-                              size={16}
-                              strokeWidth={1.5}
-                              className={isActive ? "text-white" : c.color}
-                            />
-                            <span>{c.label}</span>
-                          </div>
-                          {isActive && (
-                            <div className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_white]" />
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
+              <CategoryDropdown
+                value={form.category}
+                onChange={(val) => handleField("category", val)}
+                inputStyle={inputStyle}
+              />
             </div>
           </div>
 
-          {/* Rich Text Editor */}
+          {/* Rich Text */}
           <div className="space-y-1.5">
             <label style={labelStyle}>Release Notes *</label>
             <RichTextEditor
@@ -354,7 +138,7 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
           )}
         </div>
 
-        {/* Footer Actions */}
+        {/* Footer */}
         <div
           className="flex items-center justify-between px-7 py-5 border-t shrink-0"
           style={{
@@ -367,25 +151,17 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
             onClick={handleCancel}
             disabled={loading}
             className="px-5 py-2 rounded-lg text-sm font-bold border transition-all hover:bg-bg-card-hover hover:border-border-light disabled:opacity-40 cursor-pointer"
-            style={{
-              borderColor: "var(--color-border)",
-              color: "var(--color-text-secondary)",
-            }}
+            style={{ borderColor: "var(--color-border)", color: "var(--color-text-secondary)" }}
           >
             Cancel
           </button>
-
           <div className="flex items-center gap-3">
-            {/* Save as Draft */}
             <button
               type="button"
               onClick={() => handleSubmit(false)}
               disabled={loading}
               className="px-5 py-2 rounded-lg text-sm font-bold border transition-all hover:bg-bg-card-hover hover:border-border-light disabled:opacity-40 cursor-pointer"
-              style={{
-                borderColor: "var(--color-border)",
-                color: "var(--color-text-primary)",
-              }}
+              style={{ borderColor: "var(--color-border)", color: "var(--color-text-primary)" }}
             >
               {loading && form.status === "draft" ? (
                 <Loader2 size={14} className="animate-spin" />
@@ -393,8 +169,6 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
                 "Save Draft"
               )}
             </button>
-
-            {/* Publish */}
             <button
               type="button"
               onClick={() => handleSubmit(true)}
@@ -415,5 +189,11 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
     </div>
   );
 }
+
+CreateReleaseModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func,
+};
 
 export default CreateReleaseModal;

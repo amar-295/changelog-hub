@@ -43,7 +43,7 @@ export const authService = {
     }
   },
 
-  refreshToken: async () => {
+  refreshAccessToken: async () => {
     try {
       const response = await api.post("/auth/refresh-token");
       return response.data;

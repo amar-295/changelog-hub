@@ -23,6 +23,15 @@ export const AuthProvider = ({ children }) => {
     };
 
     checkAuth();
+
+    const handleSessionExpired = () => {
+      setUser(null);
+    };
+
+    window.addEventListener("session-expired", handleSessionExpired);
+    return () => {
+      window.removeEventListener("session-expired", handleSessionExpired);
+    };
   }, []);
 
   const login = async (credentials) => {

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 function MetricCard({ totalReleases }) {
   const cardStyle = {
@@ -241,3 +242,7 @@ function MetricCard({ totalReleases }) {
 }
 
 export default MetricCard;
+
+MetricCard.propTypes = {
+  totalReleases: PropTypes.number.isRequired,
+};

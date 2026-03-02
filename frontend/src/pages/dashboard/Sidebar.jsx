@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
 import { createPortal } from "react-dom";
 import { NavLink } from "react-router-dom";
 import {
@@ -88,9 +89,8 @@ function Sidebar({ isOpen, setIsOpen }) {
             <img
               src="/icon.svg"
               alt="Logo"
-              className={`size-7 shrink-0 transition-opacity duration-300 ${
-                !isOpen && headerHovered ? "opacity-0" : "opacity-100"
-              }`}
+              className={`size-7 shrink-0 transition-opacity duration-300 ${!isOpen && headerHovered ? "opacity-0" : "opacity-100"
+                }`}
             />
           </div>
 
@@ -98,13 +98,12 @@ function Sidebar({ isOpen, setIsOpen }) {
           <div
             role="button"
             aria-label="Open sidebar"
-            className={`absolute left-1 size-7 flex items-center justify-center rounded-lg transition-all duration-300 ${
-              isOpen
+            className={`absolute left-1 size-7 flex items-center justify-center rounded-lg transition-all duration-300 ${isOpen
                 ? "opacity-0 invisible"
                 : headerHovered
                   ? "opacity-100"
                   : "opacity-0"
-            }`}
+              }`}
             style={{
               color: headerHovered ? "white" : "var(--color-text-secondary)",
             }}
@@ -136,9 +135,8 @@ function Sidebar({ isOpen, setIsOpen }) {
 
           {/* Close icon (open state) */}
           <div
-            className={`absolute right-1 transition-all duration-300 ${
-              isOpen ? "opacity-100" : "opacity-0 invisible pointer-events-none"
-            }`}
+            className={`absolute right-1 transition-all duration-300 ${isOpen ? "opacity-100" : "opacity-0 invisible pointer-events-none"
+              }`}
             onMouseEnter={() => {
               if (isOpen) toggleTooltip.showTooltip();
             }}
@@ -213,10 +211,9 @@ function Sidebar({ isOpen, setIsOpen }) {
                   aria-label={text}
                   onClick={() => setHoveredNavItem(null)}
                   className={({ isActive }) =>
-                    `flex items-center gap-2 px-2 py-[7px] w-full text-[13.5px] font-normal rounded-[10px] transition-colors hover:bg-bg-card ${
-                      isActive
-                        ? "text-white"
-                        : "text-text-secondary hover:text-white"
+                    `flex items-center gap-2 px-2 py-[7px] w-full text-[13.5px] font-normal rounded-[10px] transition-colors hover:bg-bg-card ${isActive
+                      ? "text-white"
+                      : "text-text-secondary hover:text-white"
                     }`
                   }
                 >
@@ -270,3 +267,8 @@ function Sidebar({ isOpen, setIsOpen }) {
 }
 
 export default Sidebar;
+
+Sidebar.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  setIsOpen: PropTypes.func.isRequired,
+};
