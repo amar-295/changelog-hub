@@ -4,6 +4,9 @@ import { Release } from '../models/release.model.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import generateSlug from '../utils/generateSlug.js';
+import { sendReleaseNotification } from '../services/mail.service.js';
+import { Subscriber } from '../models/subscriber.model.js';
+import { Workspace } from '../models/workspace.model.js';
 
 const createRelease = asyncHandler(async (req, res) => {
     const { title, version, content, category } = req.body
@@ -175,6 +178,16 @@ const updateRelease = asyncHandler(async (req, res) => {
             }
         )
 
+        if (req.body.status === 'published' && release.status === 'draft') {
+            const subscribers = await Subscriber.find({
+                workspaceId,
+                status: 'active'
+            });
+
+            const workspace = await Workspace.findById(workspaceId);
+            sendReleaseNotification(subscribers, updatedRelease, workspace);
+        }
+
         return res.status(200).json(
             new ApiResponse(200, updatedRelease, "Release updated successfully")
         )
@@ -249,6 +262,16 @@ const publishRelease = asyncHandler(async (req, res) => {
                 runValidators: true
             }
         )
+
+        if (release.status === 'draft') {
+            const subscribers = await Subscriber.find({
+                workspaceId,
+                status: 'active'
+            });
+
+            const workspace = await Workspace.findById(workspaceId);
+            sendReleaseNotification(subscribers, publishedRelease, workspace);
+        }
 
         return res.status(200).json(
             new ApiResponse(200, publishedRelease, "Release published successfully")
