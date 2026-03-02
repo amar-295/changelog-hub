@@ -1,4 +1,6 @@
-﻿# 🚀 ChangelogHub
+﻿<p align="center">
+  <img src="frontend/public/logo.svg" alt="ChangelogHub Logo" width="200" />
+</p>
 
 > **Changelog management platform with JWT authentication, workspace isolation, auto-slug generation, and RESTful APIs. Built with Express & MongoDB.**
 
@@ -772,28 +774,28 @@ PORT=5000
 NODE_ENV=development
 
 # Database
-MONGODB_URL=mongodb+srv://username:password@cluster.mongodb.net/changelog-hub
+MONGODB_URL=mongodb+srv://<username>:<password>@cluster.mongodb.net/<database_name>
 
 # CORS
 CORS_ORIGIN=http://localhost:5173
 
 # JWT Secrets (use strong, random values in production)
-ACCESS_TOKEN_SECRET=your_super_secret_access_token_key_32_chars_min
+ACCESS_TOKEN_SECRET=<your_access_token_secret>
 ACCESS_TOKEN_EXPIRY=15m
 
-REFRESH_TOKEN_SECRET=your_super_secret_refresh_token_key_32_chars_min
+REFRESH_TOKEN_SECRET=<your_refresh_token_secret>
 REFRESH_TOKEN_EXPIRY=7d
 
 # File Upload
-CLOUDINARY_NAME=your_cloudinary_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+CLOUDINARY_NAME=<your_cloudinary_name>
+CLOUDINARY_API_KEY=<your_cloudinary_api_key>
+CLOUDINARY_API_SECRET=<your_cloudinary_api_secret>
 
 # Email (Optional)
 SMTP_HOST=smtp.example.com
 SMTP_PORT=587
-SMTP_USER=your_email@example.com
-SMTP_PASS=your_password
+SMTP_USER=<your_email@example.com>
+SMTP_PASS=<your_password>
 ```
 
 ### Development vs Production
