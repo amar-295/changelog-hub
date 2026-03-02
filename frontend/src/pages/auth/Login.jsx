@@ -1,9 +1,9 @@
 import React from "react";
 import Logo from "../../components/Logo";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { Eye, EyeOff, Lock, Mail, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, Loader2, Github } from "lucide-react";
 import toast from "react-hot-toast";
 
 function Login() {
@@ -11,6 +11,16 @@ function Login() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const error = params.get("error");
+    if (error) {
+      toast.error(error);
+      // Clean the URL so the error doesn't stay there
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -57,6 +67,10 @@ function Login() {
         [e.target.name]: null,
       });
     }
+  };
+
+  const handleGitHubLogin = () => {
+    window.location.href = "http://localhost:5000/api/v1/auth/github";
   };
 
   return (
@@ -158,6 +172,26 @@ function Login() {
                 )}
               </button>
             </form>
+
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-border"></div>
+              </div>
+              <div className="relative flex justify-center text-[11px] uppercase tracking-widest">
+                <span className="bg-bg-card px-3 text-text-muted font-bold">
+                  OR
+                </span>
+              </div>
+            </div>
+
+            <button
+              onClick={handleGitHubLogin}
+              className="w-full flex cursor-pointer items-center justify-center rounded-lg h-11 border border-border bg-[#252525] text-text-primary hover:bg-[#333] hover:border-border-light transition-all gap-2 text-[14px] font-semibold"
+            >
+              <Github className="w-[18px] h-[18px]" />
+              <span>Continue with GitHub</span>
+            </button>
+
             <div className="mt-8 pt-6 border-t border-border text-center">
               <p className="text-[14px] text-text-secondary">
                 Don't have an account?{" "}

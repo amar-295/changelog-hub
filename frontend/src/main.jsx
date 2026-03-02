@@ -32,6 +32,7 @@ const router = createBrowserRouter(
         }
       >
         <Route index element={<Dashboard />} />
+        <Route path="dashboard" element={<Dashboard />} />
         <Route path="releases" element={<Releases />} />
         {/* <Route path="analytics" element={<Analytics />} />
       <Route path="team" element={<Team />} />

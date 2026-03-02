@@ -233,10 +233,167 @@ const getCurrentUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, req.user, 'User fetched successfully'));
 });
 
+const githubLogin = asyncHandler(async (req, res) => {
+  const options = {
+    client_id: process.env.GITHUB_CLIENT_ID,
+    redirect_uri: process.env.GITHUB_CALLBACK_URL,
+    scope: 'user:email',
+  };
+
+  const queryString = new URLSearchParams(options).toString();
+  return res.redirect(`${process.env.GITHUB_ROOT_URL}?${queryString}`);
+});
+
+const githubLoginCallback = asyncHandler(async (req, res) => {
+  try {
+    const { code } = req.query;
+
+    if (!code) throw new ApiError(400, 'Invalid Authorization Code');
+
+    const tokenResponse = await fetch(
+      'https://github.com/login/oauth/access_token',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          client_id: process.env.GITHUB_CLIENT_ID,
+          client_secret: process.env.GITHUB_CLIENT_SECRET,
+          code,
+        }),
+      }
+    );
+
+    const tokenData = await tokenResponse.json();
+
+    if (tokenData.error) {
+      throw new ApiError(
+        400,
+        'Github Auth Failed: ' + tokenData.error_description
+      );
+    }
+
+    const userResponse = await fetch('https://api.github.com/user', {
+      headers: {
+        Authorization: `token ${tokenData.access_token}`,
+      },
+    });
+
+    const profile = await userResponse.json();
+
+    let email = profile.email;
+
+    if (!email) {
+      const emailResponse = await fetch('https://api.github.com/user/emails', {
+        headers: {
+          Authorization: `token ${tokenData.access_token}`,
+        },
+      });
+
+      const emails = await emailResponse.json();
+      email = emails.find((email) => email.primary)?.email || emails[0]?.email;
+    }
+
+    let user = await User.findOne({
+      $or: [{ githubId: profile.id.toString() }, { email: email }],
+    });
+
+    if (!user) {
+      let username = profile.login.toLowerCase();
+      const existingUsername = await User.findOne({ username });
+
+      if (existingUsername) {
+        username = `${username}-${Math.floor(Math.random() * 1000)}`;
+      }
+      user = await User.create({
+        fullName: profile.name || profile.login,
+        email: email || `${profile.login}@github.com`,
+        githubId: profile.id.toString(),
+        avatar: profile.avatar_url,
+        username: username,
+      });
+
+      let subdomain = user.username.toLowerCase();
+
+      const existingWorkspace = await Workspace.findOne({
+        subdomain,
+      });
+
+      if (existingWorkspace) {
+        subdomain = `${user.username}-${Date.now()}`;
+      }
+
+      let workspace;
+      try {
+        workspace = await Workspace.create({
+          name: `${user.fullName}'s Workspace`,
+          owner: user._id,
+          subdomain: subdomain,
+        });
+      } catch (error) {
+        await User.findByIdAndDelete(user._id);
+        throw new ApiError(
+          500,
+          'Something went wrong while creating workspace'
+        );
+      }
+
+      user.workspaceId = workspace._id;
+      await user.save({ validateBeforeSave: false });
+
+      const createdUser = await User.findById(user._id).select(
+        '-password -refreshToken'
+      );
+
+      if (!createdUser) {
+        throw new ApiError(
+          500,
+          'Something went wrong while registering the user'
+        );
+      }
+    } else {
+      // SYNC: Update avatar and name even for existing users to keep it fresh
+      user.avatar = profile.avatar_url;
+      user.fullName = profile.name || profile.login;
+      // Update githubId if it wasn't already set (e.g. user registered with email first)
+      if (!user.githubId) user.githubId = profile.id.toString();
+      await user.save({ validateBeforeSave: false });
+    }
+
+    const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+      user._id
+    );
+
+    const options = {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+    };
+
+    return res
+      .status(200)
+      .cookie('accessToken', accessToken, options)
+      .cookie('refreshToken', refreshToken, options)
+      .redirect(`${process.env.CORS_ORIGIN}/dashboard`);
+  } catch (error) {
+    console.error('GitHub Auth Error:', error.message);
+    const errorMessage = encodeURIComponent(
+      error.message || 'GitHub Authentication failed'
+    );
+    return res.redirect(
+      `${process.env.CORS_ORIGIN}/login?error=${errorMessage}`
+    );
+  }
+});
+
 export {
   registerUser,
   loginUser,
   logoutUser,
   refreshAccessToken,
   getCurrentUser,
+  githubLogin,
+  githubLoginCallback,
 };

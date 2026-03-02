@@ -75,6 +75,10 @@ function Signup() {
     }
   };
 
+  const handleGitHubSignup = () => {
+    window.location.href = "http://localhost:5000/api/v1/auth/github";
+  };
+
   return (
     <>
       <main className="bg-bg-page text-text-primary min-h-screen flex items-center justify-center p-4 transition-colors duration-300">
@@ -99,7 +103,10 @@ function Signup() {
             </div>
             {/* GitHub Auth */}
             <div className="flex flex-col gap-3">
-              <button className="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-11 border border-border bg-bg-input text-text-primary hover:bg-[#333] hover:border-border-light transition-all gap-2 text-[14px] font-semibold">
+              <button
+                onClick={handleGitHubSignup}
+                className="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-11 border border-border bg-[#252525] text-text-primary hover:bg-[#333] hover:border-border-light transition-all gap-2 text-[14px] font-semibold"
+              >
                 <Github className="w-[18px] h-[18px] mb-px" />
                 <span className="truncate">Sign up with GitHub</span>
               </button>

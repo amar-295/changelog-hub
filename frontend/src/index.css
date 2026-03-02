@@ -288,23 +288,31 @@ samp,
 /* Selection */
 .ProseMirror ::selection {
   background: rgba(16, 163, 127, 0.25);
-}/* --- Profile UI Refined (Subtle & Single Ring) --- */
+} /* --- Profile UI Refined (Subtle & Single Ring) --- */
 /* Cache-Buster: 002 */
 .profile-ring {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 !important; /* Eliminate gap for single ring look */
+  padding: 0 !important;
   border-radius: 9999px;
-  transition: all 0.2s ease;
-  border: 1px solid transparent;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  /* The "Smooth" Thick Ring: using shadow with a tiny blur for rounded edges vibe */
+  box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.04); 
+  border: none;
+  cursor: pointer;
 }
 
 .profile-ring:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: var(--color-border);
-  transform: none !important; /* No zoom */
+  background: rgba(255, 255, 255, 0.08);
+  /* Smoother, thicker ring brightness on hover with a tiny feather (1px blur) */
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.15), 0 0 2px 6px rgba(255, 255, 255, 0.05);
+  transform: none;
+}
+
+.profile-ring:hover .profile-avatar {
+  filter: brightness(1.05);
 }
 
 .profile-ring.active {
@@ -317,9 +325,9 @@ samp,
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 9999px;
+  width: 32px;                              /* Slightly smaller to accommodate thicker ring */
+  height: 32px;
+  border-radius: 9999px;                       /* Reverted to circle */
   font-size: 13px;
   font-weight: 700;
   color: white;
