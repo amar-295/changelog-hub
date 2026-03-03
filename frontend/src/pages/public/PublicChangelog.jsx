@@ -74,7 +74,7 @@ function PublicChangelog() {
     const fetchReleases = async () => {
       try {
         const response = await fetch(
-          `/api/v1/public/${encodeURIComponent(subdomain)}/releases`
+          `${import.meta.env.VITE_API_URL || '/api/v1'}/public/${encodeURIComponent(subdomain)}/releases`
         );
         const result = await response.json();
         if (result.success) {
