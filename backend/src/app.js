@@ -35,7 +35,6 @@ app.get('/', (req, res) => {
 });
 
 // 404 handler
-// eslint-disable-next-line no-unused-vars
 app.use((req, res, _next) => {
   res.status(404).json({
     success: false,
@@ -46,7 +45,6 @@ app.use((req, res, _next) => {
 });
 
 // Error handler
-// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, _next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || 'Internal Server Error';
