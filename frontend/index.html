@@ -15,11 +15,18 @@
     · Manrope      — Display / headings   (400–800, "best Inter alternative for dev-tools & fintech")
     · JetBrains Mono — Code / monospace  (400–600, loved by developers)
   -->
+  <link rel="preload" as="style"
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" />
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
-    rel="stylesheet" />
+    rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript>
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" />
+  </noscript>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ChangelogHub - Product updates, release notes, and changelogs." />
   <title>ChangelogHub</title>
 
   <!-- Prevent FOUC (Flash of Unstyled Content) for Dark Mode -->

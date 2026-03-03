@@ -341,3 +341,19 @@ samp,
   box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
   border: none !important;
 }
+
+/* Hide scrollbar but keep functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* --- Performance Utilities --- */
+/* Use this on lists of items to defer layout rendering until they enter the viewport */
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 300px; /* Estimated height of a release card */
+}
