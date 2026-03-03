@@ -1,8 +1,9 @@
-import React, { useReducer, useEffect } from "react";
+import React, { useReducer, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { releaseService } from "../../services/releaseService";
-import CreateReleaseModal from "./CreateReleaseModal";
 import ReleasesHeader from "./components/ReleasesHeader";
 import ReleasesTable from "./components/ReleasesTable";
+import ReleasesGrid from "./components/ReleasesGrid";
 import ReleasesPagination from "./components/ReleasesPagination";
 
 // ── Reducer ───────────────────────────────────────────────────────────────────
@@ -13,7 +14,6 @@ const initialState = {
   page: 1,
   pagination: null,
   statusFilter: "",
-  showCreateModal: false,
   refreshKey: 0,
 };
 
@@ -29,10 +29,8 @@ function releasesReducer(state, action) {
       return { ...state, pagination: action.payload };
     case "SET_PAGE":
       return { ...state, page: action.payload };
-    case "OPEN_MODAL":
-      return { ...state, showCreateModal: true };
-    case "CLOSE_MODAL":
-      return { ...state, showCreateModal: false };
+    case "SET_STATUS_FILTER":
+      return { ...state, statusFilter: action.payload, page: 1 };
     case "REFRESH":
       return { ...state, refreshKey: state.refreshKey + 1 };
     default:
@@ -42,18 +40,46 @@ function releasesReducer(state, action) {
 
 // ── Orchestrator ──────────────────────────────────────────────────────────────
 function Releases() {
+  const [searchParams] = useSearchParams();
   const [state, dispatch] = useReducer(releasesReducer, initialState);
-  const { releases, loading, error, page, pagination, statusFilter, showCreateModal, refreshKey } = state;
+  const {
+    releases,
+    loading,
+    error,
+    page,
+    pagination,
+    statusFilter,
+    refreshKey,
+  } = state;
 
+  // UI-only state (not synced to URL)
+  const [viewMode, setViewMode] = useState("table");
+  const [dateFilter, setDateFilter] = useState({ from: "", to: "" });
+
+  // Sync URL ?status param → reducer
+  useEffect(() => {
+    const urlStatus = searchParams.get("status") || "";
+    dispatch({ type: "SET_STATUS_FILTER", payload: urlStatus });
+  }, [searchParams]);
+
+  // Fetch releases whenever filter/page/date/refreshKey changes
   useEffect(() => {
     const fetchReleases = async () => {
       try {
         dispatch({ type: "SET_LOADING", payload: true });
         const params = { page, limit: 10 };
         if (statusFilter) params.status = statusFilter;
+        if (dateFilter.from) params.from = dateFilter.from;
+        if (dateFilter.to) params.to = dateFilter.to;
         const response = await releaseService.getAllReleases(params);
-        dispatch({ type: "SET_RELEASES", payload: response.data?.releases || [] });
-        dispatch({ type: "SET_PAGINATION", payload: response.data?.pagination || null });
+        dispatch({
+          type: "SET_RELEASES",
+          payload: response.data?.releases || [],
+        });
+        dispatch({
+          type: "SET_PAGINATION",
+          payload: response.data?.pagination || null,
+        });
       } catch (err) {
         dispatch({ type: "SET_ERROR", payload: err.message });
       } finally {
@@ -61,32 +87,38 @@ function Releases() {
       }
     };
     fetchReleases();
-  }, [page, statusFilter, refreshKey]);
+  }, [page, statusFilter, dateFilter, refreshKey]);
 
   return (
-    <>
-      <CreateReleaseModal
-        isOpen={showCreateModal}
-        onClose={() => dispatch({ type: "CLOSE_MODAL" })}
-        onSuccess={() => dispatch({ type: "REFRESH" })}
+    <div className="p-8 max-w-7xl mx-auto">
+      <ReleasesHeader
+        statusFilter={statusFilter}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+        dateFilter={dateFilter}
+        onDateFilterChange={(f) => {
+          setDateFilter(f);
+          dispatch({ type: "SET_PAGE", payload: 1 });
+        }}
       />
-      <div className="p-8 max-w-7xl mx-auto space-y-8">
-        <ReleasesHeader
-          onCreateClick={() => dispatch({ type: "OPEN_MODAL" })}
-        />
-        <ReleasesTable
-          releases={releases}
-          loading={loading}
-          error={error}
-        />
+
+      {/* Content + Pagination in one bordered card */}
+      <div
+        className="rounded-xl border overflow-hidden mt-6"
+        style={{ borderColor: "var(--color-border)" }}
+      >
+        {viewMode === "table" ? (
+          <ReleasesTable releases={releases} loading={loading} error={error} />
+        ) : (
+          <ReleasesGrid releases={releases} loading={loading} error={error} />
+        )}
         <ReleasesPagination
-          releases={releases}
           pagination={pagination}
           page={page}
           onPageChange={(p) => dispatch({ type: "SET_PAGE", payload: p })}
         />
       </div>
-    </>
+    </div>
   );
 }
 

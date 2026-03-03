@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Logo from "../../components/Logo";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import Input from "../../components/ui/Input";
 import {
   Github,
   User,
@@ -105,7 +106,7 @@ function Signup() {
             <div className="flex flex-col gap-3">
               <button
                 onClick={handleGitHubSignup}
-                className="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-11 border border-border bg-[#252525] text-text-primary hover:bg-[#333] hover:border-border-light transition-all gap-2 text-[14px] font-semibold"
+                className="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-11 border border-border bg-bg-input text-text-primary hover:bg-bg-card-hover hover:border-border-light transition-all gap-2 text-[14px] font-semibold"
               >
                 <Github className="w-[18px] h-[18px] mb-px" />
                 <span className="truncate">Sign up with GitHub</span>
@@ -127,87 +128,50 @@ function Signup() {
             </div>
             {/* Signup Form */}
             <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[12px] font-semibold text-text-primary tracking-wider uppercase ml-1">
-                  Full Name
-                </label>
-                <div className="relative flex items-center">
-                  <User className="absolute left-3.5 text-text-muted w-[18px] h-[18px]" />
-                  <input
-                    name="fullName"
-                    value={formData.fullName}
-                    onChange={handleChange}
-                    className={`w-full pl-[38px] pr-4 py-2.5 bg-bg-input border ${errors.fullName ? "border-red-500 focus:ring-red-500" : "border-border focus:border-primary focus:ring-primary hover:border-border-light"} rounded-lg text-[14px] text-text-primary focus:ring-1 outline-none transition-all placeholder-text-muted`}
-                    placeholder="John Doe"
-                    type="text"
-                  />
-                </div>
-                {errors.fullName && (
-                  <span className="text-red-500 text-[12px] ml-1">
-                    {errors.fullName}
-                  </span>
-                )}
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[12px] font-semibold text-text-primary tracking-wider uppercase ml-1">
-                  Work Email
-                </label>
-                <div className="relative flex items-center">
-                  <Mail className="absolute left-3.5 text-text-muted w-[18px] h-[18px]" />
-                  <input
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className={`w-full pl-[38px] pr-4 py-2.5 bg-bg-input border ${errors.email ? "border-red-500 focus:ring-red-500" : "border-border focus:border-primary focus:ring-primary hover:border-border-light"} rounded-lg text-[14px] text-text-primary focus:ring-1 outline-none transition-all placeholder-text-muted`}
-                    placeholder="name@company.com"
-                    type="email"
-                  />
-                </div>
-                {errors.email && (
-                  <span className="text-red-500 text-[12px] ml-1">
-                    {errors.email}
-                  </span>
-                )}
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[12px] font-semibold text-text-primary tracking-wider uppercase ml-1">
-                  Username
-                </label>
-                <div className="relative flex items-center">
-                  <AtSign className="absolute left-3.5 text-text-muted w-[18px] h-[18px]" />
-                  <input
-                    name="username"
-                    value={formData.username}
-                    onChange={handleChange}
-                    className={`w-full pl-[38px] pr-4 py-2.5 bg-bg-input border ${errors.username ? "border-red-500 focus:ring-red-500" : "border-border focus:border-primary focus:ring-primary hover:border-border-light"} rounded-lg text-[14px] text-text-primary focus:ring-1 outline-none transition-all placeholder-text-muted`}
-                    placeholder="username"
-                    type="text"
-                  />
-                </div>
-                {errors.username && (
-                  <span className="text-red-500 text-[12px] ml-1">
-                    {errors.username}
-                  </span>
-                )}
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[12px] font-semibold text-text-primary tracking-wider uppercase ml-1">
-                  Password
-                </label>
-                <div className="relative flex items-center">
-                  <Lock className="absolute left-3.5 text-text-muted w-[18px] h-[18px]" />
-                  <input
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className={`w-full pl-[38px] pr-10 py-2.5 bg-bg-input border ${errors.password ? "border-red-500 focus:ring-red-500" : "border-border focus:border-primary focus:ring-primary hover:border-border-light"} rounded-lg text-[14px] text-text-primary focus:ring-1 outline-none transition-all placeholder-text-muted`}
-                    placeholder="At least 8 characters"
-                    type={showPassword ? "text" : "password"}
-                  />
+              <Input
+                label="Full Name"
+                name="fullName"
+                type="text"
+                value={formData.fullName}
+                onChange={handleChange}
+                placeholder="John Doe"
+                icon={User}
+                error={errors.fullName}
+              />
+              <Input
+                label="Work Email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="name@company.com"
+                icon={Mail}
+                error={errors.email}
+              />
+              <Input
+                label="Username"
+                name="username"
+                type="text"
+                value={formData.username}
+                onChange={handleChange}
+                placeholder="username"
+                icon={AtSign}
+                error={errors.username}
+              />
+              <Input
+                label="Password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="At least 8 characters"
+                icon={Lock}
+                error={errors.password}
+                rightIcon={
                   <button
-                    className="absolute right-3 text-text-muted hover:text-text-primary transition-colors flex items-center"
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
+                    className="p-1 rounded-md text-text-muted hover:text-text-primary hover:bg-white/5 transition-colors focus:outline-none focus:ring-1 focus:ring-primary"
                   >
                     {showPassword ? (
                       <EyeOff className="w-[18px] h-[18px]" />
@@ -215,16 +179,11 @@ function Signup() {
                       <Eye className="w-[18px] h-[18px]" />
                     )}
                   </button>
-                </div>
-                {errors.password && (
-                  <span className="text-red-500 text-[12px] ml-1">
-                    {errors.password}
-                  </span>
-                )}
-              </div>
+                }
+              />
               <div className="pt-2">
                 <button
-                  className="w-full h-11 rounded-lg bg-primary text-white font-semibold text-[14px] hover:bg-primary-dark transition-colors flex items-center justify-center cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="btn btn-primary btn-lg w-full mt-2"
                   type="submit"
                   disabled={isLoading}
                 >
@@ -239,10 +198,7 @@ function Signup() {
             <div className="mt-8 pt-6 border-t border-border text-center">
               <p className="text-[14px] text-text-secondary">
                 Already have an account?{" "}
-                <Link
-                  className="text-primary font-semibold hover:text-primary-dark transition-colors"
-                  to="/login"
-                >
+                <Link className="link-animated" to="/login">
                   Log in
                 </Link>
               </p>
@@ -250,13 +206,13 @@ function Signup() {
           </div>
           {/* Footer Links */}
           <div className="flex justify-center gap-6 text-[12px] text-text-muted font-medium mt-2">
-            <a className="hover:text-text-primary transition-colors" href="#">
+            <a className="link-muted" href="#">
               Privacy Policy
             </a>
-            <a className="hover:text-text-primary transition-colors" href="#">
+            <a className="link-muted" href="#">
               Terms of Service
             </a>
-            <a className="hover:text-text-primary transition-colors" href="#">
+            <a className="link-muted" href="#">
               Contact Support
             </a>
           </div>

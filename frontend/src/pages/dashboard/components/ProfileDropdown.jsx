@@ -67,9 +67,9 @@ function ProfileDropdown({ user, onLogout }) {
             text-[11px] font-semibold whitespace-nowrap text-white
             pointer-events-none z-50 flex items-center tooltip-visible"
           style={{
-            backgroundColor: "#1a1a1a",
-            border: "1px solid rgba(255,255,255,0.08)",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
+            backgroundColor: "var(--color-bg-tooltip)",
+            border: "1px solid rgba(255,255,255,0.16)",
+            boxShadow: "0 8px 20px rgba(0,0,0,0.6)",
             transform: "translateX(-50%)",
           }}
         >
@@ -79,7 +79,7 @@ function ProfileDropdown({ user, onLogout }) {
             style={{
               borderLeft: "5px solid transparent",
               borderRight: "5px solid transparent",
-              borderBottom: "5px solid #1a1a1a",
+              borderBottom: "5px solid var(--color-bg-tooltip)",
             }}
           />
         </div>

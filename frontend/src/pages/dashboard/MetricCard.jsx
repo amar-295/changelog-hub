@@ -17,7 +17,7 @@ function MetricCard({ totalReleases }) {
         <div className="flex justify-between items-start">
           <div>
             <p
-              className="text-xs font-bold uppercase tracking-widest"
+              className="text-[13px] font-semibold"
               style={{ color: "var(--color-text-muted)" }}
             >
               Total Releases
@@ -93,7 +93,7 @@ function MetricCard({ totalReleases }) {
         <div className="flex justify-between items-start">
           <div>
             <p
-              className="text-xs font-bold uppercase tracking-widest"
+              className="text-[13px] font-semibold"
               style={{ color: "var(--color-text-muted)" }}
             >
               Avg. Engagement
@@ -169,7 +169,7 @@ function MetricCard({ totalReleases }) {
         <div className="flex justify-between items-start">
           <div>
             <p
-              className="text-xs font-bold uppercase tracking-widest"
+              className="text-[13px] font-semibold"
               style={{ color: "var(--color-text-muted)" }}
             >
               Subscribers

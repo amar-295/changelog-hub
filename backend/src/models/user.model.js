@@ -33,7 +33,7 @@ const userSchema = new Schema(
     githubId: {
         type: String,
         unique: true,
-        sparse: true,   // This allows multiple users to have 'null' githubId
+        sparse: true,   
     },
     avatar: {
       type: String,

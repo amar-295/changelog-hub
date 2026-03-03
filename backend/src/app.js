@@ -19,12 +19,14 @@ import userRouter from "./routes/user.routes.js"
 import releaseRouter from "./routes/release.routes.js"
 import publicRouter from "./routes/public.routes.js"
 import subscriberRouter from "./routes/subscriber.routes.js"
+import workspaceRouter from "./routes/workspace.routes.js"
 
 // routes declaration
 app.use("/api/v1/auth", userRouter)
 app.use("/api/v1/releases", releaseRouter)
 app.use("/api/v1/public", publicRouter)
 app.use("/api/v1/subscribers", subscriberRouter)
+app.use("/api/v1/workspaces", workspaceRouter)
 
 app.get('/', (req, res) => {
     res.send(`Server is running`)

@@ -3,6 +3,7 @@ import Logo from "../../components/Logo";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import Input from "../../components/ui/Input";
 import { Eye, EyeOff, Lock, Mail, Loader2, Github } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -97,54 +98,37 @@ function Login() {
             </div>
             <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
               {/* Email Field */}
-              <div className="flex flex-col gap-2">
-                <label className="text-text-primary text-[12px] font-semibold tracking-wider uppercase ml-1">
-                  Email
-                </label>
-                <div className="relative flex items-center">
-                  <Mail className="absolute left-3.5 text-text-muted w-[18px] h-[18px]" />
-                  <input
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className={`w-full pl-[38px] pr-4 py-2.5 bg-[#252525] border ${errors.email ? "border-red-500 focus:ring-red-500" : "border-border focus:border-primary focus:ring-primary hover:border-border-light"} rounded-lg text-[14px] text-text-primary focus:ring-1 outline-none transition-all placeholder-text-muted`}
-                    placeholder="name@company.com"
-                    type="email"
-                  />
-                </div>
-                {errors.email && (
-                  <span className="text-red-500 text-[12px] ml-1">
-                    {errors.email}
-                  </span>
-                )}
-              </div>
+              <Input
+                label="Email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="name@company.com"
+                icon={Mail}
+                error={errors.email}
+              />
+
               {/* Password Field */}
-              <div className="flex flex-col gap-2">
-                <div className="flex justify-between items-center ml-1">
-                  <label className="text-text-primary text-[12px] font-semibold tracking-wider uppercase">
-                    Password
-                  </label>
-                  <a
-                    className="text-primary text-[13px] font-semibold hover:text-primary-dark transition-colors"
-                    href="#"
-                  >
+              <Input
+                label="Password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                icon={Lock}
+                error={errors.password}
+                rightLabel={
+                  <a className="link" href="#">
                     Forgot password?
                   </a>
-                </div>
-                <div className="relative flex items-center">
-                  <Lock className="absolute left-3.5 text-text-muted w-[18px] h-[18px]" />
-                  <input
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className={`w-full pl-[38px] pr-10 py-2.5 bg-[#252525] border ${errors.password ? "border-red-500 focus:ring-red-500" : "border-border focus:border-primary focus:ring-primary hover:border-border-light"} rounded-lg text-[14px] text-text-primary focus:ring-1 outline-none transition-all placeholder-text-muted`}
-                    placeholder="••••••••"
-                    type={showPassword ? "text" : "password"}
-                  />
+                }
+                rightIcon={
                   <button
-                    className="absolute right-3 text-text-muted hover:text-text-primary transition-colors flex items-center"
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
+                    className="p-1 rounded-md text-text-muted hover:text-text-primary hover:bg-white/5 transition-colors focus:outline-none focus:ring-1 focus:ring-primary"
                   >
                     {showPassword ? (
                       <EyeOff className="w-[18px] h-[18px]" />
@@ -152,16 +136,11 @@ function Login() {
                       <Eye className="w-[18px] h-[18px]" />
                     )}
                   </button>
-                </div>
-                {errors.password && (
-                  <span className="text-red-500 text-[12px] ml-1">
-                    {errors.password}
-                  </span>
-                )}
-              </div>
+                }
+              />
               {/* Primary Button */}
               <button
-                className="w-full bg-primary hover:bg-primary-dark text-white font-semibold flex items-center justify-center h-11 rounded-lg transition-colors mt-3 text-[14px] cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+                className="btn btn-primary btn-lg w-full mt-3"
                 type="submit"
                 disabled={isLoading}
               >
@@ -186,7 +165,7 @@ function Login() {
 
             <button
               onClick={handleGitHubLogin}
-              className="w-full flex cursor-pointer items-center justify-center rounded-lg h-11 border border-border bg-[#252525] text-text-primary hover:bg-[#333] hover:border-border-light transition-all gap-2 text-[14px] font-semibold"
+              className="btn btn-secondary btn-lg w-full"
             >
               <Github className="w-[18px] h-[18px]" />
               <span>Continue with GitHub</span>
@@ -195,10 +174,7 @@ function Login() {
             <div className="mt-8 pt-6 border-t border-border text-center">
               <p className="text-[14px] text-text-secondary">
                 Don't have an account?{" "}
-                <Link
-                  className="text-primary font-semibold hover:text-primary-dark transition-colors"
-                  to="/signup"
-                >
+                <Link className="link-animated" to="/signup">
                   Create an account
                 </Link>
               </p>

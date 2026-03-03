@@ -38,7 +38,10 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
     <div
       ref={overlayRef}
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ backgroundColor: "rgba(0,0,0,0.65)", backdropFilter: "blur(4px)" }}
+      style={{
+        backgroundColor: "rgba(0,0,0,0.65)",
+        backdropFilter: "blur(4px)",
+      }}
     >
       <div
         className="relative w-full max-w-4xl max-h-[92vh] flex flex-col rounded-2xl shadow-2xl overflow-hidden animate-dropdown"
@@ -55,7 +58,10 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
           <div className="flex items-center gap-3">
             <div
               className="p-2 rounded-lg"
-              style={{ backgroundColor: "var(--color-primary-muted, rgba(99,102,241,0.12))" }}
+              style={{
+                backgroundColor:
+                  "var(--color-primary-muted, rgba(99,102,241,0.12))",
+              }}
             >
               <FileText size={18} style={{ color: "var(--color-primary)" }} />
             </div>
@@ -66,14 +72,17 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
               >
                 New Release
               </h2>
-              <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>
+              <p
+                className="text-xs"
+                style={{ color: "var(--color-text-muted)" }}
+              >
                 Compose and publish a product update
               </p>
             </div>
           </div>
           <button
             onClick={handleCancel}
-            className="p-2 transition-all hover:bg-white/5 rounded-lg text-text-muted hover:text-text-primary cursor-pointer active:scale-90"
+            className="p-2 transition-all hover:bg-white/10 rounded-lg text-text-muted hover:text-text-primary cursor-pointer active:scale-95"
           >
             <X size={20} />
           </button>
@@ -151,7 +160,10 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
             onClick={handleCancel}
             disabled={loading}
             className="px-5 py-2 rounded-lg text-sm font-bold border transition-all hover:bg-bg-card-hover hover:border-border-light disabled:opacity-40 cursor-pointer"
-            style={{ borderColor: "var(--color-border)", color: "var(--color-text-secondary)" }}
+            style={{
+              borderColor: "var(--color-border)",
+              color: "var(--color-text-secondary)",
+            }}
           >
             Cancel
           </button>
@@ -161,7 +173,10 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
               onClick={() => handleSubmit(false)}
               disabled={loading}
               className="px-5 py-2 rounded-lg text-sm font-bold border transition-all hover:bg-bg-card-hover hover:border-border-light disabled:opacity-40 cursor-pointer"
-              style={{ borderColor: "var(--color-border)", color: "var(--color-text-primary)" }}
+              style={{
+                borderColor: "var(--color-border)",
+                color: "var(--color-text-primary)",
+              }}
             >
               {loading && form.status === "draft" ? (
                 <Loader2 size={14} className="animate-spin" />

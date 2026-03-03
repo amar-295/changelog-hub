@@ -16,6 +16,9 @@ import Login from "./pages/auth/Login.jsx";
 import DashboardLayout from "./layouts/DashboardLayout.jsx";
 import Dashboard from "./pages/dashboard/Dashboard.jsx";
 import Releases from "./pages/releases/Releases.jsx";
+import CreateReleasePage from "./pages/releases/CreateReleasePage.jsx";
+import PublicChangelog from "./pages/public/PublicChangelog.jsx";
+import Settings from "./pages/dashboard/Settings.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -34,10 +37,23 @@ const router = createBrowserRouter(
         <Route index element={<Dashboard />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="releases" element={<Releases />} />
+        <Route path="settings" element={<Settings />} />
         {/* <Route path="analytics" element={<Analytics />} />
-      <Route path="team" element={<Team />} />
-      <Route path="settings" element={<Settings />} /> */}
+      <Route path="team" element={<Team />} /> */}
       </Route>
+
+      {/* Full-screen release editor (outside DashboardLayout so sidebar/header don't show) */}
+      <Route
+        path="/releases/new"
+        element={
+          <ProtectedRoute>
+            <CreateReleasePage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Public Page Route - Catch all other subdomains */}
+      <Route path="/:subdomain" element={<PublicChangelog />} />
     </>,
   ),
 );
@@ -51,8 +67,8 @@ createRoot(document.getElementById("root")).render(
           toastOptions={{
             duration: 4000,
             style: {
-              background: "#1a1a1a", // Darker, sleeker background
-              color: "#ededed", // Off-white crisp text
+              background: "var(--color-bg-tooltip)",
+              color: "var(--color-text-primary)",
               border: "1px solid rgba(255, 255, 255, 0.08)", // ultra-subtle border
               borderRadius: "10px",
               fontSize: "13px",
@@ -64,13 +80,13 @@ createRoot(document.getElementById("root")).render(
             success: {
               iconTheme: {
                 primary: "#38bdf8", // Sky blue for success instead of generic green
-                secondary: "#2f2f2f",
+                secondary: "var(--color-bg-tooltip)",
               },
             },
             error: {
               iconTheme: {
                 primary: "#ef4444", // Red for errors
-                secondary: "#2f2f2f",
+                secondary: "var(--color-bg-tooltip)",
               },
             },
           }}

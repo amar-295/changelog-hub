@@ -20,12 +20,18 @@ function Hero({ user }) {
       </div>
       <div className="flex gap-3">
         <button
-          className="px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 border hover:opacity-90 cursor-pointer"
+          onClick={() => {
+            if (user?.workspaceId?.subdomain) {
+              window.open(`/${user.workspaceId.subdomain}`, "_blank");
+            }
+          }}
+          className="px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 border hover:opacity-90 cursor-pointer disabled:opacity-50"
           style={{
             backgroundColor: "var(--color-bg-card)",
             borderColor: "var(--color-border)",
             color: "var(--color-text-secondary)",
           }}
+          disabled={!user?.workspaceId?.subdomain}
         >
           <ExternalLink size={18} strokeWidth={1.5} />
           View Public Page

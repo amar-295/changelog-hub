@@ -144,35 +144,35 @@ function RecentUpdate({ onTotalReleasesLoaded }) {
               <tr style={{ backgroundColor: "var(--color-bg-elevated)" }}>
                 <th
                   scope="col"
-                  className="px-6 py-4 text-xs font-bold uppercase tracking-widest"
+                  className="px-6 py-4 text-[13px] font-semibold"
                   style={thStyle}
                 >
                   Title
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-4 text-xs font-bold uppercase tracking-widest"
+                  className="px-6 py-4 text-[13px] font-semibold"
                   style={thStyle}
                 >
                   Date
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-4 text-xs font-bold uppercase tracking-widest"
+                  className="px-6 py-4 text-[13px] font-semibold"
                   style={thStyle}
                 >
                   Engagement
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-4 text-xs font-bold uppercase tracking-widest"
+                  className="px-6 py-4 text-[13px] font-semibold"
                   style={thStyle}
                 >
                   Status
                 </th>
                 <th
                   scope="col"
-                  className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-right"
+                  className="px-6 py-4 text-[13px] font-semibold text-right"
                   style={thStyle}
                 >
                   Actions

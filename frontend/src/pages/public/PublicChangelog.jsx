@@ -169,7 +169,7 @@ function PublicChangelog() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-primary/40 transition-all placeholder:text-text-muted"
+                className="w-full bg-bg-input border border-border focus:border-primary focus:ring-1 focus:ring-primary hover:border-border-light hover:bg-white/10 rounded-xl px-4 py-3 text-[14px] text-text-primary outline-none transition-all placeholder-text-muted"
               />
               <button
                 type="submit"
@@ -215,7 +215,7 @@ function PublicChangelog() {
             {["Updates", "Docs", "Support"].map((item) => (
               <button
                 key={item}
-                className="px-3 py-1.5 text-[13px] text-text-secondary hover:text-white rounded-lg hover:bg-white/5 transition-all"
+                className="px-3 py-1.5 text-[13px] text-text-secondary hover:text-white rounded-lg hover:bg-white/5 transition-all active:scale-[0.98]"
               >
                 {item}
               </button>
@@ -223,7 +223,7 @@ function PublicChangelog() {
             {isAuthenticated && (
               <Link
                 to="/dashboard"
-                className="px-3 py-1.5 text-[13px] text-text-secondary hover:text-white rounded-lg hover:bg-white/5 transition-all"
+                className="px-3 py-1.5 text-[13px] text-text-secondary hover:text-white rounded-lg hover:bg-white/5 transition-all active:scale-[0.98]"
               >
                 Dashboard
               </Link>
@@ -233,7 +233,7 @@ function PublicChangelog() {
           {/* Subscribe CTA */}
           <button
             onClick={() => setSubscribeModal(true)}
-            className="flex items-center gap-2 bg-white/8 hover:bg-white/12 border border-white/10 hover:border-white/20 text-white text-[13px] font-medium px-4 py-2 rounded-full transition-all"
+            className="flex items-center gap-2 bg-white/8 hover:bg-white/12 border border-white/10 hover:border-white/20 text-white text-[13px] font-medium px-4 py-2 rounded-full transition-all active:scale-[0.98]"
           >
             <Bell size={13} className="text-text-secondary" />
             Subscribe
@@ -316,7 +316,7 @@ function PublicChangelog() {
               placeholder="Search…"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-white/5 border border-white/8 rounded-lg pl-8 pr-4 py-2 text-[13px] text-white outline-none focus:border-primary/40 transition-all placeholder:text-text-muted w-[220px]"
+              className="bg-bg-input border border-border focus:border-primary focus:ring-1 focus:ring-primary hover:border-border-light hover:bg-white/10 rounded-lg pl-8 pr-4 py-2 text-[13px] text-text-primary outline-none transition-all placeholder-text-muted w-[220px]"
             />
           </div>
         </div>

@@ -8,19 +8,20 @@
   --color-accent: #818cf8; /* Muted Indigo */
   --color-primary-muted: rgba(59, 130, 246, 0.12);
 
-  --color-bg-page: #212121;
-  --color-bg-sidebar: #1c1c1c;
-  --color-bg-card: #2f2f2f;
-  --color-bg-card-hover: #3b3b3b;
-  --color-bg-elevated: #2f2f2f;
-  --color-bg-input: #2f2f2f;
+  --color-bg-page: #0a0a0b;
+  --color-bg-sidebar: #0e0e11;
+  --color-bg-card: #161618;
+  --color-bg-card-hover: rgba(255, 255, 255, 0.10); /* Subtle hover tint */
+  --color-bg-tooltip: #18181b; /* Deep dark - contrasts via border+shadow */  
+  --color-bg-elevated: #161618;
+  --color-bg-input: rgba(255, 255, 255, 0.06); /* Increased from 0.03 */
 
-  --color-border: #424242;
-  --color-border-light: #525252;
+  --color-border: rgba(255, 255, 255, 0.08); /* Soft, adaptive border */
+  --color-border-light: rgba(255, 255, 255, 0.12);
 
-  --color-text-primary: #ececec;
-  --color-text-secondary: #b4b4b4;
-  --color-text-muted: #828282;
+  --color-text-primary: rgba(255, 255, 255, 0.92);
+  --color-text-secondary: rgba(255, 255, 255, 0.60);
+  --color-text-muted: rgba(255, 255, 255, 0.38);
 
   /* ── Font System ──
      Display  → Plus Jakarta Sans (headings, hero text)
@@ -141,9 +142,62 @@ samp,
 .tooltip-visible-right {
   animation: tooltip-show-right 0.12s ease-out forwards;
 }
+
 .animate-dropdown {
   animation: dropdown-reveal 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   transform-origin: top right;
+}
+
+@layer components {
+  /* --- Premium Component System --- */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98];
+  }
+  
+  /* Sizing Variants */
+  .btn-sm { @apply h-8 px-3 text-[13px]; }
+  .btn-md { @apply h-10 px-4 text-[13.5px]; }
+  .btn-lg { @apply h-11 px-6 text-[14px]; }
+
+  /* Style Variants */
+  .btn-primary {
+    @apply bg-primary text-white border border-transparent;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+  .btn-primary:hover:not(:disabled) {
+    @apply bg-primary-dark;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  .btn-secondary {
+    @apply bg-bg-input text-text-primary border border-border;
+  }
+  .btn-secondary:hover:not(:disabled) {
+    @apply bg-bg-card-hover border-border-light;
+  }
+
+  .btn-danger {
+    @apply bg-red-400/10 text-red-400 border border-red-400/20 hover:bg-red-500/20 hover:border-red-500/30 hover:text-red-300;
+  }
+
+  /* Links & Typography Polish */
+  .link {
+    @apply text-primary font-semibold hover:text-primary-dark transition-colors duration-200 cursor-pointer;
+  }
+  
+  .link-muted {
+    @apply text-text-secondary font-medium hover:text-white transition-colors duration-200 cursor-pointer;
+  }
+  
+  .link-animated {
+    @apply relative text-text-primary font-medium hover:text-white transition-colors duration-200 inline-block cursor-pointer;
+  }
+  .link-animated::after {
+    @apply content-[""] absolute left-0 -bottom-0.5 w-full h-px bg-primary scale-x-0 origin-right transition-transform duration-300 ease-out;
+  }
+  .link-animated:hover::after {
+    @apply scale-x-100 origin-left;
+  }
 }
 
 /* ── Tiptap Rich Text Editor ─────────────────────────────────────────────── */
@@ -155,14 +209,22 @@ samp,
 
 /* The ProseMirror editable area */
 .ProseMirror {
-  padding: 1rem 1.25rem;
+  padding: 1.5rem 2rem;
   min-height: 220px;
-  max-height: 400px;
   overflow-y: auto;
   color: var(--color-text-primary);
-  font-size: 0.9rem;
-  line-height: 1.75;
+  font-size: 0.925rem;
+  line-height: 1.8;
   caret-color: var(--color-primary);
+}
+
+/* Full-page editor: let the outer flex container handle scrolling */
+.editor-full-page .ProseMirror {
+  min-height: 100%;
+  max-height: none;
+  overflow-y: visible;
+  padding: 2rem 2.5rem;
+  font-size: 0.95rem;
 }
 
 .ProseMirror:focus {
