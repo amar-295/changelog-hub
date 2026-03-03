@@ -1,7 +1,7 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-function Logo({ width = "100px", className = "" }) {
+function Logo({ width = '100px', className = '' }) {
   return (
     <div className={className} style={{ width }}>
       <img

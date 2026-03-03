@@ -1,10 +1,10 @@
-import React, { useReducer, useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { releaseService } from "../../services/releaseService";
-import ReleasesHeader from "./components/ReleasesHeader";
-import ReleasesTable from "./components/ReleasesTable";
-import ReleasesGrid from "./components/ReleasesGrid";
-import ReleasesPagination from "./components/ReleasesPagination";
+import React, { useReducer, useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { releaseService } from '../../services/releaseService';
+import ReleasesHeader from './components/ReleasesHeader';
+import ReleasesTable from './components/ReleasesTable';
+import ReleasesGrid from './components/ReleasesGrid';
+import ReleasesPagination from './components/ReleasesPagination';
 
 // ── Reducer ───────────────────────────────────────────────────────────────────
 const initialState = {
@@ -13,25 +13,25 @@ const initialState = {
   error: null,
   page: 1,
   pagination: null,
-  statusFilter: "",
+  statusFilter: '',
   refreshKey: 0,
 };
 
 function releasesReducer(state, action) {
   switch (action.type) {
-    case "SET_RELEASES":
+    case 'SET_RELEASES':
       return { ...state, releases: action.payload };
-    case "SET_LOADING":
+    case 'SET_LOADING':
       return { ...state, loading: action.payload };
-    case "SET_ERROR":
+    case 'SET_ERROR':
       return { ...state, error: action.payload };
-    case "SET_PAGINATION":
+    case 'SET_PAGINATION':
       return { ...state, pagination: action.payload };
-    case "SET_PAGE":
+    case 'SET_PAGE':
       return { ...state, page: action.payload };
-    case "SET_STATUS_FILTER":
+    case 'SET_STATUS_FILTER':
       return { ...state, statusFilter: action.payload, page: 1 };
-    case "REFRESH":
+    case 'REFRESH':
       return { ...state, refreshKey: state.refreshKey + 1 };
     default:
       return state;
@@ -53,37 +53,37 @@ function Releases() {
   } = state;
 
   // UI-only state (not synced to URL)
-  const [viewMode, setViewMode] = useState("table");
-  const [dateFilter, setDateFilter] = useState({ from: "", to: "" });
+  const [viewMode, setViewMode] = useState('table');
+  const [dateFilter, setDateFilter] = useState({ from: '', to: '' });
 
   // Sync URL ?status param → reducer
   useEffect(() => {
-    const urlStatus = searchParams.get("status") || "";
-    dispatch({ type: "SET_STATUS_FILTER", payload: urlStatus });
+    const urlStatus = searchParams.get('status') || '';
+    dispatch({ type: 'SET_STATUS_FILTER', payload: urlStatus });
   }, [searchParams]);
 
   // Fetch releases whenever filter/page/date/refreshKey changes
   useEffect(() => {
     const fetchReleases = async () => {
       try {
-        dispatch({ type: "SET_LOADING", payload: true });
+        dispatch({ type: 'SET_LOADING', payload: true });
         const params = { page, limit: 10 };
         if (statusFilter) params.status = statusFilter;
         if (dateFilter.from) params.from = dateFilter.from;
         if (dateFilter.to) params.to = dateFilter.to;
         const response = await releaseService.getAllReleases(params);
         dispatch({
-          type: "SET_RELEASES",
+          type: 'SET_RELEASES',
           payload: response.data?.releases || [],
         });
         dispatch({
-          type: "SET_PAGINATION",
+          type: 'SET_PAGINATION',
           payload: response.data?.pagination || null,
         });
       } catch (err) {
-        dispatch({ type: "SET_ERROR", payload: err.message });
+        dispatch({ type: 'SET_ERROR', payload: err.message });
       } finally {
-        dispatch({ type: "SET_LOADING", payload: false });
+        dispatch({ type: 'SET_LOADING', payload: false });
       }
     };
     fetchReleases();
@@ -98,16 +98,16 @@ function Releases() {
         dateFilter={dateFilter}
         onDateFilterChange={(f) => {
           setDateFilter(f);
-          dispatch({ type: "SET_PAGE", payload: 1 });
+          dispatch({ type: 'SET_PAGE', payload: 1 });
         }}
       />
 
       {/* Content + Pagination in one bordered card */}
       <div
         className="rounded-xl border overflow-hidden mt-6"
-        style={{ borderColor: "var(--color-border)" }}
+        style={{ borderColor: 'var(--color-border)' }}
       >
-        {viewMode === "table" ? (
+        {viewMode === 'table' ? (
           <ReleasesTable releases={releases} loading={loading} error={error} />
         ) : (
           <ReleasesGrid releases={releases} loading={loading} error={error} />
@@ -115,7 +115,7 @@ function Releases() {
         <ReleasesPagination
           pagination={pagination}
           page={page}
-          onPageChange={(p) => dispatch({ type: "SET_PAGE", payload: p })}
+          onPageChange={(p) => dispatch({ type: 'SET_PAGE', payload: p })}
         />
       </div>
     </div>

@@ -1,1 +1,1 @@
-export const DB_NAME = "ChangelogHub"
+export const DB_NAME = 'ChangelogHub';

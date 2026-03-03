@@ -1,11 +1,11 @@
-import axios from "axios";
-import { authService } from "./authService";
+import axios from 'axios';
+import { authService } from './authService';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "/api/v1",
+  baseURL: import.meta.env.VITE_API_URL || '/api/v1',
   withCredentials: true,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
@@ -34,8 +34,8 @@ api.interceptors.response.use(
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
-      !originalRequest.url.includes("/auth/refresh-token") &&
-      !originalRequest.url.includes("/auth/login")
+      !originalRequest.url.includes('/auth/refresh-token') &&
+      !originalRequest.url.includes('/auth/login')
     ) {
       if (isRefreshing) {
         return new Promise(function (resolve, reject) {
@@ -62,7 +62,7 @@ api.interceptors.response.use(
         processQueue(err, null);
 
         // Dispatch event so AuthContext can log user out
-        window.dispatchEvent(new Event("session-expired"));
+        window.dispatchEvent(new Event('session-expired'));
         return Promise.reject(err);
       } finally {
         isRefreshing = false;
@@ -70,7 +70,7 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  },
+  }
 );
 
 export default api;

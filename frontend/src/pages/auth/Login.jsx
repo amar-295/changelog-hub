@@ -1,11 +1,11 @@
-import React from "react";
-import Logo from "../../components/Logo";
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import Input from "../../components/ui/Input";
-import { Eye, EyeOff, Lock, Mail, Loader2, Github } from "lucide-react";
-import toast from "react-hot-toast";
+import React from 'react';
+import Logo from '../../components/Logo';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import Input from '../../components/ui/Input';
+import { Eye, EyeOff, Lock, Mail, Loader2, Github } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 function Login() {
   const { login } = useAuth();
@@ -15,7 +15,7 @@ function Login() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const error = params.get("error");
+    const error = params.get('error');
     if (error) {
       toast.error(error);
       // Clean the URL so the error doesn't stay there
@@ -24,8 +24,8 @@ function Login() {
   }, []);
 
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
   const [showPassword, setShowPassword] = useState(false);
 
@@ -33,8 +33,8 @@ function Login() {
     e.preventDefault();
     const newErrors = {};
 
-    if (!formData.email.trim()) newErrors.email = "Email is required";
-    if (!formData.password) newErrors.password = "Password is required";
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    if (!formData.password) newErrors.password = 'Password is required';
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -46,11 +46,11 @@ function Login() {
 
     try {
       await login(formData);
-      toast.success("Signed in successfully");
-      navigate("/");
+      toast.success('Signed in successfully');
+      navigate('/');
     } catch (error) {
       // The authService throws the error object directly from the response
-      toast.error(error.message || "Invalid credentials");
+      toast.error(error.message || 'Invalid credentials');
     } finally {
       setIsLoading(false);
     }
@@ -71,7 +71,7 @@ function Login() {
   };
 
   const handleGitHubLogin = () => {
-    window.location.href = "http://localhost:5000/api/v1/auth/github";
+    window.location.href = 'http://localhost:5000/api/v1/auth/github';
   };
 
   return (
@@ -88,7 +88,7 @@ function Login() {
             <div className="mb-8 text-center">
               <h2
                 className="text-text-primary text-xl font-bold leading-tight"
-                style={{ fontFamily: "var(--font-display)" }}
+                style={{ fontFamily: 'var(--font-display)' }}
               >
                 Log in to your account
               </h2>
@@ -113,7 +113,7 @@ function Login() {
               <Input
                 label="Password"
                 name="password"
-                type={showPassword ? "text" : "password"}
+                type={showPassword ? 'text' : 'password'}
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="••••••••"
@@ -147,7 +147,7 @@ function Login() {
                 {isLoading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
                 ) : (
-                  "Log in"
+                  'Log in'
                 )}
               </button>
             </form>
@@ -173,7 +173,7 @@ function Login() {
 
             <div className="mt-8 pt-6 border-t border-border text-center">
               <p className="text-[14px] text-text-secondary">
-                Don't have an account?{" "}
+                Don't have an account?{' '}
                 <Link className="link-animated" to="/signup">
                   Create an account
                 </Link>

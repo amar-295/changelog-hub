@@ -1,48 +1,48 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../context/AuthContext";
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import { useAuth } from '../../../context/AuthContext';
 
 /* ── Status config (same as table) ──────────────────────────────── */
 const STATUS_CONFIG = {
   published: {
-    dot: "bg-emerald-400",
-    text: "rgb(52,211,153)",
-    bg: "rgba(16,185,129,0.12)",
-    label: "Published",
+    dot: 'bg-emerald-400',
+    text: 'rgb(52,211,153)',
+    bg: 'rgba(16,185,129,0.12)',
+    label: 'Published',
   },
   draft: {
-    dot: "bg-amber-400",
-    text: "rgba(255,255,255,0.5)",
-    bg: "rgba(255,255,255,0.06)",
-    label: "Draft",
+    dot: 'bg-amber-400',
+    text: 'rgba(255,255,255,0.5)',
+    bg: 'rgba(255,255,255,0.06)',
+    label: 'Draft',
   },
   archive: {
-    dot: "bg-gray-500",
-    text: "rgb(156,163,175)",
-    bg: "rgba(107,114,128,0.12)",
-    label: "Archive",
+    dot: 'bg-gray-500',
+    text: 'rgb(156,163,175)',
+    bg: 'rgba(107,114,128,0.12)',
+    label: 'Archive',
   },
 };
 
 function stripHtml(html) {
-  if (!html) return "";
-  const doc = new DOMParser().parseFromString(html, "text/html");
-  return doc.body.textContent || "";
+  if (!html) return '';
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  return doc.body.textContent || '';
 }
 
-function getInitials(name = "") {
+function getInitials(name = '') {
   return (
     name
-      .split(" ")
-      .map((w) => w[0] ?? "")
-      .join("")
+      .split(' ')
+      .map((w) => w[0] ?? '')
+      .join('')
       .slice(0, 2)
-      .toUpperCase() || "U"
+      .toUpperCase() || 'U'
   );
 }
 
-function getHue(name = "") {
+function getHue(name = '') {
   const a = name.charCodeAt(0) ?? 65;
   const b = name.charCodeAt(name.length - 1) ?? 65;
   return (a * 37 + b * 13) % 360;
@@ -53,7 +53,7 @@ function ReleaseCard({ release, currentName, currentAvatar }) {
   const cfg = STATUS_CONFIG[release.status] ?? STATUS_CONFIG.draft;
   const authorName =
     release.createdBy?.name ??
-    release.createdBy?.email?.split("@")[0] ??
+    release.createdBy?.email?.split('@')[0] ??
     currentName;
   const authorAvatar =
     release.createdBy?.avatar ??
@@ -62,12 +62,12 @@ function ReleaseCard({ release, currentName, currentAvatar }) {
 
   const rawDate = release.publishedAt ?? release.createdAt;
   const date = rawDate
-    ? new Date(rawDate).toLocaleDateString("en-US", {
-        month: "short",
-        day: "2-digit",
-        year: "numeric",
+    ? new Date(rawDate).toLocaleDateString('en-US', {
+        month: 'short',
+        day: '2-digit',
+        year: 'numeric',
       })
-    : "—";
+    : '—';
 
   const snippet = stripHtml(release.content);
 
@@ -75,8 +75,8 @@ function ReleaseCard({ release, currentName, currentAvatar }) {
     <div
       className="flex flex-col rounded-xl border p-5 cursor-pointer hover:border-primary/30 transition-all group bg-opacity-80"
       style={{
-        backgroundColor: "var(--color-bg-card)",
-        borderColor: "var(--color-border)",
+        backgroundColor: 'var(--color-bg-card)',
+        borderColor: 'var(--color-border)',
       }}
     >
       {/* Top: status dot + badge */}
@@ -86,7 +86,7 @@ function ReleaseCard({ release, currentName, currentAvatar }) {
           style={{
             backgroundColor: cfg.bg,
             color: cfg.text,
-            borderColor: cfg.text + "33",
+            borderColor: cfg.text + '33',
           }}
         >
           <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${cfg.dot}`} />
@@ -94,7 +94,7 @@ function ReleaseCard({ release, currentName, currentAvatar }) {
         </span>
         <span
           className="text-[11px] font-medium"
-          style={{ color: "var(--color-text-muted)" }}
+          style={{ color: 'var(--color-text-muted)' }}
         >
           {date}
         </span>
@@ -103,7 +103,7 @@ function ReleaseCard({ release, currentName, currentAvatar }) {
       {/* Title */}
       <h3
         className="font-bold text-[15px] leading-snug mb-1 group-hover:text-primary transition-colors line-clamp-2"
-        style={{ color: "var(--color-text-primary)" }}
+        style={{ color: 'var(--color-text-primary)' }}
       >
         {release.title}
       </h3>
@@ -111,15 +111,15 @@ function ReleaseCard({ release, currentName, currentAvatar }) {
       {/* Snippet */}
       <p
         className="text-xs leading-relaxed line-clamp-3 flex-1 mb-4"
-        style={{ color: "var(--color-text-muted)" }}
+        style={{ color: 'var(--color-text-muted)' }}
       >
-        {snippet || "No description provided."}
+        {snippet || 'No description provided.'}
       </p>
 
       {/* Footer: author */}
       <div
         className="flex items-center gap-2 pt-3 border-t"
-        style={{ borderColor: "var(--color-border)" }}
+        style={{ borderColor: 'var(--color-border)' }}
       >
         {authorAvatar ? (
           <img
@@ -137,7 +137,7 @@ function ReleaseCard({ release, currentName, currentAvatar }) {
         )}
         <span
           className="text-[12px] font-medium"
-          style={{ color: "var(--color-text-muted)" }}
+          style={{ color: 'var(--color-text-muted)' }}
         >
           {authorName}
         </span>
@@ -156,7 +156,7 @@ ReleaseCard.propTypes = {
 function ReleasesGrid({ releases, loading, error }) {
   const { user } = useAuth();
   const currentName =
-    user?.name ?? user?.username ?? user?.email?.split("@")[0] ?? "You";
+    user?.name ?? user?.username ?? user?.email?.split('@')[0] ?? 'You';
   const currentAvatar =
     user?.avatar ?? user?.profilePicture ?? user?.avatarUrl ?? null;
 
@@ -164,7 +164,7 @@ function ReleasesGrid({ releases, loading, error }) {
     return (
       <div className="h-40 flex items-center justify-center gap-2.5 p-6">
         <div className="size-4 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-        <span className="text-sm" style={{ color: "var(--color-text-muted)" }}>
+        <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
           Loading releases…
         </span>
       </div>
@@ -183,7 +183,7 @@ function ReleasesGrid({ releases, loading, error }) {
     return (
       <div
         className="h-32 flex items-center justify-center p-6"
-        style={{ color: "var(--color-text-muted)" }}
+        style={{ color: 'var(--color-text-muted)' }}
       >
         No releases found.
       </div>

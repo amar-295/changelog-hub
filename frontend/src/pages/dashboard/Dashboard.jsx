@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import Hero from "./Hero";
-import MetricCard from "./MetricCard";
-import RecentUpdate from "../releases/RecentUpdate";
-import ActionBtn from "./ActionBtn";
-import { useAuth } from "../../context/AuthContext";
+import React, { useState } from 'react';
+import Hero from './Hero';
+import MetricCard from './MetricCard';
+import RecentUpdate from '../releases/RecentUpdate';
+import ActionBtn from './ActionBtn';
+import { useAuth } from '../../context/AuthContext';
 
 function Dashboard() {
   const { user } = useAuth();

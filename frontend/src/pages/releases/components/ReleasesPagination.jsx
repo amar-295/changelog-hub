@@ -1,6 +1,6 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const LIMIT = 10;
 
@@ -15,15 +15,15 @@ function ReleasesPagination({ pagination, page, onPageChange }) {
   return (
     <div
       className="flex items-center justify-between px-5 py-4"
-      style={{ borderTop: "1px solid var(--color-border)" }}
+      style={{ borderTop: '1px solid var(--color-border)' }}
     >
       <span
         className="text-[13px]"
-        style={{ color: "var(--color-text-muted)" }}
+        style={{ color: 'var(--color-text-muted)' }}
       >
         {total > 0
-          ? `Showing ${start} to ${end} of ${total} release${total !== 1 ? "s" : ""}`
-          : "No releases to show"}
+          ? `Showing ${start} to ${end} of ${total} release${total !== 1 ? 's' : ''}`
+          : 'No releases to show'}
       </span>
 
       <div className="flex items-center gap-1">
@@ -33,8 +33,8 @@ function ReleasesPagination({ pagination, page, onPageChange }) {
           aria-label="Previous page"
           className="w-8 h-8 rounded-lg border flex items-center justify-center transition-all hover:bg-white/12 hover:border-white/25 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
           style={{
-            borderColor: "rgba(255,255,255,0.18)",
-            color: "var(--color-text-primary)",
+            borderColor: 'rgba(255,255,255,0.18)',
+            color: 'var(--color-text-primary)',
           }}
         >
           <ChevronLeft size={15} strokeWidth={1.75} />
@@ -45,8 +45,8 @@ function ReleasesPagination({ pagination, page, onPageChange }) {
           aria-label="Next page"
           className="w-8 h-8 rounded-lg border flex items-center justify-center transition-all hover:bg-white/12 hover:border-white/25 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
           style={{
-            borderColor: "rgba(255,255,255,0.18)",
-            color: "var(--color-text-primary)",
+            borderColor: 'rgba(255,255,255,0.18)',
+            color: 'var(--color-text-primary)',
           }}
         >
           <ChevronRight size={15} strokeWidth={1.75} />

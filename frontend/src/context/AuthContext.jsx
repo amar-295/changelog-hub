@@ -1,6 +1,5 @@
-/* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useState, useContext, useEffect } from "react";
-import { authService } from "../services/authService";
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { authService } from '../services/authService';
 
 const AuthContext = createContext(null);
 
@@ -13,9 +12,15 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await authService.getCurrentUser();
-        setUser(response.data || response);
-      } catch {
+        const response = await authService.validateSession();
+        if (response.data?.authenticated) {
+          const userResponse = await authService.getCurrentUser();
+          setUser(userResponse.data || userResponse);
+        } else {
+          setUser(null);
+        }
+      } catch (error) {
+        console.error('Check auth error:', error);
         setUser(null);
       } finally {
         setLoading(false);
@@ -28,9 +33,9 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
     };
 
-    window.addEventListener("session-expired", handleSessionExpired);
+    window.addEventListener('session-expired', handleSessionExpired);
     return () => {
-      window.removeEventListener("session-expired", handleSessionExpired);
+      window.removeEventListener('session-expired', handleSessionExpired);
     };
   }, []);
 

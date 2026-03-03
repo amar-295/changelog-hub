@@ -16,6 +16,7 @@ const generateAccessAndRefreshTokens = async (userId) => {
 
     return { accessToken, refreshToken };
   } catch (error) {
+    console.error('Token generation error:', error);
     throw new ApiError(
       500,
       'Something went wrong while generating access and refresh tokens'
@@ -67,6 +68,7 @@ const registerUser = asyncHandler(async (req, res) => {
       subdomain: subdomain,
     });
   } catch (error) {
+    console.error('Workspace creation error:', error);
     await User.findByIdAndDelete(user._id);
     throw new ApiError(500, 'Something went wrong while creating workspace');
   }
@@ -333,6 +335,7 @@ const githubLoginCallback = asyncHandler(async (req, res) => {
           subdomain: subdomain,
         });
       } catch (error) {
+        console.error('GitHub Workspace creation error:', error);
         await User.findByIdAndDelete(user._id);
         throw new ApiError(
           500,
@@ -388,6 +391,39 @@ const githubLoginCallback = asyncHandler(async (req, res) => {
   }
 });
 
+const validateSession = asyncHandler(async (req, res) => {
+  const token =
+    req.cookies?.accessToken ||
+    req.header('Authorization')?.replace('Bearer ', '');
+
+  if (!token) {
+    return res
+      .status(200)
+      .json(new ApiResponse(200, { authenticated: false }, 'No session found'));
+  }
+
+  try {
+    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const user = await User.findById(decodedToken?._id);
+
+    if (!user) {
+      return res
+        .status(200)
+        .json(
+          new ApiResponse(200, { authenticated: false }, 'Invalid session')
+        );
+    }
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, { authenticated: true }, 'Session is valid'));
+  } catch (error) {
+    return res
+      .status(200)
+      .json(new ApiResponse(200, { authenticated: false }, 'Session expired'));
+  }
+});
+
 export {
   registerUser,
   loginUser,
@@ -396,4 +432,5 @@ export {
   getCurrentUser,
   githubLogin,
   githubLoginCallback,
+  validateSession,
 };

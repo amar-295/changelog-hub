@@ -1,5 +1,5 @@
-import React, { forwardRef } from "react";
-import PropTypes from "prop-types";
+import React, { forwardRef } from 'react';
+import PropTypes from 'prop-types';
 
 const Input = forwardRef(
   (
@@ -9,12 +9,12 @@ const Input = forwardRef(
       icon: Icon,
       rightIcon,
       rightLabel,
-      className = "",
-      containerClassName = "",
+      className = '',
+      containerClassName = '',
       id,
       ...props
     },
-    ref,
+    ref
   ) => {
     const inputId = id || props.name || Math.random().toString(36).substring(7);
 
@@ -37,7 +37,7 @@ const Input = forwardRef(
         <div className="relative flex items-center group">
           {Icon && (
             <Icon
-              className={`absolute left-3.5 w-[18px] h-[18px] pointer-events-none transition-colors ${error ? "text-red-400" : "text-text-muted group-focus-within:text-primary"}`}
+              className={`absolute left-3.5 w-[18px] h-[18px] pointer-events-none transition-colors ${error ? 'text-red-400' : 'text-text-muted group-focus-within:text-primary'}`}
             />
           )}
 
@@ -47,12 +47,12 @@ const Input = forwardRef(
             className={`
             w-full py-2.5 bg-bg-input border rounded-lg text-[14px] text-text-primary 
             focus:ring-1 outline-none transition-all placeholder-text-muted
-            ${Icon ? "pl-[38px]" : "pl-3.5"} 
-            ${rightIcon ? "pr-[38px]" : "pr-3.5"}
+            ${Icon ? 'pl-[38px]' : 'pl-3.5'} 
+            ${rightIcon ? 'pr-[38px]' : 'pr-3.5'}
             ${
               error
-                ? "border-red-500 focus:ring-red-500 bg-red-500/5"
-                : "border-border focus:border-primary focus:ring-primary hover:border-border-light hover:bg-white/0.08"
+                ? 'border-red-500 focus:ring-red-500 bg-red-500/5'
+                : 'border-border focus:border-primary focus:ring-primary hover:border-border-light hover:bg-white/0.08'
             }
             ${className}
           `}
@@ -73,10 +73,10 @@ const Input = forwardRef(
         )}
       </div>
     );
-  },
+  }
 );
 
-Input.displayName = "Input";
+Input.displayName = 'Input';
 
 Input.propTypes = {
   label: PropTypes.node,

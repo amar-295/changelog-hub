@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
-import PropTypes from "prop-types";
-import { createPortal } from "react-dom";
-import { NavLink, useLocation } from "react-router-dom";
+import React, { useState, useRef, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { createPortal } from 'react-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   ScrollText,
@@ -13,28 +13,28 @@ import {
   ChevronRight,
   Plus,
   List,
-} from "lucide-react";
-import { useTooltip } from "../../hooks/useTooltip";
+} from 'lucide-react';
+import { useTooltip } from '../../hooks/useTooltip';
 
 const ICON_SIZE = 18;
 const ICON_STROKE = 1.5;
 
 const RELEASE_CHILDREN = [
-  { to: "/releases/new", icon: Plus, text: "Create Release" },
-  { to: "/releases", icon: List, text: "All Releases", end: true },
+  { to: '/releases/new', icon: Plus, text: 'Create Release' },
+  { to: '/releases', icon: List, text: 'All Releases', end: true },
 ];
 
 const NAV_ITEMS = [
-  { to: "/", icon: LayoutDashboard, text: "Dashboard", end: true },
+  { to: '/', icon: LayoutDashboard, text: 'Dashboard', end: true },
   {
-    to: "/releases",
+    to: '/releases',
     icon: ScrollText,
-    text: "Releases",
+    text: 'Releases',
     children: RELEASE_CHILDREN,
   },
-  { to: "/analytics", icon: BarChart2, text: "Analytics" },
-  { to: "/team", icon: Users, text: "Team" },
-  { to: "/settings", icon: Settings, text: "Settings" },
+  { to: '/analytics', icon: BarChart2, text: 'Analytics' },
+  { to: '/team', icon: Users, text: 'Team' },
+  { to: '/settings', icon: Settings, text: 'Settings' },
 ];
 
 function Sidebar({ isOpen, setIsOpen }) {
@@ -50,14 +50,9 @@ function Sidebar({ isOpen, setIsOpen }) {
   // Handle window resize for dynamic layout checks
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-  // Collapse releases sub-menu when sidebar collapses
-  useEffect(() => {
-    if (!isOpen) setReleasesOpen(false);
-  }, [isOpen]);
 
   const isMobile = windowWidth < 768;
   const location = useLocation();
@@ -78,18 +73,18 @@ function Sidebar({ isOpen, setIsOpen }) {
     const handleRecalculate = () => {
       if (hoveredNavItem) updateHoverRect(hoveredNavItem);
     };
-    window.addEventListener("resize", handleRecalculate);
-    window.addEventListener("scroll", handleRecalculate, true);
+    window.addEventListener('resize', handleRecalculate);
+    window.addEventListener('scroll', handleRecalculate, true);
     return () => {
-      window.removeEventListener("resize", handleRecalculate);
-      window.removeEventListener("scroll", handleRecalculate, true);
+      window.removeEventListener('resize', handleRecalculate);
+      window.removeEventListener('scroll', handleRecalculate, true);
     };
   }, [hoveredNavItem]);
 
   // Sidebar dynamic width based on state and viewport
   const getSidebarWidth = () => {
-    if (isMobile) return isOpen ? "240px" : "0px";
-    return isOpen ? "240px" : "52px";
+    if (isMobile) return isOpen ? '240px' : '0px';
+    return isOpen ? '240px' : '52px';
   };
 
   return (
@@ -105,22 +100,22 @@ function Sidebar({ isOpen, setIsOpen }) {
       <aside
         className={`shrink-0 flex flex-col overflow-visible transition-all duration-300 ease-in-out ${
           isMobile
-            ? "fixed top-0 left-0 h-full z-100"
-            : "relative z-50 pointer-events-auto"
+            ? 'fixed top-0 left-0 h-full z-100'
+            : 'relative z-50 pointer-events-auto'
         }`}
         style={{
           width: getSidebarWidth(),
-          backgroundColor: "var(--color-bg-sidebar)",
-          borderRight: "1px solid var(--color-border)",
+          backgroundColor: 'var(--color-bg-sidebar)',
+          borderRight: '1px solid var(--color-border)',
           boxShadow:
-            isMobile && isOpen ? "20px 0 50px rgba(0,0,0,0.5)" : "none",
+            isMobile && isOpen ? '20px 0 50px rgba(0,0,0,0.5)' : 'none',
         }}
       >
         <div
           className={`pt-5 pb-6 px-2 w-full flex flex-col h-full overflow-visible transition-opacity duration-200 ${
             isMobile && !isOpen
-              ? "opacity-0 pointer-events-none"
-              : "opacity-100"
+              ? 'opacity-0 pointer-events-none'
+              : 'opacity-100'
           }`}
         >
           {/* ── Header: Logo + Toggle ── */}
@@ -148,7 +143,7 @@ function Sidebar({ isOpen, setIsOpen }) {
                 src="/icon.svg"
                 alt="Logo"
                 className={`size-7 shrink-0 transition-opacity duration-300 ${
-                  !isOpen && headerHovered ? "opacity-0" : "opacity-100"
+                  !isOpen && headerHovered ? 'opacity-0' : 'opacity-100'
                 }`}
               />
             </div>
@@ -159,13 +154,13 @@ function Sidebar({ isOpen, setIsOpen }) {
               aria-label="Open sidebar"
               className={`absolute left-1 size-7 flex items-center justify-center rounded-lg transition-all duration-300 ${
                 isOpen
-                  ? "opacity-0 invisible"
+                  ? 'opacity-0 invisible'
                   : headerHovered
-                    ? "opacity-100"
-                    : "opacity-0"
+                    ? 'opacity-100'
+                    : 'opacity-0'
               }`}
               style={{
-                color: headerHovered ? "white" : "var(--color-text-secondary)",
+                color: headerHovered ? 'white' : 'var(--color-text-secondary)',
               }}
             >
               <PanelLeftOpen size={ICON_SIZE} strokeWidth={ICON_STROKE} />
@@ -176,18 +171,18 @@ function Sidebar({ isOpen, setIsOpen }) {
               <div
                 className="absolute left-[52px] top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold whitespace-nowrap text-white pointer-events-none z-99999 flex items-center tooltip-visible-right"
                 style={{
-                  backgroundColor: "var(--color-bg-tooltip)",
-                  border: "1px solid rgba(255,255,255,0.16)",
-                  boxShadow: "0 8px 20px rgba(0,0,0,0.6)",
+                  backgroundColor: 'var(--color-bg-tooltip)',
+                  border: '1px solid rgba(255,255,255,0.16)',
+                  boxShadow: '0 8px 20px rgba(0,0,0,0.6)',
                 }}
               >
                 Expand Sidebar
                 <div
                   className="absolute top-1/2 right-full -translate-y-1/2 w-0 h-0"
                   style={{
-                    borderTop: "5px solid transparent",
-                    borderBottom: "5px solid transparent",
-                    borderRight: "5px solid var(--color-bg-tooltip)",
+                    borderTop: '5px solid transparent',
+                    borderBottom: '5px solid transparent',
+                    borderRight: '5px solid var(--color-bg-tooltip)',
                   }}
                 />
               </div>
@@ -197,8 +192,8 @@ function Sidebar({ isOpen, setIsOpen }) {
             <div
               className={`absolute right-1 transition-all duration-300 ${
                 isOpen
-                  ? "opacity-100"
-                  : "opacity-0 invisible pointer-events-none"
+                  ? 'opacity-100'
+                  : 'opacity-0 invisible pointer-events-none'
               }`}
               onMouseEnter={() => {
                 if (isOpen) toggleTooltip.showTooltip();
@@ -228,20 +223,20 @@ function Sidebar({ isOpen, setIsOpen }) {
                 <div
                   className="absolute right-[110%] mr-1 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold whitespace-nowrap text-white pointer-events-none z-99999 flex items-center tooltip-visible"
                   style={{
-                    backgroundColor: "var(--color-bg-tooltip)",
-                    border: "1px solid rgba(255,255,255,0.16)",
-                    boxShadow: "0 8px 20px rgba(0,0,0,0.6)",
+                    backgroundColor: 'var(--color-bg-tooltip)',
+                    border: '1px solid rgba(255,255,255,0.16)',
+                    boxShadow: '0 8px 20px rgba(0,0,0,0.6)',
                     animation:
-                      "tooltipFadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+                      'tooltipFadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                   }}
                 >
                   Collapse Sidebar
                   <div
                     className="absolute top-1/2 left-full -translate-y-1/2 w-0 h-0"
                     style={{
-                      borderTop: "5px solid transparent",
-                      borderBottom: "5px solid transparent",
-                      borderLeft: "5px solid var(--color-bg-tooltip)",
+                      borderTop: '5px solid transparent',
+                      borderBottom: '5px solid transparent',
+                      borderLeft: '5px solid var(--color-bg-tooltip)',
                     }}
                   />
                 </div>
@@ -258,7 +253,7 @@ function Sidebar({ isOpen, setIsOpen }) {
               const end = item.end;
               const rect = navItemRects[to];
               const hasChildren = !!item.children;
-              const isExpanded = hasChildren && releasesOpen;
+              const isExpanded = hasChildren && isOpen && releasesOpen;
 
               return (
                 <div key={to}>
@@ -278,8 +273,8 @@ function Sidebar({ isOpen, setIsOpen }) {
                         onClick={() => setReleasesOpen((v) => !v)}
                         className={`flex items-center gap-2 px-2 py-[7px] w-full text-[13.5px] font-normal rounded-[10px] transition-all hover:bg-bg-card-hover active:scale-[0.98] cursor-pointer ${
                           isExpanded
-                            ? "text-white"
-                            : "text-text-secondary hover:text-white"
+                            ? 'text-white'
+                            : 'text-text-secondary hover:text-white'
                         }`}
                       >
                         <Icon
@@ -294,7 +289,7 @@ function Sidebar({ isOpen, setIsOpen }) {
                           size={14}
                           strokeWidth={1.5}
                           className={`shrink-0 text-text-muted transition-transform duration-200 ${
-                            isExpanded ? "rotate-90" : ""
+                            isExpanded ? 'rotate-90' : ''
                           }`}
                         />
                       </button>
@@ -311,8 +306,8 @@ function Sidebar({ isOpen, setIsOpen }) {
                         className={({ isActive }) =>
                           `flex items-center gap-2 px-2 py-[7px] w-full text-[13.5px] font-normal rounded-[10px] transition-all hover:bg-bg-card-hover active:scale-[0.98] ${
                             isActive
-                              ? "text-white"
-                              : "text-text-secondary hover:text-white"
+                              ? 'text-white'
+                              : 'text-text-secondary hover:text-white'
                           }`
                         }
                       >
@@ -323,7 +318,7 @@ function Sidebar({ isOpen, setIsOpen }) {
                         />
                         <span
                           className={`transition-opacity duration-300 overflow-hidden whitespace-nowrap ${
-                            isOpen ? "opacity-100" : "opacity-0 invisible"
+                            isOpen ? 'opacity-100' : 'opacity-0 invisible'
                           }`}
                         >
                           {text}
@@ -341,22 +336,22 @@ function Sidebar({ isOpen, setIsOpen }) {
                           style={{
                             top: rect.top + rect.height / 2,
                             left: rect.right + 12,
-                            backgroundColor: "var(--color-bg-tooltip)",
-                            border: "1px solid rgba(255,255,255,0.16)",
-                            boxShadow: "0 8px 20px rgba(0,0,0,0.6)",
+                            backgroundColor: 'var(--color-bg-tooltip)',
+                            border: '1px solid rgba(255,255,255,0.16)',
+                            boxShadow: '0 8px 20px rgba(0,0,0,0.6)',
                           }}
                         >
                           {text}
                           <div
                             className="absolute top-1/2 right-full -translate-y-1/2 w-0 h-0"
                             style={{
-                              borderTop: "5px solid transparent",
-                              borderBottom: "5px solid transparent",
-                              borderRight: "5px solid var(--color-bg-tooltip)",
+                              borderTop: '5px solid transparent',
+                              borderBottom: '5px solid transparent',
+                              borderRight: '5px solid var(--color-bg-tooltip)',
                             }}
                           />
                         </div>,
-                        document.body,
+                        document.body
                       )}
                   </div>
 
@@ -365,8 +360,8 @@ function Sidebar({ isOpen, setIsOpen }) {
                     <div
                       className={`overflow-hidden transition-all duration-200 ease-in-out ${
                         isExpanded
-                          ? "max-h-52 opacity-100 mt-0.5"
-                          : "max-h-0 opacity-0"
+                          ? 'max-h-52 opacity-100 mt-0.5'
+                          : 'max-h-0 opacity-0'
                       }`}
                     >
                       <div className="ml-5 pl-3 border-l border-white/8 flex flex-col gap-0.5 pb-1.5">
@@ -384,9 +379,9 @@ function Sidebar({ isOpen, setIsOpen }) {
                               className={() => {
                                 // For query-param routes, match both pathname and search
                                 let isChildActive;
-                                if (child.to.includes("?")) {
+                                if (child.to.includes('?')) {
                                   const [childPath, childSearch] =
-                                    child.to.split("?");
+                                    child.to.split('?');
                                   isChildActive =
                                     location.pathname === childPath &&
                                     location.search === `?${childSearch}`;
@@ -396,8 +391,8 @@ function Sidebar({ isOpen, setIsOpen }) {
                                 }
                                 return `flex items-center gap-2 px-2 py-[5px] w-full text-[12.5px] rounded-[8px] transition-all hover:bg-bg-card-hover active:scale-[0.98] ${
                                   isChildActive
-                                    ? "text-white font-medium"
-                                    : "text-text-muted hover:text-white font-normal"
+                                    ? 'text-white font-medium'
+                                    : 'text-text-muted hover:text-white font-normal'
                                 }`;
                               }}
                             >

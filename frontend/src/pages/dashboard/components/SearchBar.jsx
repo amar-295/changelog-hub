@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from "react";
-import { Search } from "lucide-react";
+import React, { useRef, useEffect } from 'react';
+import { Search } from 'lucide-react';
 
 function SearchBar() {
   const searchInputRef = useRef(null);
@@ -7,17 +7,17 @@ function SearchBar() {
   useEffect(() => {
     function handleKeyDown(e) {
       if (
-        e.key === "/" &&
-        e.target.tagName !== "INPUT" &&
-        e.target.tagName !== "TEXTAREA" &&
+        e.key === '/' &&
+        e.target.tagName !== 'INPUT' &&
+        e.target.tagName !== 'TEXTAREA' &&
         !e.target.isContentEditable
       ) {
         e.preventDefault();
         searchInputRef.current?.focus();
       }
     }
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   return (
@@ -26,7 +26,7 @@ function SearchBar() {
         size={15}
         strokeWidth={1.5}
         className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
-        style={{ color: "var(--color-text-muted)" }}
+        style={{ color: 'var(--color-text-muted)' }}
       />
       <input
         ref={searchInputRef}
@@ -37,11 +37,11 @@ function SearchBar() {
       <div
         className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center justify-center min-w-[20px] h-[20px] text-[11px] font-semibold rounded"
         style={{
-          color: "var(--color-text-muted)",
-          backgroundColor: "var(--color-bg-card)",
+          color: 'var(--color-text-muted)',
+          backgroundColor: 'var(--color-bg-card)',
           boxShadow:
-            "0 1px 2px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.05)",
-          border: "1px solid var(--color-border)",
+            '0 1px 2px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.05)',
+          border: '1px solid var(--color-border)',
         }}
       >
         /

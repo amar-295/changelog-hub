@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Settings as SettingsIcon,
   Globe,
@@ -9,11 +9,11 @@ import {
   Loader2,
   Image as ImageIcon,
   ExternalLink,
-} from "lucide-react";
-import { workspaceService } from "../../services/workspaceService";
-import toast from "react-hot-toast";
-import Logo from "../../components/Logo";
-import Input from "../../components/ui/Input";
+} from 'lucide-react';
+import { workspaceService } from '../../services/workspaceService';
+import toast from 'react-hot-toast';
+import Logo from '../../components/Logo';
+import Input from '../../components/ui/Input';
 
 function Settings() {
   const [workspace, setWorkspace] = useState(null);
@@ -24,9 +24,9 @@ function Settings() {
   const fileInputRef = useRef(null);
 
   const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    subdomain: "",
+    name: '',
+    description: '',
+    subdomain: '',
   });
 
   useEffect(() => {
@@ -40,16 +40,16 @@ function Settings() {
       if (data.success) {
         setWorkspace(data.data);
         setFormData({
-          name: data.data.name || "",
-          description: data.data.description || "",
-          subdomain: data.data.subdomain || "",
+          name: data.data.name || '',
+          description: data.data.description || '',
+          subdomain: data.data.subdomain || '',
         });
         if (data.data.logo) {
           setLogoPreview(data.data.logo);
         }
       }
     } catch (error) {
-      toast.error("Failed to load workspace settings");
+      toast.error('Failed to load workspace settings');
       console.error(error);
     } finally {
       setLoading(false);
@@ -65,7 +65,7 @@ function Settings() {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 2 * 1024 * 1024) {
-        toast.error("Logo must be smaller than 2MB");
+        toast.error('Logo must be smaller than 2MB');
         return;
       }
       setLogoFile(file);
@@ -87,13 +87,13 @@ function Settings() {
       };
       const response = await workspaceService.updateWorkspace(updatePayload);
       if (response.success) {
-        toast.success("Workspace updated successfully");
+        toast.success('Workspace updated successfully');
         setWorkspace(response.data);
         setLogoFile(null);
       }
     } catch (error) {
       toast.error(
-        error.response?.data?.message || "Failed to update workspace",
+        error.response?.data?.message || 'Failed to update workspace'
       );
       console.error(error);
     } finally {
@@ -108,11 +108,6 @@ function Settings() {
       </div>
     );
   }
-
-  const inputClasses =
-    "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-primary/50 focus:ring-4 focus:ring-primary/10 transition-all font-medium text-white placeholder:text-text-muted";
-  const labelClasses =
-    "text-[11px] font-black uppercase tracking-widest text-text-secondary block mb-2";
 
   return (
     <div className="flex-1 max-w-4xl mx-auto px-8 py-12">
@@ -282,7 +277,7 @@ function Settings() {
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-[13px] font-bold text-text-secondary hover:text-white transition-all group/link"
                   >
-                    View Live Page:{" "}
+                    View Live Page:{' '}
                     <span className="text-primary underline opacity-80 group-hover/link:opacity-100 transition-opacity font-mono">
                       /{workspace.subdomain}
                     </span>

@@ -65,87 +65,85 @@ const subscribeToChangelog = asyncHandler(async (req, res) => {
   let { email } = req.body;
 
   if (!email) {
-    throw new ApiError(400, "Email is required")
+    throw new ApiError(400, 'Email is required');
   }
 
-  email = email.trim().toLowerCase()
+  email = email.trim().toLowerCase();
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    throw new ApiError(400, "Invalid email format")
+    throw new ApiError(400, 'Invalid email format');
   }
 
-  const workspace = await Workspace.findOne({ subdomain })
+  const workspace = await Workspace.findOne({ subdomain });
 
   if (!workspace) {
-    throw new ApiError(404, "Workspace not found")
+    throw new ApiError(404, 'Workspace not found');
   }
 
   const existingSubscriber = await Subscriber.findOne({
     email,
     workspaceId: workspace._id,
-  })
+  });
 
   if (existingSubscriber) {
     if (existingSubscriber.status === 'active') {
-      return res.status(200).json(
-        new ApiResponse(200, {}, "You are already subscribed")
-      )
+      return res
+        .status(200)
+        .json(new ApiResponse(200, {}, 'You are already subscribed'));
     } else {
       // Reactivate subscription
-      existingSubscriber.status = "active"
-      existingSubscriber.subscribedAt = new Date()
-      existingSubscriber.unsubscribedAt = null
-      await existingSubscriber.save()
+      existingSubscriber.status = 'active';
+      existingSubscriber.subscribedAt = new Date();
+      existingSubscriber.unsubscribedAt = null;
+      await existingSubscriber.save();
 
-      return res.status(200).json(
-        new ApiResponse(200, {}, "Subscription reactivated successfully")
-      )
+      return res
+        .status(200)
+        .json(
+          new ApiResponse(200, {}, 'Subscription reactivated successfully')
+        );
     }
   }
 
   // Create new subscriber
-  const unsubscribeToken = crypto.randomBytes(32).toString('hex')
+  const unsubscribeToken = crypto.randomBytes(32).toString('hex');
 
   const subscriber = await Subscriber.create({
     email,
     workspaceId: workspace._id,
-    unsubscribeToken
-  })
+    unsubscribeToken,
+  });
 
-  return res.status(200).json(
-    new ApiResponse(200, {}, "Subscribed successfully")
-  )
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { subscriber }, 'Subscribed successfully'));
 });
 
 const unsubscribeFromChangelog = asyncHandler(async (req, res) => {
   const { token } = req.params;
 
   const subscriber = await Subscriber.findOne({
-    unsubscribeToken: token
+    unsubscribeToken: token,
   });
 
   if (!subscriber) {
-    throw new ApiError(404, "Invalid unsubscribe link")
+    throw new ApiError(404, 'Invalid unsubscribe link');
   }
 
-  if (subscriber.status === "unsubscribed") {
-    return res.status(200).json(
-      new ApiResponse(200, {}, "You are already unsubscribed")
-    )
+  if (subscriber.status === 'unsubscribed') {
+    return res
+      .status(200)
+      .json(new ApiResponse(200, {}, 'You are already unsubscribed'));
   }
 
-  subscriber.status = "unsubscribed"
-  subscriber.unsubscribedAt = new Date()
-  await subscriber.save()
+  subscriber.status = 'unsubscribed';
+  subscriber.unsubscribedAt = new Date();
+  await subscriber.save();
 
-  return res.status(200).json(
-    new ApiResponse(200, {}, "Unsubscribed successfully")
-  )
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, 'Unsubscribed successfully'));
 });
 
-export {
-  getPublicReleases,
-  subscribeToChangelog,
-  unsubscribeFromChangelog
-};
+export { getPublicReleases, subscribeToChangelog, unsubscribeFromChangelog };

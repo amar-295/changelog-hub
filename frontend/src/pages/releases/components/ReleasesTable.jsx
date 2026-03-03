@@ -1,49 +1,49 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { MoreHorizontal } from "lucide-react";
-import { useAuth } from "../../../context/AuthContext";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { MoreHorizontal } from 'lucide-react';
+import { useAuth } from '../../../context/AuthContext';
 
 /* ── Status config ───────────────────────────────────────────────── */
 const STATUS_CONFIG = {
   published: {
-    dot: "bg-emerald-400",
-    bg: "rgba(16,185,129,0.12)",
-    text: "rgb(52,211,153)",
-    label: "Published",
+    dot: 'bg-emerald-400',
+    bg: 'rgba(16,185,129,0.12)',
+    text: 'rgb(52,211,153)',
+    label: 'Published',
   },
   draft: {
-    dot: "bg-amber-400",
-    bg: "rgba(255,255,255,0.06)",
-    text: "rgba(255,255,255,0.5)",
-    label: "Draft",
+    dot: 'bg-amber-400',
+    bg: 'rgba(255,255,255,0.06)',
+    text: 'rgba(255,255,255,0.5)',
+    label: 'Draft',
   },
   archive: {
-    dot: "bg-gray-500",
-    bg: "rgba(107,114,128,0.12)",
-    text: "rgb(156,163,175)",
-    label: "Archive",
+    dot: 'bg-gray-500',
+    bg: 'rgba(107,114,128,0.12)',
+    text: 'rgb(156,163,175)',
+    label: 'Archive',
   },
 };
 
 /* ── Helpers ─────────────────────────────────────────────────────── */
 function stripHtml(html) {
-  if (!html) return "";
-  const doc = new DOMParser().parseFromString(html, "text/html");
-  return doc.body.textContent || "";
+  if (!html) return '';
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  return doc.body.textContent || '';
 }
 
-function getInitials(name = "") {
+function getInitials(name = '') {
   return (
     name
-      .split(" ")
-      .map((w) => w[0] ?? "")
-      .join("")
+      .split(' ')
+      .map((w) => w[0] ?? '')
+      .join('')
       .slice(0, 2)
-      .toUpperCase() || "U"
+      .toUpperCase() || 'U'
   );
 }
 
-function getHue(name = "") {
+function getHue(name = '') {
   const a = name.charCodeAt(0) ?? 65;
   const b = name.charCodeAt(name.length - 1) ?? 65;
   return (a * 37 + b * 13) % 360;
@@ -69,7 +69,7 @@ function AuthorCell({ name, avatarUrl }) {
       )}
       <span
         className="text-[13px] font-medium"
-        style={{ color: "var(--color-text-secondary)" }}
+        style={{ color: 'var(--color-text-secondary)' }}
       >
         {name}
       </span>
@@ -83,7 +83,7 @@ function RowActions() {
   return (
     <button
       className="p-1.5 rounded-lg hover:bg-white/10 cursor-pointer transition-colors"
-      style={{ color: "var(--color-text-secondary)" }}
+      style={{ color: 'var(--color-text-secondary)' }}
       aria-label="Row actions"
     >
       <MoreHorizontal size={16} strokeWidth={1.5} />
@@ -93,14 +93,14 @@ function RowActions() {
 
 /* ── Table columns ───────────────────────────────────────────────── */
 const TH =
-  "px-5 py-3.5 align-middle text-[10.5px] font-bold tracking-widest uppercase";
-const TD = "px-5 py-[14px] align-middle";
+  'px-5 py-3.5 align-middle text-[10.5px] font-bold tracking-widest uppercase';
+const TD = 'px-5 py-[14px] align-middle';
 
 function ReleasesTable({ releases, loading, error }) {
   const { user } = useAuth();
 
   const currentName =
-    user?.name ?? user?.username ?? user?.email?.split("@")[0] ?? "You";
+    user?.name ?? user?.username ?? user?.email?.split('@')[0] ?? 'You';
   const currentAvatar =
     user?.avatar ?? user?.profilePicture ?? user?.avatarUrl ?? null;
 
@@ -108,32 +108,32 @@ function ReleasesTable({ releases, loading, error }) {
     <table className="w-full text-sm text-left">
       <thead
         style={{
-          backgroundColor: "var(--color-bg-elevated)",
-          borderBottom: "1px solid var(--color-border)",
+          backgroundColor: 'var(--color-bg-elevated)',
+          borderBottom: '1px solid var(--color-border)',
         }}
       >
         <tr>
-          <th className={TH} style={{ color: "var(--color-text-muted)" }}>
+          <th className={TH} style={{ color: 'var(--color-text-muted)' }}>
             Release Title
           </th>
-          <th className={TH} style={{ color: "var(--color-text-muted)" }}>
+          <th className={TH} style={{ color: 'var(--color-text-muted)' }}>
             Status
           </th>
-          <th className={TH} style={{ color: "var(--color-text-muted)" }}>
+          <th className={TH} style={{ color: 'var(--color-text-muted)' }}>
             Publish Date
           </th>
-          <th className={TH} style={{ color: "var(--color-text-muted)" }}>
+          <th className={TH} style={{ color: 'var(--color-text-muted)' }}>
             Author
           </th>
           <th
             className={`${TH} text-right pr-6`}
-            style={{ color: "var(--color-text-muted)" }}
+            style={{ color: 'var(--color-text-muted)' }}
           >
             Actions
           </th>
         </tr>
       </thead>
-      <tbody style={{ backgroundColor: "var(--color-bg-card)" }}>
+      <tbody style={{ backgroundColor: 'var(--color-bg-card)' }}>
         {loading && (
           <tr>
             <td colSpan="5" className="h-28 text-center">
@@ -141,7 +141,7 @@ function ReleasesTable({ releases, loading, error }) {
                 <div className="size-4 rounded-full border-2 border-primary border-t-transparent animate-spin" />
                 <span
                   className="text-sm"
-                  style={{ color: "var(--color-text-muted)" }}
+                  style={{ color: 'var(--color-text-muted)' }}
                 >
                   Loading releases…
                 </span>
@@ -166,7 +166,7 @@ function ReleasesTable({ releases, loading, error }) {
             <td
               colSpan="5"
               className="h-28 text-center"
-              style={{ color: "var(--color-text-muted)" }}
+              style={{ color: 'var(--color-text-muted)' }}
             >
               No releases found.
             </td>
@@ -178,7 +178,7 @@ function ReleasesTable({ releases, loading, error }) {
             const cfg = STATUS_CONFIG[release.status] ?? STATUS_CONFIG.draft;
             const authorName =
               release.createdBy?.name ??
-              release.createdBy?.email?.split("@")[0] ??
+              release.createdBy?.email?.split('@')[0] ??
               currentName;
             const authorAvatar =
               release.createdBy?.avatar ??
@@ -186,18 +186,18 @@ function ReleasesTable({ releases, loading, error }) {
               currentAvatar;
             const rawDate = release.publishedAt ?? release.createdAt;
             const date = rawDate
-              ? new Date(rawDate).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "2-digit",
-                  year: "numeric",
+              ? new Date(rawDate).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: '2-digit',
+                  year: 'numeric',
                 })
-              : "—";
+              : '—';
 
             return (
               <tr
                 key={release._id}
                 className="border-b last:border-0 hover:brightness-105 transition-colors cursor-pointer"
-                style={{ borderColor: "var(--color-border)" }}
+                style={{ borderColor: 'var(--color-border)' }}
               >
                 {/* Title + snippet */}
                 <td className={TD}>
@@ -208,15 +208,15 @@ function ReleasesTable({ releases, loading, error }) {
                     <div className="flex flex-col gap-0.5 min-w-0">
                       <span
                         className="font-semibold truncate max-w-[280px]"
-                        style={{ color: "var(--color-text-primary)" }}
+                        style={{ color: 'var(--color-text-primary)' }}
                       >
                         {release.title}
                       </span>
                       <span
                         className="text-xs truncate max-w-[280px]"
-                        style={{ color: "var(--color-text-muted)" }}
+                        style={{ color: 'var(--color-text-muted)' }}
                       >
-                        {stripHtml(release.content) || "No description"}
+                        {stripHtml(release.content) || 'No description'}
                       </span>
                     </div>
                   </div>
@@ -229,7 +229,7 @@ function ReleasesTable({ releases, loading, error }) {
                     style={{
                       backgroundColor: cfg.bg,
                       color: cfg.text,
-                      borderColor: cfg.text + "33",
+                      borderColor: cfg.text + '33',
                     }}
                   >
                     {cfg.label}
@@ -240,7 +240,7 @@ function ReleasesTable({ releases, loading, error }) {
                 <td className={TD}>
                   <span
                     className="text-[13px] font-medium"
-                    style={{ color: "var(--color-text-secondary)" }}
+                    style={{ color: 'var(--color-text-secondary)' }}
                   >
                     {date}
                   </span>

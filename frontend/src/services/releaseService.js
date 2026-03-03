@@ -1,21 +1,21 @@
-import api from "./api";
+import api from './api';
 
 export const releaseService = {
   createRelease: async (releaseData) => {
     try {
-      const response = await api.post("/releases/", releaseData);
+      const response = await api.post('/releases/', releaseData);
       return response.data;
     } catch (error) {
-      console.error("Error creating release:", error);
+      console.error('Error creating release:', error);
       throw error;
     }
   },
   getAllReleases: async (params) => {
     try {
-      const response = await api.get("/releases/", { params });
+      const response = await api.get('/releases/', { params });
       return response.data;
     } catch (error) {
-      console.error("Error fetching releases:", error);
+      console.error('Error fetching releases:', error);
       throw error;
     }
   },
@@ -24,7 +24,7 @@ export const releaseService = {
       const response = await api.get(`/releases/${id}`);
       return response.data;
     } catch (error) {
-      console.error("Error fetching release:", error);
+      console.error('Error fetching release:', error);
       throw error;
     }
   },
@@ -33,7 +33,7 @@ export const releaseService = {
       const response = await api.patch(`/releases/${id}`, releaseData);
       return response.data;
     } catch (error) {
-      console.error("Error updating release:", error);
+      console.error('Error updating release:', error);
       throw error;
     }
   },
@@ -42,7 +42,7 @@ export const releaseService = {
       const response = await api.delete(`/releases/${id}`);
       return response.data;
     } catch (error) {
-      console.error("Error deleting release:", error);
+      console.error('Error deleting release:', error);
       throw error;
     }
   },
@@ -51,7 +51,7 @@ export const releaseService = {
       const response = await api.patch(`/releases/${id}/publish`);
       return response.data;
     } catch {
-      throw new Error("Failed to publish release");
+      throw new Error('Failed to publish release');
     }
   },
 };

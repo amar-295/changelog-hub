@@ -1,50 +1,50 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { Mail, Search, Calendar, ChevronRight, Bell } from "lucide-react";
-import toast from "react-hot-toast";
-import Logo from "../../components/Logo";
-import { useAuth } from "../../context/AuthContext";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { Search, Calendar, ChevronRight, Bell } from 'lucide-react';
+import toast from 'react-hot-toast';
+import Logo from '../../components/Logo';
+import { useAuth } from '../../context/AuthContext';
+import { Link } from 'react-router-dom';
 
 // ── Category config ─────────────────────────────────────────────────────────
 const CATEGORY_CONFIG = {
   feature: {
-    label: "Feature",
-    icon: "✦",
-    badge: "bg-blue-500/10 text-blue-300 border-blue-500/20",
-    border: "border-l-blue-500/50",
-    dot: "bg-blue-500",
+    label: 'Feature',
+    icon: '✦',
+    badge: 'bg-blue-500/10 text-blue-300 border-blue-500/20',
+    border: 'border-l-blue-500/50',
+    dot: 'bg-blue-500',
   },
   improvement: {
-    label: "Improvement",
-    icon: "↑",
-    badge: "bg-emerald-500/10 text-emerald-300 border-emerald-500/20",
-    border: "border-l-emerald-500/50",
-    dot: "bg-emerald-500",
+    label: 'Improvement',
+    icon: '↑',
+    badge: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20',
+    border: 'border-l-emerald-500/50',
+    dot: 'bg-emerald-500',
   },
   bugfix: {
-    label: "Bugfix",
-    icon: "⬡",
-    badge: "bg-red-500/10 text-red-300 border-red-500/20",
-    border: "border-l-red-500/50",
-    dot: "bg-red-500",
+    label: 'Bugfix',
+    icon: '⬡',
+    badge: 'bg-red-500/10 text-red-300 border-red-500/20',
+    border: 'border-l-red-500/50',
+    dot: 'bg-red-500',
   },
   security: {
-    label: "Security",
-    icon: "◈",
-    badge: "bg-amber-500/10 text-amber-300 border-amber-500/20",
-    border: "border-l-amber-500/50",
-    dot: "bg-amber-500",
+    label: 'Security',
+    icon: '◈',
+    badge: 'bg-amber-500/10 text-amber-300 border-amber-500/20',
+    border: 'border-l-amber-500/50',
+    dot: 'bg-amber-500',
   },
 };
 
 const getCategoryConfig = (cat) =>
   CATEGORY_CONFIG[cat] || {
     label: cat,
-    icon: "○",
-    badge: "bg-white/5 text-text-secondary border-white/10",
-    border: "border-l-white/10",
-    dot: "bg-white/30",
+    icon: '○',
+    badge: 'bg-white/5 text-text-secondary border-white/10',
+    border: 'border-l-white/10',
+    dot: 'bg-white/30',
   };
 
 function CategoryBadge({ category }) {
@@ -64,26 +64,26 @@ function PublicChangelog() {
   const { isAuthenticated } = useAuth();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [email, setEmail] = useState("");
+  const [filter, setFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [email, setEmail] = useState('');
   const [subscribeModal, setSubscribeModal] = useState(false);
 
   useEffect(() => {
     const fetchReleases = async () => {
       try {
         const response = await fetch(
-          `/api/v1/public/${encodeURIComponent(subdomain)}/releases`,
+          `/api/v1/public/${encodeURIComponent(subdomain)}/releases`
         );
         const result = await response.json();
         if (result.success) {
           setData(result.data);
         } else {
-          toast.error(result.message || "Failed to load changelog");
+          toast.error(result.message || 'Failed to load changelog');
         }
       } catch (error) {
-        toast.error("Network error: Could not reach the server");
-        console.error("Fetch error:", error);
+        toast.error('Network error: Could not reach the server');
+        console.error('Fetch error:', error);
       } finally {
         setLoading(false);
       }
@@ -120,14 +120,14 @@ function PublicChangelog() {
   const { workspace, releases } = data;
 
   const filteredReleases = releases.filter((release) => {
-    const matchesFilter = filter === "all" || release.category === filter;
+    const matchesFilter = filter === 'all' || release.category === filter;
     const matchesSearch =
       release.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       release.content.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesFilter && matchesSearch;
   });
 
-  const categories = ["all", "feature", "improvement", "bugfix", "security"];
+  const categories = ['all', 'feature', 'improvement', 'bugfix', 'security'];
 
   return (
     <div className="min-h-screen bg-[#080809] text-text-primary font-sans selection:bg-primary/20">
@@ -159,7 +159,7 @@ function PublicChangelog() {
                 e.preventDefault();
                 toast.success("Subscribed! You'll hear from us soon.");
                 setSubscribeModal(false);
-                setEmail("");
+                setEmail('');
               }}
               className="flex flex-col gap-3"
             >
@@ -212,7 +212,7 @@ function PublicChangelog() {
 
           {/* Nav */}
           <nav className="hidden md:flex items-center gap-1">
-            {["Updates", "Docs", "Support"].map((item) => (
+            {['Updates', 'Docs', 'Support'].map((item) => (
               <button
                 key={item}
                 className="px-3 py-1.5 text-[13px] text-text-secondary hover:text-white rounded-lg hover:bg-white/5 transition-all active:scale-[0.98]"
@@ -248,7 +248,7 @@ function PublicChangelog() {
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(59,130,246,0.07) 0%, transparent 70%)",
+              'radial-gradient(ellipse 80% 50% at 50% -10%, rgba(59,130,246,0.07) 0%, transparent 70%)',
           }}
         />
 
@@ -263,10 +263,10 @@ function PublicChangelog() {
             className="text-5xl md:text-6xl font-black tracking-tight leading-[1.05] mb-5"
             style={{
               background:
-                "linear-gradient(180deg, #ffffff 30%, rgba(255,255,255,0.5) 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
+                'linear-gradient(180deg, #ffffff 30%, rgba(255,255,255,0.5) 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
             }}
           >
             {workspace.name}
@@ -285,7 +285,7 @@ function PublicChangelog() {
           {/* Category pills */}
           <div className="flex items-center gap-1.5 flex-wrap">
             {categories.map((cat) => {
-              const cfg = cat !== "all" ? getCategoryConfig(cat) : null;
+              const cfg = cat !== 'all' ? getCategoryConfig(cat) : null;
               const isActive = filter === cat;
               return (
                 <button
@@ -293,13 +293,13 @@ function PublicChangelog() {
                   onClick={() => setFilter(cat)}
                   className={`px-3 py-1.5 rounded-lg text-[12px] font-medium capitalize transition-all border ${
                     isActive
-                      ? "bg-white text-black border-white"
-                      : cat === "all"
-                        ? "bg-white/5 text-slate-300 border-transparent hover:border-white/15 hover:text-white"
+                      ? 'bg-white text-black border-white'
+                      : cat === 'all'
+                        ? 'bg-white/5 text-slate-300 border-transparent hover:border-white/15 hover:text-white'
                         : `${cfg.badge} opacity-80 hover:opacity-100`
                   }`}
                 >
-                  {cat === "all" ? "All" : cat}
+                  {cat === 'all' ? 'All' : cat}
                 </button>
               );
             })}
@@ -329,11 +329,11 @@ function PublicChangelog() {
             {filteredReleases.map((release, idx) => {
               const cfg = getCategoryConfig(release.category);
               const dateLabel = new Date(
-                release.publishedAt,
-              ).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
+                release.publishedAt
+              ).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
               });
               const isLast = idx === filteredReleases.length - 1;
 
@@ -375,7 +375,7 @@ function PublicChangelog() {
                       </div>
                       {release.version && (
                         <span className="shrink-0 px-2 py-0.5 bg-white/5 border border-white/8 rounded-md text-[10px] font-mono text-text-muted tracking-wider">
-                          {release.version.startsWith("v")
+                          {release.version.startsWith('v')
                             ? release.version
                             : `v${release.version}`}
                         </span>
@@ -418,8 +418,8 @@ function PublicChangelog() {
             </p>
             <button
               onClick={() => {
-                setFilter("all");
-                setSearchQuery("");
+                setFilter('all');
+                setSearchQuery('');
               }}
               className="text-primary text-sm font-medium hover:underline"
             >
@@ -459,8 +459,8 @@ function PublicChangelog() {
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
-                  toast.success("Subscribed successfully!");
-                  setEmail("");
+                  toast.success('Subscribed successfully!');
+                  setEmail('');
                 }}
                 className="flex gap-2 w-full md:w-auto"
               >

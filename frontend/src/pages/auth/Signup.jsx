@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import Logo from "../../components/Logo";
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import Input from "../../components/ui/Input";
+import React, { useState } from 'react';
+import Logo from '../../components/Logo';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import Input from '../../components/ui/Input';
 import {
   Github,
   User,
@@ -12,8 +12,8 @@ import {
   Loader2,
   Eye,
   EyeOff,
-} from "lucide-react";
-import toast from "react-hot-toast";
+} from 'lucide-react';
+import toast from 'react-hot-toast';
 
 function Signup() {
   const navigate = useNavigate();
@@ -23,24 +23,24 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
 
   const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    username: "",
-    password: "",
+    fullName: '',
+    email: '',
+    username: '',
+    password: '',
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
-    if (!formData.fullName.trim()) newErrors.fullName = "Full name is required";
-    if (!formData.email.trim()) newErrors.email = "Work email is required";
-    if (!formData.username.trim()) newErrors.username = "Username is required";
+    if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
+    if (!formData.email.trim()) newErrors.email = 'Work email is required';
+    if (!formData.username.trim()) newErrors.username = 'Username is required';
 
     if (!formData.password) {
-      newErrors.password = "Password is required";
+      newErrors.password = 'Password is required';
     } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
+      newErrors.password = 'Password must be at least 8 characters';
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -53,10 +53,10 @@ function Signup() {
     setIsLoading(true);
     try {
       await register(formData);
-      toast.success("Account created successfully");
-      navigate("/");
+      toast.success('Account created successfully');
+      navigate('/');
     } catch (error) {
-      toast.error(error.message || "Failed to create account");
+      toast.error(error.message || 'Failed to create account');
     } finally {
       setIsLoading(false);
     }
@@ -77,7 +77,7 @@ function Signup() {
   };
 
   const handleGitHubSignup = () => {
-    window.location.href = "http://localhost:5000/api/v1/auth/github";
+    window.location.href = 'http://localhost:5000/api/v1/auth/github';
   };
 
   return (
@@ -93,7 +93,7 @@ function Signup() {
               <div className="text-center mb-2">
                 <h2
                   className="text-2xl font-bold tracking-tight text-text-primary"
-                  style={{ fontFamily: "var(--font-display)" }}
+                  style={{ fontFamily: 'var(--font-display)' }}
                 >
                   Create your account
                 </h2>
@@ -161,7 +161,7 @@ function Signup() {
               <Input
                 label="Password"
                 name="password"
-                type={showPassword ? "text" : "password"}
+                type={showPassword ? 'text' : 'password'}
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="At least 8 characters"
@@ -190,14 +190,14 @@ function Signup() {
                   {isLoading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
-                    "Create account"
+                    'Create account'
                   )}
                 </button>
               </div>
             </form>
             <div className="mt-8 pt-6 border-t border-border text-center">
               <p className="text-[14px] text-text-secondary">
-                Already have an account?{" "}
+                Already have an account?{' '}
                 <Link className="link-animated" to="/login">
                   Log in
                 </Link>

@@ -25,15 +25,15 @@ const userSchema = new Schema(
     },
     password: {
       type: String, // bcrypt js
-      required: function() {
+      required: function () {
         return !this.githubId;
       },
       select: false,
     },
     githubId: {
-        type: String,
-        unique: true,
-        sparse: true,   
+      type: String,
+      unique: true,
+      sparse: true,
     },
     avatar: {
       type: String,

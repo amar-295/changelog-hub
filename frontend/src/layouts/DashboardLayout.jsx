@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import Sidebar from "../pages/dashboard/Sidebar";
-import Header from "../pages/dashboard/Header";
-import { Outlet } from "react-router-dom";
+import React, { useState } from 'react';
+import Sidebar from '../pages/dashboard/Sidebar';
+import Header from '../pages/dashboard/Header';
+import { Outlet } from 'react-router-dom';
 
 function DashboardLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -9,7 +9,7 @@ function DashboardLayout() {
   return (
     <div
       className="flex h-screen overflow-hidden"
-      style={{ backgroundColor: "var(--color-bg-page)" }}
+      style={{ backgroundColor: 'var(--color-bg-page)' }}
     >
       <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
 
