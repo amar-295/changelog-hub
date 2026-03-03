@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import Logo from '../../components/Logo';
 import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
+import Input from '../../components/ui/Input';
 
 // ── Category config ─────────────────────────────────────────────────────────
 const CATEGORY_CONFIG = {
@@ -163,13 +164,13 @@ function PublicChangelog() {
               }}
               className="flex flex-col gap-3"
             >
-              <input
+              <Input
                 type="email"
                 placeholder="your@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full bg-bg-input border border-border focus:border-primary focus:ring-1 focus:ring-primary hover:border-border-light hover:bg-white/10 rounded-xl px-4 py-3 text-[14px] text-text-primary outline-none transition-all placeholder-text-muted"
+                className="py-3 rounded-xl"
               />
               <button
                 type="submit"
@@ -306,17 +307,14 @@ function PublicChangelog() {
           </div>
 
           {/* Search */}
-          <div className="relative group">
-            <Search
-              size={14}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors"
-            />
-            <input
+          <div className="w-[220px]">
+            <Input
+              icon={Search}
               type="text"
               placeholder="Search…"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-bg-input border border-border focus:border-primary focus:ring-1 focus:ring-primary hover:border-border-light hover:bg-white/10 rounded-lg pl-8 pr-4 py-2 text-[13px] text-text-primary outline-none transition-all placeholder-text-muted w-[220px]"
+              className="py-2 text-[13px]"
             />
           </div>
         </div>
@@ -464,12 +462,13 @@ function PublicChangelog() {
                 }}
                 className="flex gap-2 w-full md:w-auto"
               >
-                <input
+                <Input
                   type="email"
                   placeholder="your@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1 md:w-60 bg-white/5 border border-white/8 rounded-lg px-4 py-2.5 text-sm text-white outline-none focus:border-primary/40 transition-all placeholder:text-text-muted"
+                  containerClassName="flex-1 md:w-60"
+                  className="bg-white/5 border-white/8 text-white focus:border-primary/40 text-[14px] hover:bg-white/10"
                 />
                 <button
                   type="submit"

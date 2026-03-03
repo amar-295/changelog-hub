@@ -4,6 +4,7 @@ import { X, Loader2, Rocket, FileText } from 'lucide-react';
 import RichTextEditor from '../../components/RichTextEditor/index';
 import CategoryDropdown from './components/CategoryDropdown';
 import { useReleaseForm } from './hooks/useReleaseForm';
+import Input from '../../components/ui/Input';
 
 function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
   const overlayRef = useRef(null);
@@ -21,11 +22,6 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
 
   if (!isOpen) return null;
 
-  const inputStyle = {
-    backgroundColor: 'var(--color-bg-input)',
-    borderColor: 'var(--color-border)',
-    color: 'var(--color-text-primary)',
-  };
   const labelStyle = {
     color: 'var(--color-text-secondary)',
     fontSize: '12px',
@@ -91,37 +87,28 @@ function CreateReleaseModal({ isOpen, onClose, onSuccess }) {
         {/* Scrollable Body */}
         <div className="flex-1 overflow-y-auto px-7 py-6 space-y-5">
           {/* Title */}
-          <div className="space-y-1.5">
-            <label style={labelStyle}>Title *</label>
-            <input
-              type="text"
-              value={form.title}
-              onChange={(e) => handleField('title', e.target.value)}
-              placeholder="e.g. v2.5.0 — Dark Mode Support"
-              className="w-full px-4 py-2.5 rounded-lg border text-sm font-medium outline-none focus:ring-2 focus:ring-primary/30 transition-all"
-              style={inputStyle}
-            />
-          </div>
+          <Input
+            label="Title *"
+            type="text"
+            value={form.title}
+            onChange={(e) => handleField('title', e.target.value)}
+            placeholder="e.g. v2.5.0 — Dark Mode Support"
+          />
 
           {/* Version + Category */}
           <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-1.5">
-              <label style={labelStyle}>Version</label>
-              <input
-                type="text"
-                value={form.version}
-                onChange={(e) => handleField('version', e.target.value)}
-                placeholder="e.g. 2.5.0"
-                className="w-full px-4 py-2.5 rounded-lg border text-sm font-medium outline-none focus:ring-2 focus:ring-primary/30 transition-all"
-                style={inputStyle}
-              />
-            </div>
+            <Input
+              label="Version"
+              type="text"
+              value={form.version}
+              onChange={(e) => handleField('version', e.target.value)}
+              placeholder="e.g. 2.5.0"
+            />
             <div className="space-y-1.5">
               <label style={labelStyle}>Category</label>
               <CategoryDropdown
                 value={form.category}
                 onChange={(val) => handleField('category', val)}
-                inputStyle={inputStyle}
               />
             </div>
           </div>
