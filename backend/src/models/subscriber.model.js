@@ -36,5 +36,6 @@ const subscriberSchema = new Schema(
 
 // Compound unique index: one email per workspace
 subscriberSchema.index({ email: 1, workspaceId: 1 }, { unique: true });
+subscriberSchema.index({ workspaceId: 1 });
 
 export const Subscriber = mongoose.model('Subscriber', subscriberSchema);
