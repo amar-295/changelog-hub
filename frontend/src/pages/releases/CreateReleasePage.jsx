@@ -29,7 +29,7 @@ function CreateReleasePage() {
           setInitialData(response.data);
         } catch {
           toast.error('Failed to load release');
-          navigate('/releases');
+          navigate('/dashboard/releases');
         } finally {
           setLoadingInitial(false);
         }
@@ -41,8 +41,8 @@ function CreateReleasePage() {
   const { form, loading, error, handleField, handleCancel, handleSubmit } =
     useReleaseForm({
       isOpen: true,
-      onSuccess: () => navigate('/releases'),
-      onClose: () => navigate('/releases'),
+      onSuccess: () => navigate('/dashboard/releases'),
+      onClose: () => navigate('/dashboard/releases'),
       initialData,
       isEdit: !!id,
     });
