@@ -21,19 +21,19 @@ const ICON_STROKE = 1.5;
 
 const RELEASE_CHILDREN = [
   { to: '/releases/new', icon: Plus, text: 'Create Release' },
-  { to: '/releases', icon: List, text: 'All Releases', end: true },
+  { to: '/dashboard/releases', icon: List, text: 'All Releases', end: true },
 ];
 
 const NAV_ITEMS = [
-  { to: '/', icon: LayoutDashboard, text: 'Dashboard', end: true },
+  { to: '/dashboard', icon: LayoutDashboard, text: 'Dashboard', end: true },
   {
-    to: '/releases',
+    to: '/dashboard/releases',
     icon: ScrollText,
     text: 'Releases',
     children: RELEASE_CHILDREN,
   },
-  { to: '/subscribers', icon: Users, text: 'Subscribers' },
-  { to: '/settings', icon: Settings, text: 'Settings' },
+  { to: '/dashboard/subscribers', icon: Users, text: 'Subscribers' },
+  { to: '/dashboard/settings', icon: Settings, text: 'Settings' },
 ];
 
 function Sidebar({ isOpen, setIsOpen }) {

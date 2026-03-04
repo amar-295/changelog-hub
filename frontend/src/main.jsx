@@ -20,6 +20,7 @@ import CreateReleasePage from './pages/releases/CreateReleasePage.jsx';
 import PublicChangelog from './pages/public/PublicChangelog.jsx';
 import Settings from './pages/dashboard/Settings.jsx';
 import Subscribers from './pages/dashboard/Subscribers.jsx';
+import LandingPage from './pages/landing/LandingPage.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,8 +28,12 @@ const router = createBrowserRouter(
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
 
+      {/* Public landing page (no auth required) */}
+      <Route path="/" element={<LandingPage />} />
+
+      {/* Protected app — dashboard lives at /dashboard */}
       <Route
-        path="/"
+        path="/dashboard"
         element={
           <ProtectedRoute>
             <DashboardLayout />
@@ -36,12 +41,9 @@ const router = createBrowserRouter(
         }
       >
         <Route index element={<Dashboard />} />
-        <Route path="dashboard" element={<Dashboard />} />
         <Route path="releases" element={<Releases />} />
         <Route path="subscribers" element={<Subscribers />} />
         <Route path="settings" element={<Settings />} />
-        {/* <Route path="analytics" element={<Analytics />} />
-      <Route path="team" element={<Team />} /> */}
       </Route>
 
       {/* Full-screen release editor (outside DashboardLayout so sidebar/header don't show) */}
