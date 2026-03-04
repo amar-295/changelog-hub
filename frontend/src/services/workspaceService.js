@@ -6,6 +6,11 @@ export const workspaceService = {
     return response.data;
   },
 
+  getWorkspaceMetrics: async () => {
+    const response = await api.get('/workspaces/metrics');
+    return response.data;
+  },
+
   updateWorkspace: async (data) => {
     // We use FormData for multipart/form-data support (for the logo upload)
     const formData = new FormData();
