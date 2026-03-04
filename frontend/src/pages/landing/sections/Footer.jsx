@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import LogoWordmark from '../../../components/LogoWordmark';
 
 const COLS = [

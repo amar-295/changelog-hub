@@ -5,7 +5,6 @@ import { NavLink, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   ScrollText,
-  BarChart2,
   Users,
   PanelLeftClose,
   PanelLeftOpen,

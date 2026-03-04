@@ -56,7 +56,7 @@ export const authService = {
     try {
       const response = await api.get('/auth/validate-session');
       return response.data;
-    } catch (error) {
+    } catch {
       return { data: { authenticated: false } };
     }
   },

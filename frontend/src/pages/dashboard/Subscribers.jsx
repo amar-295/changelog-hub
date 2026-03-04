@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Mail, Trash2, Search, ArrowLeft, ArrowRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { subscriberService } from '../../services/subscriberService';
@@ -11,7 +11,7 @@ function Subscribers() {
   const [pagination, setPagination] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const fetchSubscribers = async () => {
+  const fetchSubscribers = useCallback(async () => {
     try {
       setLoading(true);
       const response = await subscriberService.getAllSubscribers({
@@ -27,11 +27,11 @@ function Subscribers() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page]);
 
   useEffect(() => {
     fetchSubscribers();
-  }, [page]);
+  }, [fetchSubscribers]);
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to remove this subscriber?'))
@@ -40,7 +40,7 @@ function Subscribers() {
       await subscriberService.deleteSubscriber(id);
       toast.success('Subscriber removed successfully');
       fetchSubscribers();
-    } catch (error) {
+    } catch {
       toast.error('Failed to remove subscriber');
     }
   };

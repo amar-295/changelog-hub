@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  Settings as SettingsIcon,
   Globe,
   Upload,
   Info,

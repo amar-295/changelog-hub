@@ -69,7 +69,7 @@ export function useReleaseForm({
     } else {
       onClose();
     }
-  }, [form, onSuccess, onClose]);
+  }, [form, onSuccess, onClose, isEdit, initialData]);
 
   const handleSubmit = async (publishNow = false) => {
     if (!form.title.trim()) {

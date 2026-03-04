@@ -94,7 +94,7 @@ function PublicChangelog() {
       } else {
         toast.error(data.message || 'Failed to subscribe');
       }
-    } catch (error) {
+    } catch {
       toast.error('Network error. Please try again.');
     } finally {
       setIsSubscribing(false);

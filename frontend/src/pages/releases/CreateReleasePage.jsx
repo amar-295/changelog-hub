@@ -27,7 +27,7 @@ function CreateReleasePage() {
           setLoadingInitial(true);
           const response = await releaseService.getReleaseById(id);
           setInitialData(response.data);
-        } catch (error) {
+        } catch {
           toast.error('Failed to load release');
           navigate('/releases');
         } finally {

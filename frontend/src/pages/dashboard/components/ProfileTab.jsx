@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UserCircle, CheckCircle2, Loader2, Info } from 'lucide-react';
+import { UserCircle, CheckCircle2, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { authService } from '../../../services/authService';
 import Input from '../../../components/ui/Input';
