@@ -136,7 +136,7 @@ function ProfileDropdown({ user, onLogout }) {
             <button
               onClick={() => {
                 setProfileOpen(false);
-                navigate('/settings');
+                navigate('/dashboard/settings');
               }}
               className="w-full flex items-center gap-3 px-4 py-2.5 text-[13px] transition-colors hover:bg-bg-card-hover text-left"
               style={{ color: 'var(--color-text-secondary)' }}

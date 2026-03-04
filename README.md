@@ -50,42 +50,26 @@ ChangelogHub is a full-stack changelog management platform that simplifies how t
 - **Protected Routes** with middleware-based JWT verification
 - **Secure Logout** with token invalidation
 
-### 📊 Multi-Tenant Architecture
+### 📊 Multi-Tenant Architecture & Backend
 
-- **Workspace Isolation** - Each user gets an isolated workspace
-- **Automatic Workspace Assignment** - Every new user creates a default workspace
-- **Multi-User Support** - Multiple users can be part of the same workspace
-- **Role-Based Access** - Owner and contributor roles for workspace members
+- **Workspace Isolation** - Each user gets an isolated workspace with unique subdomain mapping
+- **Professional API Architecture** - Standardized `ApiError` and `ApiResponse` wrappers for consistent data delivery
+- **Secure Middleware Layer** - Centralized error handling, auth verification, and request sanitization
+- **Multi-Tenant Support** - Public pages dynamically fetch content based on the workspace identifier
 
-### 📝 Release Management
+### 🎨 Premium Frontend & Landing Page
 
-- **Create Releases** with title, content, version, and category
-- **Auto-Slug Generation** - SEO-friendly URLs generated from titles using Slugify
-- **Draft & Publish Workflow** - Save as drafts before publishing
-- **Full CRUD Operations** - Create, read, update, delete releases
-- **Release Categories** - Feature, improvement, bugfix, security, other
-- **Versioning Support** - Semantic versioning for releases
-- **Rich Publishing** - Timestamps and publication tracking
+- **Immersive Hero Experience** - Scroll-driven GSAP animations and parallax effects
+- **Modern UI Patterns** - Sleek dark mode with glassmorphism and subtle micro-animations
+- **Premium Iconography** - Custom SVG icon system replacing generic placeholders
+- **Responsive Dashboard** - Feature-rich dashboard for managing releases, team, and subscribers
+- **Rich Text Editing** - Integrated TipTap editor for professional product updates
 
-### 🔍 Advanced Filtering & Search
+### 📝 Release & Subscriber Management
 
-- **Pagination Support** - Configurable page size (1-50 results per page)
-- **Status Filtering** - Filter by draft, published, or archived
-- **Category Filtering** - Filter by release type
-- **Full-Text Search** - Search releases by title
-- **Sorted Results** - Newest first by default
-- **Input Validation** - Sanitized search to prevent injection attacks
-
-### 🎨 Modern Frontend
-
-- **React 19** with latest features and hooks
-- **Vite** for lightning-fast development and builds
-- **Tailwind CSS** for beautiful, responsive UI
-- **TipTap Editor** for rich text content editing
-- **Lucide Icons** for consistent iconography
-- **React Router** for seamless navigation
-- **Axios** for API communication
-- **React Hot Toast** for user notifications
+- **Draft & Publish Workflow** - Versioned releases with SEO-friendly auto-generated slugs
+- **Subscriber CRM** - Manage your audience directly from the dashboard with subscription tracking
+- **Dynamic Public Pages** - Automatically generated public changelog pages for every workspace
 
 ---
 
@@ -93,33 +77,29 @@ ChangelogHub is a full-stack changelog management platform that simplifies how t
 
 ### Backend
 
-| Technology                    | Purpose                                   |
-| ----------------------------- | ----------------------------------------- |
-| **Node.js**                   | JavaScript runtime environment            |
-| **Express.js** (v5.2.1)       | Fast, unopinionated web framework         |
-| **MongoDB**                   | NoSQL database for flexible data modeling |
-| **Mongoose** (v9.2.1)         | ODM for MongoDB with schema validation    |
-| **JWT** (jsonwebtoken v9.0.3) | Secure stateless authentication           |
-| **Bcryptjs** (v3.0.3)         | Password hashing and verification         |
-| **Slugify** (v1.6.6)          | URL-safe slug generation                  |
-| **Cloudinary** (v2.9.0)       | Cloud image/file storage                  |
-| **Multer** (v2.0.2)           | File upload handling                      |
-| **CORS** (v2.8.6)             | Cross-origin resource sharing             |
-| **Cookie Parser** (v1.4.7)    | HTTP cookie parsing                       |
-| **Dotenv** (v17.3.1)          | Environment configuration                 |
+| Technology               | Purpose                                   |
+| ------------------------ | ----------------------------------------- |
+| **Node.js**              | JavaScript runtime environment            |
+| **Express.js**           | Fast, unopinionated web framework         |
+| **MongoDB**              | NoSQL database for flexible data modeling |
+| **Mongoose**             | ODM for MongoDB with schema validation    |
+| **JWT**                  | Secure stateless authentication           |
+| **Bcryptjs**             | Password hashing and verification         |
+| **Helmet**               | HTTP header security                      |
+| **CORS / Cookie Parser** | Cross-origin and session management       |
 
 ### Frontend
 
-| Technology                     | Purpose                     |
-| ------------------------------ | --------------------------- |
-| **React** (v19.2.0)            | Modern UI library           |
-| **Vite** (v7.3.1)              | Fast bundler and dev server |
-| **React Router DOM** (v7.13.0) | Client-side routing         |
-| **Tailwind CSS** (v4.2.0)      | Utility-first CSS framework |
-| **TipTap** (v3.20.0)           | Advanced rich text editor   |
-| **Lucide React** (v0.575.0)    | Icon library                |
-| **Axios** (v1.13.5)            | HTTP client                 |
-| **React Hot Toast** (v2.6.0)   | Toast notifications         |
+| Technology       | Purpose                                     |
+| ---------------- | ------------------------------------------- |
+| **React 19**     | Modern library for building user interfaces |
+| **Vite**         | High-performance build tool                 |
+| **GSAP**         | High-fidelity animations and motion design  |
+| **Tailwind CSS** | Utility-first styling with custom tokens    |
+| **TipTap**       | Advanced rich text editing framework        |
+| **Lucide React** | Clean, consistent icon set                  |
+| **React Router** | Seamless client-side navigation             |
+| **Axios**        | Promise-based HTTP client                   |
 
 ### Development Tools
 

@@ -8,11 +8,12 @@ import NotificationBell from './components/NotificationBell';
 import ProfileDropdown from './components/ProfileDropdown';
 
 const PAGE_TITLES = {
-  '/': 'Dashboard',
-  '/releases': 'Releases',
-  '/analytics': 'Analytics',
-  '/team': 'Team',
-  '/settings': 'Settings',
+  '/dashboard': 'Dashboard',
+  '/dashboard/releases': 'Releases',
+  '/dashboard/analytics': 'Analytics',
+  '/dashboard/team': 'Team',
+  '/dashboard/settings': 'Settings',
+  '/dashboard/subscribers': 'Subscribers',
 };
 
 function Header({ onMenuClick }) {
