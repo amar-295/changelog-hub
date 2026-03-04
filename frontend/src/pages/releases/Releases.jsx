@@ -1,5 +1,6 @@
 import React, { useReducer, useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { releaseService } from '../../services/releaseService';
 import ReleasesHeader from './components/ReleasesHeader';
 import ReleasesTable from './components/ReleasesTable';
@@ -41,6 +42,7 @@ function releasesReducer(state, action) {
 // ── Orchestrator ──────────────────────────────────────────────────────────────
 function Releases() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [state, dispatch] = useReducer(releasesReducer, initialState);
   const {
     releases,
@@ -56,19 +58,22 @@ function Releases() {
   const [viewMode, setViewMode] = useState('table');
   const [dateFilter, setDateFilter] = useState({ from: '', to: '' });
 
+  const searchQuery = searchParams.get('search') || '';
+
   // Sync URL ?status param → reducer
   useEffect(() => {
     const urlStatus = searchParams.get('status') || '';
     dispatch({ type: 'SET_STATUS_FILTER', payload: urlStatus });
   }, [searchParams]);
 
-  // Fetch releases whenever filter/page/date/refreshKey changes
+  // Fetch releases whenever filter/page/date/refreshKey/searchQuery changes
   useEffect(() => {
     const fetchReleases = async () => {
       try {
         dispatch({ type: 'SET_LOADING', payload: true });
         const params = { page, limit: 10 };
         if (statusFilter) params.status = statusFilter;
+        if (searchQuery) params.search = searchQuery;
         if (dateFilter.from) params.from = dateFilter.from;
         if (dateFilter.to) params.to = dateFilter.to;
         const response = await releaseService.getAllReleases(params);
@@ -87,7 +92,39 @@ function Releases() {
       }
     };
     fetchReleases();
-  }, [page, statusFilter, dateFilter, refreshKey]);
+  }, [page, statusFilter, dateFilter, refreshKey, searchQuery]);
+
+  // Actions
+  const handleEdit = (release) => {
+    navigate(`/releases/${release._id}/edit`, { state: { release } });
+  };
+
+  const handlePublishToggle = async (release) => {
+    try {
+      if (release.status === 'published') {
+        await releaseService.unpublishRelease(release._id);
+        toast.success('Release unpublished');
+      } else {
+        await releaseService.publishRelease(release._id);
+        toast.success('Release published');
+      }
+      dispatch({ type: 'REFRESH' });
+    } catch (error) {
+      toast.error(error.message || 'Failed to update release status');
+    }
+  };
+
+  const handleDelete = async (release) => {
+    if (window.confirm('Are you sure you want to delete this release?')) {
+      try {
+        await releaseService.deleteRelease(release._id);
+        toast.success('Release deleted');
+        dispatch({ type: 'REFRESH' });
+      } catch (error) {
+        toast.error(error.message || 'Failed to delete release');
+      }
+    }
+  };
 
   return (
     <div className="p-8 max-w-7xl mx-auto">
@@ -108,9 +145,23 @@ function Releases() {
         style={{ borderColor: 'var(--color-border)' }}
       >
         {viewMode === 'table' ? (
-          <ReleasesTable releases={releases} loading={loading} error={error} />
+          <ReleasesTable
+            releases={releases}
+            loading={loading}
+            error={error}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onPublishToggle={handlePublishToggle}
+          />
         ) : (
-          <ReleasesGrid releases={releases} loading={loading} error={error} />
+          <ReleasesGrid
+            releases={releases}
+            loading={loading}
+            error={error}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onPublishToggle={handlePublishToggle}
+          />
         )}
         <ReleasesPagination
           pagination={pagination}

@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { ArrowLeft, Loader2, Rocket, Save } from 'lucide-react';
 import RichTextEditor from '../../components/RichTextEditor/index';
 import CategoryDropdown from './components/CategoryDropdown';
 import Input from '../../components/ui/Input';
 import { useReleaseForm } from './hooks/useReleaseForm';
+import { releaseService } from '../../services/releaseService';
+import toast from 'react-hot-toast';
 
 /* ──────────────────────────────────────────────────────────
    Standalone full-screen release editor page.
@@ -13,11 +15,36 @@ import { useReleaseForm } from './hooks/useReleaseForm';
 function CreateReleasePage() {
   const navigate = useNavigate();
 
+  const { id } = useParams();
+  const { state } = useLocation();
+  const [initialData, setInitialData] = useState(state?.release || null);
+  const [loadingInitial, setLoadingInitial] = useState(!!id && !state?.release);
+
+  useEffect(() => {
+    if (id && !initialData) {
+      const fetchRelease = async () => {
+        try {
+          setLoadingInitial(true);
+          const response = await releaseService.getReleaseById(id);
+          setInitialData(response.data);
+        } catch (error) {
+          toast.error('Failed to load release');
+          navigate('/releases');
+        } finally {
+          setLoadingInitial(false);
+        }
+      };
+      fetchRelease();
+    }
+  }, [id, initialData, navigate]);
+
   const { form, loading, error, handleField, handleCancel, handleSubmit } =
     useReleaseForm({
       isOpen: true,
       onSuccess: () => navigate('/releases'),
       onClose: () => navigate('/releases'),
+      initialData,
+      isEdit: !!id,
     });
 
   // Escape → auto-save draft and go back
@@ -28,6 +55,14 @@ function CreateReleasePage() {
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, [handleCancel]);
+
+  if (loadingInitial) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg-page">
+        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-bg-page">
@@ -51,7 +86,7 @@ function CreateReleasePage() {
           </button>
           <span className="text-text-muted/40 text-[13px]">›</span>
           <span className="text-text-secondary text-[13px] font-medium truncate">
-            New Release
+            {id ? 'Edit Release' : 'New Release'}
           </span>
         </div>
 

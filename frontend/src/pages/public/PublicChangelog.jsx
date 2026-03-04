@@ -69,6 +69,37 @@ function PublicChangelog() {
   const [searchQuery, setSearchQuery] = useState('');
   const [email, setEmail] = useState('');
   const [subscribeModal, setSubscribeModal] = useState(false);
+  const [isSubscribing, setIsSubscribing] = useState(false);
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (!email || isSubscribing) return;
+
+    try {
+      setIsSubscribing(true);
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL || '/api/v1'}/public/${encodeURIComponent(subdomain)}/subscribe`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        }
+      );
+      const data = await res.json();
+
+      if (data.success) {
+        toast.success(data.message || "Subscribed! You'll hear from us soon.");
+        setEmail('');
+        setSubscribeModal(false);
+      } else {
+        toast.error(data.message || 'Failed to subscribe');
+      }
+    } catch (error) {
+      toast.error('Network error. Please try again.');
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
 
   useEffect(() => {
     const fetchReleases = async () => {
@@ -155,15 +186,7 @@ function PublicChangelog() {
                 </p>
               </div>
             </div>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                toast.success("Subscribed! You'll hear from us soon.");
-                setSubscribeModal(false);
-                setEmail('');
-              }}
-              className="flex flex-col gap-3"
-            >
+            <form onSubmit={handleSubscribe} className="flex flex-col gap-3">
               <Input
                 type="email"
                 placeholder="your@email.com"
@@ -174,9 +197,10 @@ function PublicChangelog() {
               />
               <button
                 type="submit"
-                className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-3 rounded-xl text-sm transition-all"
+                disabled={isSubscribing}
+                className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-3 rounded-xl text-sm transition-all disabled:opacity-50"
               >
-                Subscribe to Updates
+                {isSubscribing ? 'Subscribing...' : 'Subscribe to Updates'}
               </button>
             </form>
             <p className="text-[11px] text-text-muted mt-4 text-center">
@@ -455,11 +479,7 @@ function PublicChangelog() {
                 </p>
               </div>
               <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  toast.success('Subscribed successfully!');
-                  setEmail('');
-                }}
+                onSubmit={handleSubscribe}
                 className="flex gap-2 w-full md:w-auto"
               >
                 <Input
@@ -472,9 +492,10 @@ function PublicChangelog() {
                 />
                 <button
                   type="submit"
-                  className="bg-primary hover:bg-primary-dark text-white font-medium px-5 py-2.5 rounded-lg text-sm transition-all shrink-0"
+                  disabled={isSubscribing}
+                  className="bg-primary hover:bg-primary-dark text-white font-medium px-5 py-2.5 rounded-lg text-sm transition-all shrink-0 disabled:opacity-50"
                 >
-                  Subscribe
+                  {isSubscribing ? 'Wait...' : 'Subscribe'}
                 </button>
               </form>
             </div>

@@ -19,6 +19,7 @@ import Releases from './pages/releases/Releases.jsx';
 import CreateReleasePage from './pages/releases/CreateReleasePage.jsx';
 import PublicChangelog from './pages/public/PublicChangelog.jsx';
 import Settings from './pages/dashboard/Settings.jsx';
+import Subscribers from './pages/dashboard/Subscribers.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -37,6 +38,7 @@ const router = createBrowserRouter(
         <Route index element={<Dashboard />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="releases" element={<Releases />} />
+        <Route path="subscribers" element={<Subscribers />} />
         <Route path="settings" element={<Settings />} />
         {/* <Route path="analytics" element={<Analytics />} />
       <Route path="team" element={<Team />} /> */}
@@ -45,6 +47,14 @@ const router = createBrowserRouter(
       {/* Full-screen release editor (outside DashboardLayout so sidebar/header don't show) */}
       <Route
         path="/releases/new"
+        element={
+          <ProtectedRoute>
+            <CreateReleasePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/releases/:id/edit"
         element={
           <ProtectedRoute>
             <CreateReleasePage />

@@ -34,7 +34,7 @@ function Header({ onMenuClick }) {
 
   return (
     <header
-      className="shrink-0 z-20 flex items-center justify-between px-4 md:px-6 py-3"
+      className="shrink-0 z-20 flex items-center justify-between px-4 md:px-6 h-[52px]"
       style={{
         backgroundColor: 'var(--color-bg-sidebar)',
         borderBottom: '1px solid var(--color-border)',

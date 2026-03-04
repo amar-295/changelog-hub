@@ -15,14 +15,14 @@ const TABS = [
   { label: 'All', value: '' },
   { label: 'Published', value: 'published' },
   { label: 'Drafts', value: 'draft' },
-  { label: 'Archive', value: 'archive' },
+  { label: 'Archive', value: 'archived' },
 ];
 
 const TITLES = {
   '': 'All Releases',
   published: 'Published',
   draft: 'Drafts',
-  archive: 'Archive',
+  archived: 'Archive',
 };
 
 /* ── Small tooltip (reused locally) ─────────────────────────────── */

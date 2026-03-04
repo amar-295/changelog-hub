@@ -1,9 +1,11 @@
 import React, { useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import Input from '../../../components/ui/Input';
 
 function SearchBar() {
   const searchInputRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     function handleKeyDown(e) {
@@ -27,7 +29,18 @@ function SearchBar() {
       icon={Search}
       placeholder="Search..."
       type="text"
-      className="w-52 py-1.5 text-[13px]"
+      className="w-56 h-9! py-1! text-[13px] bg-bg-elevated/50!"
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') {
+          const val = e.target.value.trim();
+          if (val) {
+            navigate(`/releases?search=${encodeURIComponent(val)}`);
+          } else {
+            navigate(`/releases`);
+          }
+          searchInputRef.current?.blur();
+        }
+      }}
       rightIcon={
         <div
           className="flex items-center justify-center min-w-[20px] h-[20px] text-[11px] font-semibold rounded bg-bg-card text-text-muted"

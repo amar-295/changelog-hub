@@ -60,4 +60,26 @@ export const authService = {
       return { data: { authenticated: false } };
     }
   },
+
+  updateAccount: async (data) => {
+    try {
+      const response = await api.patch('/auth/update-account', data);
+      return response.data;
+    } catch (error) {
+      const message =
+        error.response?.data?.message || 'Failed to update account';
+      throw new Error(message);
+    }
+  },
+
+  changePassword: async (data) => {
+    try {
+      const response = await api.post('/auth/change-password', data);
+      return response.data;
+    } catch (error) {
+      const message =
+        error.response?.data?.message || 'Failed to change password';
+      throw new Error(message);
+    }
+  },
 };

@@ -1,9 +1,12 @@
 import React from 'react';
 import { Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 function ActionBtn() {
+  const navigate = useNavigate();
   return (
     <button
+      onClick={() => navigate('/releases/new')}
       className="fixed bottom-8 right-8 flex items-center gap-2 text-white px-4 py-2.5 rounded-lg hover:opacity-90 active:scale-95 transition-all z-20 font-semibold text-sm shadow-lg cursor-pointer"
       style={{
         backgroundColor: 'var(--color-primary)',

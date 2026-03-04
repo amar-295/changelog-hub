@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { useAuth } from '../../../context/AuthContext';
+import { Edit, Trash2, Send, Archive } from 'lucide-react';
 
 /* ── Status config (same as table) ──────────────────────────────── */
 const STATUS_CONFIG = {
@@ -49,7 +50,14 @@ function getHue(name = '') {
 }
 
 /* ── Release Card ────────────────────────────────────────────────── */
-function ReleaseCard({ release, currentName, currentAvatar }) {
+function ReleaseCard({
+  release,
+  currentName,
+  currentAvatar,
+  onEdit,
+  onDelete,
+  onPublishToggle,
+}) {
   const cfg = STATUS_CONFIG[release.status] ?? STATUS_CONFIG.draft;
   const authorName =
     release.createdBy?.name ??
@@ -73,12 +81,53 @@ function ReleaseCard({ release, currentName, currentAvatar }) {
 
   return (
     <div
-      className="flex flex-col rounded-xl border p-5 cursor-pointer hover:border-primary/30 transition-all group bg-opacity-80"
+      className="flex flex-col relative rounded-xl border p-5 cursor-pointer hover:border-primary/30 transition-all group bg-opacity-80 mt-2"
       style={{
         backgroundColor: 'var(--color-bg-card)',
         borderColor: 'var(--color-border)',
       }}
+      onClick={() => onEdit(release)}
     >
+      {/* Actions Overlay */}
+      <div
+        className="absolute -top-3 right-4 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-bg-card/90 backdrop-blur-sm p-1 rounded-lg border shadow-xl z-10"
+        style={{ borderColor: 'var(--color-border)' }}
+      >
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onEdit(release);
+          }}
+          className="p-1.5 rounded hover:bg-white/10 text-text-muted hover:text-primary transition-colors"
+          title="Edit Release"
+        >
+          <Edit size={14} />
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onPublishToggle(release);
+          }}
+          className="p-1.5 rounded hover:bg-white/10 text-text-muted hover:text-primary transition-colors"
+          title={release.status === 'published' ? 'Unpublish' : 'Publish'}
+        >
+          {release.status === 'published' ? (
+            <Archive size={14} />
+          ) : (
+            <Send size={14} />
+          )}
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(release);
+          }}
+          className="p-1.5 rounded hover:bg-red-500/10 text-text-muted hover:text-red-400 transition-colors"
+          title="Delete"
+        >
+          <Trash2 size={14} />
+        </button>
+      </div>
       {/* Top: status dot + badge */}
       <div className="flex items-center justify-between mb-3">
         <span
@@ -150,10 +199,20 @@ ReleaseCard.propTypes = {
   release: PropTypes.object.isRequired,
   currentName: PropTypes.string,
   currentAvatar: PropTypes.string,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onPublishToggle: PropTypes.func.isRequired,
 };
 
 /* ── Grid Container ──────────────────────────────────────────────── */
-function ReleasesGrid({ releases, loading, error }) {
+function ReleasesGrid({
+  releases,
+  loading,
+  error,
+  onEdit,
+  onDelete,
+  onPublishToggle,
+}) {
   const { user } = useAuth();
   const currentName =
     user?.name ?? user?.username ?? user?.email?.split('@')[0] ?? 'You';
@@ -199,6 +258,9 @@ function ReleasesGrid({ releases, loading, error }) {
             release={release}
             currentName={currentName}
             currentAvatar={currentAvatar}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onPublishToggle={onPublishToggle}
           />
         ))}
     </div>
@@ -209,6 +271,9 @@ ReleasesGrid.propTypes = {
   releases: PropTypes.array.isRequired,
   loading: PropTypes.bool.isRequired,
   error: PropTypes.string,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onPublishToggle: PropTypes.func.isRequired,
 };
 
 export default ReleasesGrid;

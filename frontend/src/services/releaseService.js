@@ -54,4 +54,12 @@ export const releaseService = {
       throw new Error('Failed to publish release');
     }
   },
+  unpublishRelease: async (id) => {
+    try {
+      const response = await api.patch(`/releases/${id}/unpublish`);
+      return response.data;
+    } catch {
+      throw new Error('Failed to unpublish release');
+    }
+  },
 };

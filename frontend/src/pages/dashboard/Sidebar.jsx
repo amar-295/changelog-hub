@@ -32,8 +32,7 @@ const NAV_ITEMS = [
     text: 'Releases',
     children: RELEASE_CHILDREN,
   },
-  { to: '/analytics', icon: BarChart2, text: 'Analytics' },
-  { to: '/team', icon: Users, text: 'Team' },
+  { to: '/subscribers', icon: Users, text: 'Subscribers' },
   { to: '/settings', icon: Settings, text: 'Settings' },
 ];
 

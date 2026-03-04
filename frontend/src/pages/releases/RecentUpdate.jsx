@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { MoreVertical, Inbox } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Edit, Inbox } from 'lucide-react';
 import { releaseService } from '../../services/releaseService';
 
 function RecentUpdate({ onTotalReleasesLoaded }) {
+  const navigate = useNavigate();
   const [releases, setReleases] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -96,6 +98,7 @@ function RecentUpdate({ onTotalReleasesLoaded }) {
           Recent Updates
         </h3>
         <button
+          onClick={() => navigate('/releases')}
           className="text-sm font-bold hover:underline cursor-pointer"
           style={{ color: 'var(--color-primary)' }}
         >
@@ -116,27 +119,29 @@ function RecentUpdate({ onTotalReleasesLoaded }) {
             </div>
           </div>
         ) : releases.length === 0 ? (
-          <div className="flex-1 flex flex-col items-center justify-center py-20 gap-3">
+          <div className="flex-1 flex flex-col items-center justify-center py-24 gap-4 px-6 text-center">
             <div
-              className="p-4 rounded-full bg-bg-elevated"
-              style={{ color: 'var(--color-text-muted)' }}
+              className="p-5 rounded-2xl mb-2"
+              style={{
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                color: 'var(--color-primary)',
+              }}
             >
-              <Inbox size={32} strokeWidth={1.5} />
+              <Inbox size={36} strokeWidth={1.5} />
             </div>
-            <div className="text-center">
-              <p
-                className="font-bold"
-                style={{ color: 'var(--color-text-primary)' }}
-              >
-                No updates yet
-              </p>
-              <p
-                className="text-sm"
-                style={{ color: 'var(--color-text-secondary)' }}
-              >
-                Your recent product releases will appear here.
-              </p>
-            </div>
+            <h4
+              className="text-xl font-black"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Welcome to ChangelogHub! 🎉
+            </h4>
+            <p
+              className="text-[15px] max-w-sm"
+              style={{ color: 'var(--color-text-secondary)' }}
+            >
+              Your workspace is ready. Head over to the Releases tab to start
+              documenting your product updates and sharing them with your users.
+            </p>
           </div>
         ) : (
           <table className="w-full text-left border-collapse">
@@ -182,9 +187,8 @@ function RecentUpdate({ onTotalReleasesLoaded }) {
             <tbody>
               {releases.map((release, idx) => {
                 const status = getStatusInfo(release.status);
-                // Simulation of engagement bar for UI polish
-                const engagementWidth =
-                  release.status === 'published' ? 75 - idx * 15 + '%' : '0%';
+                // Engagement metrics are not yet tracked per post, defaulting to 0
+                const engagementWidth = '0%';
 
                 return (
                   <tr
@@ -237,14 +241,16 @@ function RecentUpdate({ onTotalReleasesLoaded }) {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <button
-                        aria-label="Release options"
-                        className="p-1 rounded transition-colors hover:opacity-80 cursor-pointer"
+                        onClick={() =>
+                          navigate(`/releases/${release._id}/edit`, {
+                            state: { release },
+                          })
+                        }
+                        aria-label="Edit release"
+                        title="Edit Release"
+                        className="p-1.5 rounded-lg transition-colors hover:bg-white/10 hover:text-primary cursor-pointer text-text-muted inline-flex items-center justify-center"
                       >
-                        <MoreVertical
-                          size={18}
-                          strokeWidth={1.5}
-                          style={{ color: 'var(--color-text-muted)' }}
-                        />
+                        <Edit size={16} strokeWidth={2} />
                       </button>
                     </td>
                   </tr>

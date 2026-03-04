@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { MoreHorizontal } from 'lucide-react';
+import { Edit, Trash2, Send, Archive } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 
 /* ── Status config ───────────────────────────────────────────────── */
@@ -79,15 +79,41 @@ function AuthorCell({ name, avatarUrl }) {
 AuthorCell.propTypes = { name: PropTypes.string, avatarUrl: PropTypes.string };
 
 /* ── Row action menu ─────────────────────────────────────────────── */
-function RowActions() {
+function RowActions({ release, onEdit, onDelete, onPublishToggle }) {
+  const isPublished = release.status === 'published';
   return (
-    <button
-      className="p-1.5 rounded-lg hover:bg-white/10 cursor-pointer transition-colors"
-      style={{ color: 'var(--color-text-secondary)' }}
-      aria-label="Row actions"
-    >
-      <MoreHorizontal size={16} strokeWidth={1.5} />
-    </button>
+    <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onEdit(release);
+        }}
+        className="p-1.5 rounded-lg hover:bg-white/10 text-text-muted hover:text-primary transition-colors cursor-pointer"
+        title="Edit Release"
+      >
+        <Edit size={14} />
+      </button>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onPublishToggle(release);
+        }}
+        className="p-1.5 rounded-lg hover:bg-white/10 text-text-muted hover:text-primary transition-colors cursor-pointer"
+        title={isPublished ? 'Unpublish' : 'Publish'}
+      >
+        {isPublished ? <Archive size={14} /> : <Send size={14} />}
+      </button>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onDelete(release);
+        }}
+        className="p-1.5 rounded-lg hover:bg-red-500/10 text-text-muted hover:text-red-400 transition-colors cursor-pointer"
+        title="Delete"
+      >
+        <Trash2 size={14} />
+      </button>
+    </div>
   );
 }
 
@@ -96,7 +122,14 @@ const TH =
   'px-5 py-3.5 align-middle text-[10.5px] font-bold tracking-widest uppercase';
 const TD = 'px-5 py-[14px] align-middle';
 
-function ReleasesTable({ releases, loading, error }) {
+function ReleasesTable({
+  releases,
+  loading,
+  error,
+  onEdit,
+  onDelete,
+  onPublishToggle,
+}) {
   const { user } = useAuth();
 
   const currentName =
@@ -196,8 +229,9 @@ function ReleasesTable({ releases, loading, error }) {
             return (
               <tr
                 key={release._id}
-                className="border-b last:border-0 hover:brightness-105 transition-colors cursor-pointer"
+                className="border-b last:border-0 hover:brightness-105 transition-colors cursor-pointer group"
                 style={{ borderColor: 'var(--color-border)' }}
+                onClick={() => onEdit(release)}
               >
                 {/* Title + snippet */}
                 <td className={TD}>
@@ -253,7 +287,12 @@ function ReleasesTable({ releases, loading, error }) {
 
                 {/* Actions — always visible */}
                 <td className={`${TD} text-right pr-5`}>
-                  <RowActions />
+                  <RowActions
+                    release={release}
+                    onEdit={onEdit}
+                    onDelete={onDelete}
+                    onPublishToggle={onPublishToggle}
+                  />
                 </td>
               </tr>
             );
@@ -267,6 +306,9 @@ ReleasesTable.propTypes = {
   releases: PropTypes.array.isRequired,
   loading: PropTypes.bool.isRequired,
   error: PropTypes.string,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onPublishToggle: PropTypes.func.isRequired,
 };
 
 export default ReleasesTable;

@@ -9,18 +9,34 @@ const INITIAL_FORM = {
   content: '',
 };
 
-export function useReleaseForm({ isOpen, onSuccess, onClose }) {
+export function useReleaseForm({
+  isOpen,
+  onSuccess,
+  onClose,
+  initialData,
+  isEdit,
+}) {
   const [form, setForm] = useState(INITIAL_FORM);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Reset form when modal opens
+  // Reset form when modal opens or initialData changes
   useEffect(() => {
     if (isOpen) {
-      setForm(INITIAL_FORM);
+      if (initialData) {
+        setForm({
+          title: initialData.title || '',
+          version: initialData.version || '',
+          category: initialData.category || 'feature',
+          status: initialData.status || 'draft',
+          content: initialData.content || '',
+        });
+      } else {
+        setForm(INITIAL_FORM);
+      }
       setError(null);
     }
-  }, [isOpen]);
+  }, [isOpen, initialData]);
 
   const handleField = (field, value) =>
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -36,11 +52,13 @@ export function useReleaseForm({ isOpen, onSuccess, onClose }) {
       try {
         setLoading(true);
         const autoTitle = form.title.trim() || 'Untitled Release';
-        await releaseService.createRelease({
-          ...form,
-          title: autoTitle,
-          status: 'draft',
-        });
+        const payload = { ...form, title: autoTitle, status: 'draft' };
+
+        if (isEdit && initialData?._id) {
+          await releaseService.updateRelease(initialData._id, payload);
+        } else {
+          await releaseService.createRelease(payload);
+        }
         onSuccess?.();
       } catch (err) {
         console.error('Auto-draft failed', err);
@@ -70,7 +88,12 @@ export function useReleaseForm({ isOpen, onSuccess, onClose }) {
         ...form,
         status: publishNow ? 'published' : form.status,
       };
-      await releaseService.createRelease(payload);
+
+      if (isEdit && initialData?._id) {
+        await releaseService.updateRelease(initialData._id, payload);
+      } else {
+        await releaseService.createRelease(payload);
+      }
       onSuccess?.();
       onClose();
     } catch (err) {

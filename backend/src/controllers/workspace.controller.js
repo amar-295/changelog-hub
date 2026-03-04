@@ -2,6 +2,8 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { Workspace } from '../models/workspace.model.js';
+import { Release } from '../models/release.model.js';
+import { Subscriber } from '../models/subscriber.model.js';
 import { uploadOnCloudinary } from '../utils/cloudinary.js';
 
 const getWorkspaceDetails = asyncHandler(async (req, res) => {
@@ -72,4 +74,25 @@ const updateWorkspace = asyncHandler(async (req, res) => {
   }
 });
 
-export { getWorkspaceDetails, updateWorkspace };
+const getWorkspaceMetrics = asyncHandler(async (req, res) => {
+  const workspaceId = req.user.workspaceId;
+
+  const [totalReleases, totalSubscribers] = await Promise.all([
+    Release.countDocuments({ workspaceId }),
+    Subscriber.countDocuments({ workspaceId, status: 'active' }),
+  ]);
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        totalReleases,
+        totalSubscribers,
+        avgEngagement: 64.2, // Placeholder for v1
+      },
+      'Workspace metrics fetched successfully'
+    )
+  );
+});
+
+export { getWorkspaceDetails, updateWorkspace, getWorkspaceMetrics };

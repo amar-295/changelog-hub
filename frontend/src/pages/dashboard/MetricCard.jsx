@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-function MetricCard({ totalReleases }) {
+function MetricCard({ metrics }) {
   const cardStyle = {
     backgroundColor: 'var(--color-bg-card)',
     borderColor: 'var(--color-border)',
@@ -26,63 +26,9 @@ function MetricCard({ totalReleases }) {
               className="text-3xl font-black mt-1"
               style={{ color: 'var(--color-text-primary)' }}
             >
-              {totalReleases}
+              {metrics?.totalReleases || 0}
             </h3>
           </div>
-          <span
-            className="text-blue-400 font-bold text-sm flex items-center px-2 py-1 rounded-lg"
-            style={{ backgroundColor: 'rgba(59, 130, 246, 0.1)' }}
-          >
-            +14.2%
-          </span>
-        </div>
-        <div className="flex items-end gap-1 h-12 mt-2">
-          <div
-            className="w-full rounded-t-sm"
-            style={{
-              height: '30%',
-              backgroundColor: 'rgba(129, 140, 248, 0.15)',
-            }}
-          ></div>
-          <div
-            className="w-full rounded-t-sm"
-            style={{
-              height: '50%',
-              backgroundColor: 'rgba(129, 140, 248, 0.25)',
-            }}
-          ></div>
-          <div
-            className="w-full rounded-t-sm"
-            style={{
-              height: '40%',
-              backgroundColor: 'rgba(129, 140, 248, 0.35)',
-            }}
-          ></div>
-          <div
-            className="w-full rounded-t-sm"
-            style={{
-              height: '70%',
-              backgroundColor: 'rgba(129, 140, 248, 0.50)',
-            }}
-          ></div>
-          <div
-            className="w-full rounded-t-sm"
-            style={{
-              height: '90%',
-              backgroundColor: 'rgba(129, 140, 248, 0.70)',
-            }}
-          ></div>
-          <div
-            className="w-full rounded-t-sm"
-            style={{
-              height: '60%',
-              backgroundColor: 'rgba(129, 140, 248, 0.60)',
-            }}
-          ></div>
-          <div
-            className="w-full rounded-t-sm"
-            style={{ height: '100%', backgroundColor: 'var(--color-primary)' }}
-          ></div>
         </div>
       </div>
       {/* Card 2 */}
@@ -102,63 +48,9 @@ function MetricCard({ totalReleases }) {
               className="text-3xl font-black mt-1"
               style={{ color: 'var(--color-text-primary)' }}
             >
-              64.2%
+              {metrics?.avgEngagement || 0}%
             </h3>
           </div>
-          <span
-            className="text-blue-400 font-bold text-sm flex items-center px-2 py-1 rounded-lg"
-            style={{ backgroundColor: 'rgba(59, 130, 246, 0.1)' }}
-          >
-            +5.1%
-          </span>
-        </div>
-        <div className="flex items-end gap-1 h-12 mt-2">
-          <div
-            className="w-full rounded-t-sm"
-            style={{
-              height: '60%',
-              backgroundColor: 'rgba(129, 140, 248, 0.15)',
-            }}
-          ></div>
-          <div
-            className="w-full rounded-t-sm"
-            style={{
-              height: '40%',
-              backgroundColor: 'rgba(129, 140, 248, 0.25)',
-            }}
-          ></div>
-          <div
-            className="w-full rounded-t-sm"
-            style={{
-              height: '80%',
-              backgroundColor: 'rgba(129, 140, 248, 0.35)',
-            }}
-          ></div>
-          <div
-            className="w-full rounded-t-sm"
-            style={{
-              height: '30%',
-              backgroundColor: 'rgba(129, 140, 248, 0.50)',
-            }}
-          ></div>
-          <div
-            className="w-full rounded-t-sm"
-            style={{
-              height: '50%',
-              backgroundColor: 'rgba(129, 140, 248, 0.70)',
-            }}
-          ></div>
-          <div
-            className="w-full rounded-t-sm"
-            style={{
-              height: '90%',
-              backgroundColor: 'rgba(129, 140, 248, 0.60)',
-            }}
-          ></div>
-          <div
-            className="w-full rounded-t-sm"
-            style={{ height: '75%', backgroundColor: 'var(--color-primary)' }}
-          ></div>
         </div>
       </div>
       {/* Card 3 */}
@@ -178,63 +70,9 @@ function MetricCard({ totalReleases }) {
               className="text-3xl font-black mt-1"
               style={{ color: 'var(--color-text-primary)' }}
             >
-              12.5k
+              {metrics?.totalSubscribers || 0}
             </h3>
           </div>
-          <span
-            className="text-blue-400 font-bold text-sm flex items-center px-2 py-1 rounded-lg"
-            style={{ backgroundColor: 'rgba(59, 130, 246, 0.1)' }}
-          >
-            +8.3%
-          </span>
-        </div>
-        <div aria-hidden="true" className="flex items-end gap-1 h-12 mt-2">
-          <div
-            className="w-full rounded-t-sm"
-            style={{
-              height: '40%',
-              backgroundColor: 'rgba(129, 140, 248, 0.15)',
-            }}
-          ></div>
-          <div
-            className="w-full rounded-t-sm"
-            style={{
-              height: '60%',
-              backgroundColor: 'rgba(129, 140, 248, 0.25)',
-            }}
-          ></div>
-          <div
-            className="w-full rounded-t-sm"
-            style={{
-              height: '70%',
-              backgroundColor: 'rgba(129, 140, 248, 0.35)',
-            }}
-          ></div>
-          <div
-            className="w-full rounded-t-sm"
-            style={{
-              height: '85%',
-              backgroundColor: 'rgba(129, 140, 248, 0.50)',
-            }}
-          ></div>
-          <div
-            className="w-full rounded-t-sm"
-            style={{
-              height: '95%',
-              backgroundColor: 'rgba(129, 140, 248, 0.70)',
-            }}
-          ></div>
-          <div
-            className="w-full rounded-t-sm"
-            style={{
-              height: '80%',
-              backgroundColor: 'rgba(129, 140, 248, 0.60)',
-            }}
-          ></div>
-          <div
-            className="w-full rounded-t-sm"
-            style={{ height: '100%', backgroundColor: 'var(--color-primary)' }}
-          ></div>
         </div>
       </div>
     </div>
@@ -244,5 +82,9 @@ function MetricCard({ totalReleases }) {
 export default MetricCard;
 
 MetricCard.propTypes = {
-  totalReleases: PropTypes.number.isRequired,
+  metrics: PropTypes.shape({
+    totalReleases: PropTypes.number,
+    totalSubscribers: PropTypes.number,
+    avgEngagement: PropTypes.number,
+  }),
 };

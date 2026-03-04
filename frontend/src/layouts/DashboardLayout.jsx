@@ -4,17 +4,24 @@ import Header from '../pages/dashboard/Header';
 import { Outlet } from 'react-router-dom';
 
 function DashboardLayout() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(
-    () => window.innerWidth >= 1280
-  );
+  const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
+    const saved = localStorage.getItem('changeloghub_sidebar_open');
+    if (saved !== null) {
+      return JSON.parse(saved);
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem(
+      'changeloghub_sidebar_open',
+      JSON.stringify(isSidebarOpen)
+    );
+  }, [isSidebarOpen]);
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1280) {
-        setIsSidebarOpen(true);
-      } else if (window.innerWidth >= 768) {
-        setIsSidebarOpen(false);
-      } else {
+      if (window.innerWidth < 768) {
         setIsSidebarOpen(false);
       }
     };

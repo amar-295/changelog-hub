@@ -8,6 +8,8 @@ import {
   githubLogin,
   githubLoginCallback,
   validateSession,
+  updateAccountDetails,
+  changeCurrentPassword,
 } from '../controllers/user.controller.js';
 import { verifyJWT } from '../middlewares/auth.middleware.js';
 
@@ -19,6 +21,8 @@ router.route('/logout').post(verifyJWT, logoutUser);
 router.route('/refresh-token').post(refreshAccessToken);
 router.route('/validate-session').get(validateSession);
 router.route('/me').get(verifyJWT, getCurrentUser);
+router.route('/update-account').patch(verifyJWT, updateAccountDetails);
+router.route('/change-password').post(verifyJWT, changeCurrentPassword);
 
 // Github routes
 router.route('/github').get(githubLogin);
