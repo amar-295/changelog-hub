@@ -45,6 +45,7 @@ ChangelogHub is a full-stack changelog management platform that simplifies how t
 - **User Registration** with secure password hashing (bcryptjs)
 - **JWT-Based Authentication** with access and refresh tokens
 - **Refresh Token Rotation** for enhanced security
+- **Social Login** with GitHub OAuth integration
 - **HttpOnly Cookies** for secure token storage
 - **Automatic Workspace Creation** on user signup
 - **Protected Routes** with middleware-based JWT verification
@@ -68,7 +69,7 @@ ChangelogHub is a full-stack changelog management platform that simplifies how t
 ### 📝 Release & Subscriber Management
 
 - **Draft & Publish Workflow** - Versioned releases with SEO-friendly auto-generated slugs
-- **Subscriber CRM** - Manage your audience directly from the dashboard with subscription tracking
+- **Subscriber CRM** - Manage your audience with advanced filtering, sorting, and subscription tracking
 - **Dynamic Public Pages** - Automatically generated public changelog pages for every workspace
 
 ---
@@ -87,6 +88,8 @@ ChangelogHub is a full-stack changelog management platform that simplifies how t
 | **Bcryptjs**             | Password hashing and verification         |
 | **Helmet**               | HTTP header security                      |
 | **CORS / Cookie Parser** | Cross-origin and session management       |
+| **Cloudinary**           | Secure image hosting and management       |
+| **GitHub OAuth**         | Social authentication integration         |
 
 ### Frontend
 
@@ -574,9 +577,20 @@ Authorization: Bearer {accessToken}
 #### 11. **Get All Subscribers** 🔒
 
 ```http
-GET /subscribers?page=1&limit=50&status=active
+GET /subscribers?page=1&limit=50&status=active&sortBy=subscribedAt&sortOrder=desc
 Authorization: Bearer {accessToken}
 ```
+
+**Query Parameters:**
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `page` | number | 1 | Page number |
+| `limit` | number | 50 | Results per page (max: 100) |
+| `status` | string | `active` | Filter: `active`, `unsubscribed` |
+| `sortBy` | string | `subscribedAt` | Sort field: `subscribedAt`, `unsubscribedAt` |
+| `sortOrder`| string | `desc` | Sort direction: `asc`, `desc` |
+
+````
 
 **Response (200 OK):**
 
@@ -595,7 +609,7 @@ Authorization: Bearer {accessToken}
   "message": "Subscribers fetched successfully",
   "success": true
 }
-```
+````
 
 ---
 
