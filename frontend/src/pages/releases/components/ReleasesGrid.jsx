@@ -1,53 +1,19 @@
+/**
+ * @module ReleasesGrid
+ * Card/grid view for the releases list. Each card shows status, date,
+ * a content snippet, and an action menu (edit / delete / publish toggle).
+ */
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import { useAuth } from '../../../context/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 import { Edit, Trash2, Send, Archive } from 'lucide-react';
-
-/* ── Status config (same as table) ──────────────────────────────── */
-const STATUS_CONFIG = {
-  published: {
-    dot: 'bg-emerald-400',
-    text: 'rgb(52,211,153)',
-    bg: 'rgba(16,185,129,0.12)',
-    label: 'Published',
-  },
-  draft: {
-    dot: 'bg-amber-400',
-    text: 'rgba(255,255,255,0.5)',
-    bg: 'rgba(255,255,255,0.06)',
-    label: 'Draft',
-  },
-  archive: {
-    dot: 'bg-gray-500',
-    text: 'rgb(156,163,175)',
-    bg: 'rgba(107,114,128,0.12)',
-    label: 'Archive',
-  },
-};
-
-function stripHtml(html) {
-  if (!html) return '';
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-  return doc.body.textContent || '';
-}
-
-function getInitials(name = '') {
-  return (
-    name
-      .split(' ')
-      .map((w) => w[0] ?? '')
-      .join('')
-      .slice(0, 2)
-      .toUpperCase() || 'U'
-  );
-}
-
-function getHue(name = '') {
-  const a = name.charCodeAt(0) ?? 65;
-  const b = name.charCodeAt(name.length - 1) ?? 65;
-  return (a * 37 + b * 13) % 360;
-}
+import { getStatusConfig } from '@/config';
+import {
+  stripHtml,
+  getInitials,
+  getHue,
+  formatDate,
+} from '../../../utils/format';
 
 /* ── Release Card ────────────────────────────────────────────────── */
 function ReleaseCard({
@@ -58,7 +24,7 @@ function ReleaseCard({
   onDelete,
   onPublishToggle,
 }) {
-  const cfg = STATUS_CONFIG[release.status] ?? STATUS_CONFIG.draft;
+  const statusStyle = getStatusConfig(release.status);
   const authorName =
     release.createdBy?.name ??
     release.createdBy?.email?.split('@')[0] ??
@@ -69,15 +35,8 @@ function ReleaseCard({
     currentAvatar;
 
   const rawDate = release.publishedAt ?? release.createdAt;
-  const date = rawDate
-    ? new Date(rawDate).toLocaleDateString('en-US', {
-        month: 'short',
-        day: '2-digit',
-        year: 'numeric',
-      })
-    : '—';
-
-  const snippet = stripHtml(release.content);
+  const displayDate = formatDate(rawDate);
+  const contentSnippet = stripHtml(release.content);
 
   return (
     <div
@@ -133,19 +92,21 @@ function ReleaseCard({
         <span
           className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11.5px] font-semibold border"
           style={{
-            backgroundColor: cfg.bg,
-            color: cfg.text,
-            borderColor: cfg.text + '33',
+            backgroundColor: statusStyle.bg,
+            color: statusStyle.text,
+            borderColor: statusStyle.text + '33',
           }}
         >
-          <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${cfg.dot}`} />
-          {cfg.label}
+          <span
+            className={`w-1.5 h-1.5 rounded-full mr-1.5 ${statusStyle.dot}`}
+          />
+          {statusStyle.label}
         </span>
         <span
           className="text-[11px] font-medium"
           style={{ color: 'var(--color-text-muted)' }}
         >
-          {date}
+          {displayDate}
         </span>
       </div>
 
@@ -162,7 +123,7 @@ function ReleaseCard({
         className="text-xs leading-relaxed line-clamp-3 flex-1 mb-4"
         style={{ color: 'var(--color-text-muted)' }}
       >
-        {snippet || 'No description provided.'}
+        {contentSnippet || 'No description provided.'}
       </p>
 
       {/* Footer: author */}

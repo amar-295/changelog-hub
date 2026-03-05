@@ -1,42 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import React, { useEffect, Suspense, lazy } from 'react';
+import {
+  useNavigate,
+  useParams,
+  useLocation,
+  useLoaderData,
+} from 'react-router-dom';
 import { ArrowLeft, Loader2, Rocket, Save } from 'lucide-react';
-import RichTextEditor from '../../components/RichTextEditor/index';
 import CategoryDropdown from './components/CategoryDropdown';
 import Input from '../../components/ui/Input';
 import { useReleaseForm } from './hooks/useReleaseForm';
-import { releaseService } from '../../services/releaseService';
-import toast from 'react-hot-toast';
 
-/* ──────────────────────────────────────────────────────────
-   Standalone full-screen release editor page.
-   Route: /releases/new  (outside DashboardLayout)
-   ────────────────────────────────────────────────────────── */
+// Heavy Tiptap editor split into its own chunk — loaded only when this page mounts
+const RichTextEditor = lazy(
+  () => import('../../components/RichTextEditor/index')
+);
+
+/**
+ * Standalone full-screen release editor.
+ * Route: /releases/new  and  /releases/:id/edit
+ * Rendered outside DashboardLayout so the sidebar/header are not shown.
+ */
+
 function CreateReleasePage() {
   const navigate = useNavigate();
-
   const { id } = useParams();
   const { state } = useLocation();
-  const [initialData, setInitialData] = useState(state?.release || null);
-  const [loadingInitial, setLoadingInitial] = useState(!!id && !state?.release);
+  const loaderData = useLoaderData(); // Pre-fetched data from React Router v7 loader
 
-  useEffect(() => {
-    if (id && !initialData) {
-      const fetchRelease = async () => {
-        try {
-          setLoadingInitial(true);
-          const response = await releaseService.getReleaseById(id);
-          setInitialData(response.data);
-        } catch {
-          toast.error('Failed to load release');
-          navigate('/dashboard/releases');
-        } finally {
-          setLoadingInitial(false);
-        }
-      };
-      fetchRelease();
-    }
-  }, [id, initialData, navigate]);
+  // Use state.release first (if navigated from table), then loaderData (if hard refresh/direct link), else null (for /new)
+  const initialData = state?.release || loaderData || null;
 
   const { form, loading, error, handleField, handleCancel, handleSubmit } =
     useReleaseForm({
@@ -55,14 +47,6 @@ function CreateReleasePage() {
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, [handleCancel]);
-
-  if (loadingInitial) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg-page">
-        <Loader2 className="w-8 h-8 text-primary animate-spin" />
-      </div>
-    );
-  }
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-bg-page">
@@ -248,12 +232,20 @@ function CreateReleasePage() {
 
         {/* Right: Rich-Text Editor ────────────────────────── */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          <RichTextEditor
-            content={form.content}
-            onChange={(html) => handleField('content', html)}
-            placeholder="Write your release notes here…"
-            fullPage
-          />
+          <Suspense
+            fallback={
+              <div className="flex-1 flex items-center justify-center">
+                <Loader2 className="w-8 h-8 text-primary animate-spin" />
+              </div>
+            }
+          >
+            <RichTextEditor
+              content={form.content}
+              onChange={(html) => handleField('content', html)}
+              placeholder="Write your release notes here…"
+              fullPage
+            />
+          </Suspense>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { LogOut, Settings } from 'lucide-react';
-import { useTooltip } from '../../../hooks/useTooltip';
+import { useTooltip } from '@/hooks';
 import { useNavigate } from 'react-router-dom';
 
 function ProfileDropdown({ user, onLogout }) {

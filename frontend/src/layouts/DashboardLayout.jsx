@@ -1,7 +1,16 @@
+/**
+ * @module DashboardLayout
+ * Persistent shell for all protected /dashboard/* routes.
+ * Manages sidebar open/closed state (persisted to localStorage) and
+ * auto-collapses the sidebar on mobile (<768 px) on window resize.
+ */
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../pages/dashboard/Sidebar';
 import Header from '../pages/dashboard/Header';
 import { Outlet } from 'react-router-dom';
+
+/** Below this viewport width the sidebar is force-closed. */
+const MOBILE_BREAKPOINT = 768;
 
 function DashboardLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
@@ -21,7 +30,7 @@ function DashboardLayout() {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 768) {
+      if (window.innerWidth < MOBILE_BREAKPOINT) {
         setIsSidebarOpen(false);
       }
     };

@@ -98,7 +98,7 @@ function RecentUpdate({ onTotalReleasesLoaded }) {
           Recent Updates
         </h3>
         <button
-          onClick={() => navigate('/releases')}
+          onClick={() => navigate('/dashboard/releases')}
           className="text-sm font-bold hover:underline cursor-pointer"
           style={{ color: 'var(--color-primary)' }}
         >

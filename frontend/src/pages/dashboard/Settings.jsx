@@ -1,3 +1,9 @@
+/**
+ * @module Settings
+ * Workspace settings page with three tabs: Workspace, Profile, and Security.
+ * Workspace tab supports updating name, subdomain, description, and logo.
+ * All workspace data is managed via TanStack Query (useWorkspace / useUpdateWorkspace).
+ */
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Globe,
@@ -9,7 +15,6 @@ import {
   Image as ImageIcon,
   ExternalLink,
 } from 'lucide-react';
-import { workspaceService } from '../../services/workspaceService';
 import toast from 'react-hot-toast';
 import Logo from '../../components/Logo';
 import Input from '../../components/ui/Input';
@@ -17,14 +22,16 @@ import { useAuth } from '../../context/AuthContext';
 import SettingsTabs from './components/SettingsTabs';
 import ProfileTab from './components/ProfileTab';
 import SecurityTab from './components/SecurityTab';
+import { useWorkspace, useUpdateWorkspace } from '@/hooks/queries/useWorkspace';
 
 function Settings() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('workspace');
 
-  const [workspace, setWorkspace] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const { data: workspace, isLoading: loading } = useWorkspace();
+  const updateWorkspaceMutation = useUpdateWorkspace();
+  const saving = updateWorkspaceMutation.isPending;
+
   const [logoPreview, setLogoPreview] = useState(null);
   const [logoFile, setLogoFile] = useState(null);
   const fileInputRef = useRef(null);
@@ -35,32 +42,19 @@ function Settings() {
     subdomain: '',
   });
 
+  // Sync form data when workspace loads
   useEffect(() => {
-    fetchWorkspace();
-  }, []);
-
-  const fetchWorkspace = async () => {
-    try {
-      setLoading(true);
-      const data = await workspaceService.getWorkspaceDetails();
-      if (data.success) {
-        setWorkspace(data.data);
-        setFormData({
-          name: data.data.name || '',
-          description: data.data.description || '',
-          subdomain: data.data.subdomain || '',
-        });
-        if (data.data.logo) {
-          setLogoPreview(data.data.logo);
-        }
+    if (workspace) {
+      setFormData({
+        name: workspace.name || '',
+        description: workspace.description || '',
+        subdomain: workspace.subdomain || '',
+      });
+      if (workspace.logo) {
+        setLogoPreview(workspace.logo);
       }
-    } catch (error) {
-      toast.error('Failed to load workspace settings');
-      console.error(error);
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [workspace]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -85,26 +79,13 @@ function Settings() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      setSaving(true);
-      const updatePayload = {
-        ...formData,
-        logo: logoFile,
-      };
-      const response = await workspaceService.updateWorkspace(updatePayload);
-      if (response.success) {
-        toast.success('Workspace updated successfully');
-        setWorkspace(response.data);
-        setLogoFile(null);
-      }
-    } catch (error) {
-      toast.error(
-        error.response?.data?.message || 'Failed to update workspace'
-      );
-      console.error(error);
-    } finally {
-      setSaving(false);
-    }
+    const updatePayload = {
+      ...formData,
+      logo: logoFile,
+    };
+    updateWorkspaceMutation.mutate(updatePayload, {
+      onSuccess: () => setLogoFile(null),
+    });
   };
 
   if (loading) {
@@ -303,7 +284,17 @@ function Settings() {
           <div className="flex items-center justify-end gap-4 p-6 bg-white/1 border border-white/5 rounded-2xl shadow-xl">
             <button
               type="button"
-              onClick={fetchWorkspace}
+              onClick={() => {
+                if (workspace) {
+                  setFormData({
+                    name: workspace.name || '',
+                    description: workspace.description || '',
+                    subdomain: workspace.subdomain || '',
+                  });
+                  setLogoPreview(workspace.logo || null);
+                  setLogoFile(null);
+                }
+              }}
               className="btn btn-secondary px-6"
             >
               Reset Changes

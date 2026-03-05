@@ -1,48 +1,38 @@
-import React, { useState, useEffect, useCallback } from 'react';
+/**
+ * @module Subscribers
+ * Dashboard page listing all workspace email subscribers with search and pagination.
+ * Data fetching and delete are managed by TanStack Query hooks
+ * (useSubscribers / useDeleteSubscriber) — no local fetch boilerplate.
+ */
+import React, { useState } from 'react';
 import { Mail, Trash2, Search, ArrowLeft, ArrowRight } from 'lucide-react';
-import toast from 'react-hot-toast';
-import { subscriberService } from '../../services/subscriberService';
 import Input from '../../components/ui/Input';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
+import EmptyState from '../../components/ui/EmptyState';
+import { formatDate } from '../../utils/format';
+import {
+  useSubscribers,
+  useDeleteSubscriber,
+} from '@/hooks/queries/useSubscribers';
 
 function Subscribers() {
-  const [subscribers, setSubscribers] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [pagination, setPagination] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const fetchSubscribers = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await subscriberService.getAllSubscribers({
-        page,
-        limit: 10,
-        status: 'active',
-      });
-      setSubscribers(response.data?.subscribers || []);
-      setPagination(response.data?.pagination || null);
-    } catch (error) {
-      console.error('Failed to fetch subscribers:', error);
-      toast.error('Failed to load subscribers');
-    } finally {
-      setLoading(false);
-    }
-  }, [page]);
+  const { data, isLoading: loading } = useSubscribers({
+    page,
+    limit: 10,
+    status: 'active',
+  });
+  const deleteMutation = useDeleteSubscriber();
 
-  useEffect(() => {
-    fetchSubscribers();
-  }, [fetchSubscribers]);
+  const subscribers = data?.subscribers || [];
+  const pagination = data?.pagination || null;
 
-  const handleDelete = async (id) => {
+  const handleDelete = (id) => {
     if (!window.confirm('Are you sure you want to remove this subscriber?'))
       return;
-    try {
-      await subscriberService.deleteSubscriber(id);
-      toast.success('Subscriber removed successfully');
-      fetchSubscribers();
-    } catch {
-      toast.error('Failed to remove subscriber');
-    }
+    deleteMutation.mutate(id);
   };
 
   // Basic client-side filtering since backend doesn't have a search param yet
@@ -51,7 +41,7 @@ function Subscribers() {
   );
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-6">
+    <div className="p-4 sm:p-8 max-w-7xl mx-auto space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1
@@ -87,64 +77,39 @@ function Subscribers() {
       >
         <div className="overflow-x-auto min-h-[400px] flex flex-col">
           {loading ? (
-            <div className="flex-1 flex items-center justify-center py-20">
-              <div className="animate-pulse flex flex-col items-center gap-3">
-                <div className="size-8 rounded-full border-2 border-primary border-t-transparent animate-spin"></div>
-                <span
-                  className="text-sm font-medium"
-                  style={{ color: 'var(--color-text-muted)' }}
-                >
-                  Loading subscribers...
-                </span>
-              </div>
-            </div>
+            <LoadingSpinner
+              label="Loading subscribers..."
+              className="flex-1 py-20"
+            />
           ) : filteredSubscribers.length === 0 ? (
-            <div className="flex-1 flex flex-col items-center justify-center py-20 gap-3">
-              <div
-                className="p-4 rounded-full"
-                style={{
-                  backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                  color: 'var(--color-primary)',
-                }}
-              >
-                <Mail size={32} strokeWidth={1.5} />
-              </div>
-              <div className="text-center">
-                <p
-                  className="font-bold text-lg"
-                  style={{ color: 'var(--color-text-primary)' }}
-                >
-                  No subscribers found
-                </p>
-                <p
-                  className="text-sm"
-                  style={{ color: 'var(--color-text-secondary)' }}
-                >
-                  {searchQuery
-                    ? 'Try adjusting your search query.'
-                    : 'Share your public changelog to get your first subscriber.'}
-                </p>
-              </div>
-            </div>
+            <EmptyState
+              icon={Mail}
+              title="No subscribers found"
+              description={
+                searchQuery
+                  ? 'Try adjusting your search query.'
+                  : 'Share your public changelog to get your first subscriber.'
+              }
+            />
           ) : (
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr style={{ backgroundColor: 'var(--color-bg-elevated)' }}>
                   <th
                     className="px-6 py-4 text-[13px] font-semibold"
-                    style={{ color: 'var(--color-text-muted)' }}
+                    style={{ color: 'var(--color-text-secondary)' }}
                   >
                     Email Address
                   </th>
                   <th
-                    className="px-6 py-4 text-[13px] font-semibold"
-                    style={{ color: 'var(--color-text-muted)' }}
+                    className="hidden sm:table-cell px-6 py-4 text-[13px] font-semibold"
+                    style={{ color: 'var(--color-text-secondary)' }}
                   >
                     Subscribed On
                   </th>
                   <th
                     className="px-6 py-4 text-[13px] font-semibold text-right"
-                    style={{ color: 'var(--color-text-muted)' }}
+                    style={{ color: 'var(--color-text-secondary)' }}
                   >
                     Actions
                   </th>
@@ -179,17 +144,10 @@ function Subscribers() {
                       </div>
                     </td>
                     <td
-                      className="px-6 py-4 text-sm"
+                      className="hidden sm:table-cell px-6 py-4 text-sm"
                       style={{ color: 'var(--color-text-secondary)' }}
                     >
-                      {new Date(subscriber.subscribedAt).toLocaleDateString(
-                        'en-US',
-                        {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric',
-                        }
-                      )}
+                      {formatDate(subscriber.subscribedAt)}
                     </td>
                     <td className="px-6 py-4 text-right flex justify-end">
                       <button

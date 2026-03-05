@@ -1,5 +1,11 @@
+/**
+ * @module Releases
+ * Dashboard releases management page.
+ * Initial data is pre-loaded by `releasesLoader` (React Router v7 loader).
+ * Subsequent filter/page changes trigger direct API fetches via the reducer.
+ */
 import React, { useReducer, useEffect, useState } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate, useLoaderData } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { releaseService } from '../../services/releaseService';
 import ReleasesHeader from './components/ReleasesHeader';
@@ -8,15 +14,19 @@ import ReleasesGrid from './components/ReleasesGrid';
 import ReleasesPagination from './components/ReleasesPagination';
 
 // ── Reducer ───────────────────────────────────────────────────────────────────
-const initialState = {
-  releases: [],
-  loading: true,
-  error: null,
-  page: 1,
-  pagination: null,
-  statusFilter: '',
-  refreshKey: 0,
-};
+// We no longer rely on a static initial state. It is seeded by the loader.
+function createInitialState(loaderData) {
+  return {
+    releases: loaderData?.releases || [],
+    loading: false, // Start false because loader already fetched
+    error: null,
+    page: 1,
+    pagination: loaderData?.pagination || null,
+    statusFilter: '',
+    refreshKey: 0,
+    isInitialMount: true, // flag to prevent double-fetching on mount
+  };
+}
 
 function releasesReducer(state, action) {
   switch (action.type) {
@@ -31,9 +41,20 @@ function releasesReducer(state, action) {
     case 'SET_PAGE':
       return { ...state, page: action.payload };
     case 'SET_STATUS_FILTER':
-      return { ...state, statusFilter: action.payload, page: 1 };
+      return {
+        ...state,
+        statusFilter: action.payload,
+        page: 1,
+        isInitialMount: false,
+      };
+    case 'MARK_MOUNTED':
+      return { ...state, isInitialMount: false };
     case 'REFRESH':
-      return { ...state, refreshKey: state.refreshKey + 1 };
+      return {
+        ...state,
+        refreshKey: state.refreshKey + 1,
+        isInitialMount: false,
+      };
     default:
       return state;
   }
@@ -41,9 +62,15 @@ function releasesReducer(state, action) {
 
 // ── Orchestrator ──────────────────────────────────────────────────────────────
 function Releases() {
+  const loaderData = useLoaderData();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [state, dispatch] = useReducer(releasesReducer, initialState);
+  // Initialize reducer with loaderData
+  const [state, dispatch] = useReducer(
+    releasesReducer,
+    loaderData,
+    createInitialState
+  );
   const {
     releases,
     loading,
@@ -68,6 +95,12 @@ function Releases() {
 
   // Fetch releases whenever filter/page/date/refreshKey/searchQuery changes
   useEffect(() => {
+    // Skip fetching on the very first render across navigation, as the loader handled it
+    if (state.isInitialMount) {
+      dispatch({ type: 'MARK_MOUNTED' });
+      return;
+    }
+
     const fetchReleases = async () => {
       try {
         dispatch({ type: 'SET_LOADING', payload: true });
@@ -92,7 +125,14 @@ function Releases() {
       }
     };
     fetchReleases();
-  }, [page, statusFilter, dateFilter, refreshKey, searchQuery]);
+  }, [
+    page,
+    statusFilter,
+    dateFilter,
+    refreshKey,
+    searchQuery,
+    state.isInitialMount,
+  ]);
 
   // Actions
   const handleEdit = (release) => {

@@ -1,53 +1,14 @@
+/**
+ * @module ReleasesTable
+ * Table view for the releases list. Renders author avatars, status badges,
+ * category labels, and action menus (edit / delete / publish toggle).
+ */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Edit, Trash2, Send, Archive } from 'lucide-react';
-import { useAuth } from '../../../context/AuthContext';
-
-/* ── Status config ───────────────────────────────────────────────── */
-const STATUS_CONFIG = {
-  published: {
-    dot: 'bg-emerald-400',
-    bg: 'rgba(16,185,129,0.12)',
-    text: 'rgb(52,211,153)',
-    label: 'Published',
-  },
-  draft: {
-    dot: 'bg-amber-400',
-    bg: 'rgba(255,255,255,0.06)',
-    text: 'rgba(255,255,255,0.5)',
-    label: 'Draft',
-  },
-  archive: {
-    dot: 'bg-gray-500',
-    bg: 'rgba(107,114,128,0.12)',
-    text: 'rgb(156,163,175)',
-    label: 'Archive',
-  },
-};
-
-/* ── Helpers ─────────────────────────────────────────────────────── */
-function stripHtml(html) {
-  if (!html) return '';
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-  return doc.body.textContent || '';
-}
-
-function getInitials(name = '') {
-  return (
-    name
-      .split(' ')
-      .map((w) => w[0] ?? '')
-      .join('')
-      .slice(0, 2)
-      .toUpperCase() || 'U'
-  );
-}
-
-function getHue(name = '') {
-  const a = name.charCodeAt(0) ?? 65;
-  const b = name.charCodeAt(name.length - 1) ?? 65;
-  return (a * 37 + b * 13) % 360;
-}
+import { useAuth } from '@/context/AuthContext';
+import { getStatusConfig } from '@/config';
+import { stripHtml, getInitials, getHue } from '../../../utils/format';
 
 /* ── Author Cell ─────────────────────────────────────────────────── */
 function AuthorCell({ name, avatarUrl }) {
@@ -208,7 +169,7 @@ function ReleasesTable({
 
         {!loading &&
           releases.map((release) => {
-            const cfg = STATUS_CONFIG[release.status] ?? STATUS_CONFIG.draft;
+            const cfg = getStatusConfig(release.status);
             const authorName =
               release.createdBy?.name ??
               release.createdBy?.email?.split('@')[0] ??

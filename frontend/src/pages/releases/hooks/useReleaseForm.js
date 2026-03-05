@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { releaseService } from '../../../services/releaseService';
 
 const INITIAL_FORM = {
@@ -17,8 +18,9 @@ export function useReleaseForm({
   isEdit,
 }) {
   const [form, setForm] = useState(INITIAL_FORM);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [errorVar, setError] = useState(null); // Local error state for validation errors
+
+  const queryClient = useQueryClient();
 
   // Reset form when modal opens or initialData changes
   useEffect(() => {
@@ -38,10 +40,37 @@ export function useReleaseForm({
     }
   }, [isOpen, initialData]);
 
-  const handleField = (field, value) =>
+  const handleField = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
+    setError(null);
+  };
 
-  const handleCancel = useCallback(async () => {
+  // TanStack Query Mutation for saving/creating
+  const saveMutation = useMutation({
+    mutationFn: async ({ payload, isDraft: _isDraft }) => {
+      if (isEdit && initialData?._id) {
+        return releaseService.updateRelease(initialData._id, payload);
+      } else {
+        return releaseService.createRelease(payload);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['releases'] });
+      onSuccess?.();
+    },
+    onError: (err) => {
+      setError(
+        err.response?.data?.message ||
+          'Failed to process release. Please try again.'
+      );
+    },
+    onSettled: (_, __, { isDraft }) => {
+      // Only close if it's the main submit or a valid draft auto-save
+      if (!isDraft) onClose();
+    },
+  });
+
+  const handleCancel = useCallback(() => {
     const hasContent =
       form.title.trim() !== '' ||
       (form.content &&
@@ -49,29 +78,17 @@ export function useReleaseForm({
         form.content.trim() !== '');
 
     if (hasContent) {
-      try {
-        setLoading(true);
-        const autoTitle = form.title.trim() || 'Untitled Release';
-        const payload = { ...form, title: autoTitle, status: 'draft' };
-
-        if (isEdit && initialData?._id) {
-          await releaseService.updateRelease(initialData._id, payload);
-        } else {
-          await releaseService.createRelease(payload);
-        }
-        onSuccess?.();
-      } catch (err) {
-        console.error('Auto-draft failed', err);
-      } finally {
-        setLoading(false);
-        onClose();
-      }
+      const autoTitle = form.title.trim() || 'Untitled Release';
+      const payload = { ...form, title: autoTitle, status: 'draft' };
+      // Fire and forget auto-save draft
+      saveMutation.mutate({ payload, isDraft: true });
+      onClose(); // close immediately for snappy UX
     } else {
       onClose();
     }
-  }, [form, onSuccess, onClose, isEdit, initialData]);
+  }, [form, onClose, saveMutation]);
 
-  const handleSubmit = async (publishNow = false) => {
+  const handleSubmit = (publishNow = false) => {
     if (!form.title.trim()) {
       setError('Title is required.');
       return;
@@ -81,30 +98,20 @@ export function useReleaseForm({
       return;
     }
 
-    try {
-      setLoading(true);
-      setError(null);
-      const payload = {
-        ...form,
-        status: publishNow ? 'published' : form.status,
-      };
+    const payload = {
+      ...form,
+      status: publishNow ? 'published' : form.status,
+    };
 
-      if (isEdit && initialData?._id) {
-        await releaseService.updateRelease(initialData._id, payload);
-      } else {
-        await releaseService.createRelease(payload);
-      }
-      onSuccess?.();
-      onClose();
-    } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          'Failed to create release. Please try again.'
-      );
-    } finally {
-      setLoading(false);
-    }
+    saveMutation.mutate({ payload, isDraft: false });
   };
 
-  return { form, loading, error, handleField, handleCancel, handleSubmit };
+  return {
+    form,
+    loading: saveMutation.isPending,
+    error: errorVar,
+    handleField,
+    handleCancel,
+    handleSubmit,
+  };
 }

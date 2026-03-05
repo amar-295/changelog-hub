@@ -1,3 +1,7 @@
+/**
+ * @module Signup
+ * Unauthenticated registration page. Redirects to /dashboard if already authenticated.
+ */
 import React, { useState } from 'react';
 import Logo from '../../components/Logo';
 import { Link, useNavigate } from 'react-router-dom';

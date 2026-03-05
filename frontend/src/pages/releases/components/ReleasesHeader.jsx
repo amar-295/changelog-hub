@@ -1,14 +1,14 @@
+/**
+ * @module ReleasesHeader
+ * Toolbar for the releases page: view toggle (table/grid), status/date filters,
+ * CSV export, and the 'New Release' button.
+ */
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate, Link } from 'react-router-dom';
-import {
-  Download,
-  Plus,
-  LayoutGrid,
-  List,
-  CalendarDays,
-} from 'lucide-react';
+import { Download, Plus, LayoutGrid, List, CalendarDays } from 'lucide-react';
 import { IconBtn } from './IconBtn';
+import { Tooltip } from '@/components/ui';
 
 /* ── Constants ───────────────────────────────────────────────────── */
 const TABS = [
@@ -24,32 +24,6 @@ const TITLES = {
   draft: 'Drafts',
   archived: 'Archive',
 };
-
-/* ── Small tooltip (reused locally) ─────────────────────────────── */
-function Tip({ children }) {
-  return (
-    <div
-      className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1.5 rounded-lg
-        text-[11px] font-semibold whitespace-nowrap text-white pointer-events-none z-50"
-      style={{
-        backgroundColor: 'var(--color-bg-tooltip)',
-        border: '1px solid rgba(255,255,255,0.14)',
-        boxShadow: '0 6px 16px rgba(0,0,0,0.5)',
-      }}
-    >
-      {children}
-      <div
-        className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0"
-        style={{
-          borderLeft: '5px solid transparent',
-          borderRight: '5px solid transparent',
-          borderTop: '5px solid var(--color-bg-tooltip)',
-        }}
-      />
-    </div>
-  );
-}
-Tip.propTypes = { children: PropTypes.node };
 
 /* ── Date filter dropdown ────────────────────────────────────────── */
 function FilterDropdown({ dateFilter, onChange, onClose }) {
@@ -182,13 +156,14 @@ function ReleasesHeader({
 }) {
   const navigate = useNavigate();
   const [filterOpen, setFilterOpen] = useState(false);
-  const [exportTip, setExportTip] = useState(false);
 
   const title = TITLES[statusFilter] ?? 'All Releases';
   const hasDate = dateFilter.from || dateFilter.to;
 
   const go = (value) =>
-    navigate(value ? `/releases?status=${value}` : '/releases');
+    navigate(
+      value ? `/dashboard/releases?status=${value}` : '/dashboard/releases'
+    );
 
   return (
     <div>
@@ -243,11 +218,7 @@ function ReleasesHeader({
           </div>
 
           {/* Export */}
-          <div
-            className="relative"
-            onMouseEnter={() => setExportTip(true)}
-            onMouseLeave={() => setExportTip(false)}
-          >
+          <Tooltip text="Export as CSV">
             <button
               type="button"
               className="h-9 px-4 rounded-lg border text-[13px] font-semibold flex items-center gap-2 transition-all hover:bg-white/12 hover:border-white/25 text-text-primary cursor-pointer"
@@ -258,8 +229,7 @@ function ReleasesHeader({
               <Download size={14} strokeWidth={1.75} />
               Export
             </button>
-            {exportTip && <Tip>Export as CSV</Tip>}
-          </div>
+          </Tooltip>
 
           {/* Table / Grid toggle */}
           <div className="flex items-center gap-1">

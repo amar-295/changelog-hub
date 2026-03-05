@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { ShieldCheck, CheckCircle2, Loader2, Info } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { authService } from '../../../services/authService';
-import Input from '../../../components/ui/Input';
+import { authService } from '@/services';
+import { Input } from '@/components/ui';
 
 function SecurityTab({ user }) {
   const [formData, setFormData] = useState({

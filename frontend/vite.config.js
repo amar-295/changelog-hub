@@ -1,10 +1,36 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
+import { visualizer } from 'rollup-plugin-visualizer';
+import viteCompression from 'vite-plugin-compression';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+  plugins: [
+    react({
+      babel: {
+        plugins: [
+          ['babel-plugin-react-compiler'],
+          [
+            'babel-plugin-transform-react-remove-prop-types',
+            { removeImport: true },
+          ],
+        ],
+      },
+    }),
+    tailwindcss(),
+    visualizer({ filename: 'stats.html', gzipSize: true, brotliSize: true }),
+    viteCompression({ algorithm: 'gzip' }),
+    viteCompression({ algorithm: 'brotliCompress' }),
+  ],
   server: {
     proxy: {
       '/api': {
@@ -21,5 +47,12 @@ export default defineConfig({
       },
     },
     chunkSizeWarningLimit: 800, // Bump the warning limit to avoid noise
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.js',
+    include: ['src/**/*.test.{js,jsx}'],
+    css: false,
   },
 });

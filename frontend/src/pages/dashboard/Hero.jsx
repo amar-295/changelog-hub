@@ -6,10 +6,10 @@ function Hero({ user }) {
   const firstName = user?.fullName?.split(' ')[0] || 'Alex';
 
   return (
-    <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-      <div className="space-y-2">
+    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
+      <div className="space-y-1.5">
         <h2
-          className="text-3xl font-black tracking-tight"
+          className="text-2xl sm:text-3xl font-black tracking-tight"
           style={{ color: 'var(--color-text-primary)' }}
         >
           Welcome back, {firstName}
@@ -18,7 +18,7 @@ function Hero({ user }) {
           Here's what's happening with your changelog today.
         </p>
       </div>
-      <div className="flex gap-3">
+      <div className="flex gap-3 flex-wrap sm:flex-nowrap">
         <button
           onClick={() => {
             if (user?.workspaceId?.subdomain) {

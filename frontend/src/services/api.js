@@ -1,3 +1,14 @@
+/**
+ * @module api
+ * Authenticated Axios instance used by all dashboard API services.
+ *
+ * Interceptor behaviour:
+ *  - On 401: attempts a single token refresh via /auth/refresh-token.
+ *  - While a refresh is in-flight, subsequent 401 requests are queued
+ *    and replayed once the refresh succeeds.
+ *  - On refresh failure: dispatches 'session-expired' so AuthContext
+ *    can clear the user state and redirect to /login.
+ */
 import axios from 'axios';
 import { authService } from './authService';
 

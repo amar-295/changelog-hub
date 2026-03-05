@@ -18,7 +18,7 @@ function MetricCard({ metrics }) {
           <div>
             <p
               className="text-[13px] font-semibold"
-              style={{ color: 'var(--color-text-muted)' }}
+              style={{ color: 'var(--color-text-secondary)' }}
             >
               Total Releases
             </p>

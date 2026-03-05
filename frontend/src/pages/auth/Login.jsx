@@ -1,6 +1,9 @@
-import React from 'react';
+/**
+ * @module Login
+ * Unauthenticated login page. Redirects to /dashboard if already authenticated.
+ */
+import React, { useState, useEffect } from 'react';
 import Logo from '../../components/Logo';
-import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Input from '../../components/ui/Input';

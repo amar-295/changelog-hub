@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useMemo,
-} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -24,8 +18,13 @@ function RichTextEditor({
 }) {
   const [linkMenu, setLinkMenu] = useState({ isOpen: false, url: '' });
 
-  const extensions = useMemo(() => {
-    return [
+  const openLinkMenu = useCallback((editorInst) => {
+    const previousUrl = editorInst.getAttributes('link').href || '';
+    setLinkMenu({ isOpen: true, url: previousUrl });
+  }, []);
+
+  const editor = useEditor({
+    extensions: [
       StarterKit.configure({
         codeBlock: { languageClassPrefix: 'language-' },
         history: true,
@@ -46,16 +45,7 @@ function RichTextEditor({
         placeholder,
         emptyEditorClass: 'is-editor-empty',
       }),
-    ];
-  }, [placeholder]);
-
-  const openLinkMenu = useCallback((editorInst) => {
-    const previousUrl = editorInst.getAttributes('link').href || '';
-    setLinkMenu({ isOpen: true, url: previousUrl });
-  }, []);
-
-  const editor = useEditor({
-    extensions,
+    ],
     content: content || '',
     onUpdate: ({ editor }) => {
       onChange?.(editor.getHTML());
